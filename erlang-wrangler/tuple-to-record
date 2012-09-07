@@ -1,0 +1,34 @@
+#!/usr/bin/env escript
+%% vim: sts=4 ts=4 sw=4 et ft=erlang
+%%! -pa /home/erszcz/apps/erlang/wrangler/lib/erlang/lib/wrangler-1.0/ebin
+
+%% This script is a rough translation of wrangler/elisp/wrangler.el
+%% aiming to reconstruct the wrangler API usage pattern needed to perform
+%% a gen_fsm state tuple to record transformation.
+
+main(File) ->
+    Path = filename:dirname(File),
+    Paths = [Path],
+    TabWidth = 4,
+    wrangler:start([],[]),
+
+    %(erl-send-rpc wrangler-erl-node 'emacs_wrangler 'apply_refac
+    % (list 'gen_fsm_to_record (list current-file-name wrangler-search-paths
+    %                                'emacs tab-width)))
+    {ok,{tuple,_NoOfFields},StateFuns} =
+        emacs_wrangler:apply_refac(gen_fsm_to_record,
+                                   [File, Path, command, TabWidth], Paths),
+    io:format("Extracted state funs:~n~p~n", [StateFuns]),
+
+    %(erl-refactor-state-to-record-1 current-file-name no-of-fields state-funs
+    %  'true 'gen_fsm_to_record_1))
+    %(defun erl-refactor-state-to-record-1(current-file-name no-of-fields
+    %   state-funs is-tuple function-name)
+    %(erl-send-rpc wrangler-erl-node 'wrangler_refacs function-name
+    %  (list current-file-name record-name (reverse field-names)
+    %        state-funs is-tuple wrangler-search-paths 'emacs tab-width))
+    {ok,Modified} =
+        wrangler_refacs:gen_fsm_to_record_1(File, "zxc", ["a", "b","c"], StateFuns,
+                                            true, Paths, command, TabWidth),
+
+    {ok,Files,Msg} = wrangler_preview_server:commit().
