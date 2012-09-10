@@ -6,3 +6,6 @@ server: server.o
 
 %.o: %.c
 	gcc -c $<
+
+clean:
+	rm client server *.o

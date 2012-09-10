@@ -1,5 +1,8 @@
+#include <errno.h>
 #include <ev.h>
+#include <fcntl.h>
 #include <bsd/string.h>
+#include <poll.h>
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <stdlib.h>
@@ -11,14 +14,18 @@
 #define LISTEN_BACKLOG 50
 
 #define handle_error(msg) \
-    do { perror(msg); exit(EXIT_FAILURE); } while (0)
+    do { fprintf(stderr, "%s:%d: ", __FILE__, __LINE__); \
+         perror(msg); exit(EXIT_FAILURE); } while (0)
 
-#define BUFSIZE 4096
+#define BUFSIZE 256
 
 static int
 bind_and_listen (const char *path);
 
-ev_io listen_watcher;
+static void
+set_nonblock(int fd);
+
+static ev_io listen_watcher;
 
 static void
 listen_cb (EV_P_ ev_io *w, int revents);
@@ -37,15 +44,16 @@ main (int argc, char *argv[])
 
     sfd = bind_and_listen(MY_SOCK_PATH);
 
-    /* set sfd to non-blocking mode before using with libev */
+    //printf("main: sfd = %d\n", sfd);
 
-    /* how to store sfd in the watcher? */
+    /* Set sfd to non-blocking mode before using with libev */
+    set_nonblock(sfd);
+
     ev_io_init (&listen_watcher, listen_cb, sfd, EV_READ);
-    ev_io_start (loop, &listen_watcher);
+    ev_io_start (EV_A_ &listen_watcher);
 
-    /* Now we can accept incoming connections one
-       at a time using accept(2) */
-
+    /* Start the event loop */
+    ev_run (EV_A_ 0);
 
     /* When no longer required, the socket pathname, MY_SOCK_PATH
        should be deleted using unlink(2) or remove(3) */
@@ -77,32 +85,79 @@ bind_and_listen(const char *path)
 }
 
 static void
-listen_cb (EV_P_ ev_io *w, int revents)
+set_nonblock(int fd)
 {
-    for(;;) {
-        peer_addr_size = sizeof(struct sockaddr_un);
-        cfd = accept(sfd, (struct sockaddr *) &peer_addr,
-                     &peer_addr_size);
-        if (cfd == -1)
-            handle_error("accept");
-
-        /* Code to deal with incoming connection(s)... */
-        pid_t pid = fork();
-        if (pid == 0)
-            handle_connection(cfd);
-        else if (pid == -1)
-            handle_error("fork");
-    }
+    long flags;
+    if ((flags = fcntl(fd, F_GETFL) == -1))
+        handle_error("fcntl");
+    flags |= O_NONBLOCK;
+    if (fcntl(fd, F_SETFL, flags) == -1)
+        handle_error("fcntl");
 }
 
-void
-handle_connection(int sfd)
+static void
+listen_cb (EV_P_ ev_io *w, int revents)
+{
+    int cfd;
+    int r;
+    struct pollfd pfd;
+    struct sockaddr_un peer_addr;
+    socklen_t peer_addr_size;
+    ev_io* client_watcher;
+
+    //printf("listen_cb: w->fd = %d\n", w->fd);
+
+    /* Without this block the accept call often fails with EINVAL */
+    bzero(&pfd, sizeof pfd);
+    pfd.fd = w->fd;
+    pfd.events |= POLLIN;
+    r = poll(&pfd, 1, /* timeout in ms */ 10);
+    if (r == -1)
+        handle_error("poll");
+    else if (r == 0) {
+        /* no events to read */
+        fprintf(stderr, "poll: no events to read\n");
+        return;
+    }
+
+    cfd = accept4(w->fd, (struct sockaddr*) &peer_addr,
+                  &peer_addr_size, SOCK_NONBLOCK);
+    //printf("cfd=%d\terrno=%d\n", cfd, errno);
+    if (cfd == -1)
+        handle_error("accept");
+
+    client_watcher = (ev_io*) malloc (sizeof(ev_io));
+    if (! client_watcher)
+        handle_error("malloc");
+
+    ev_io_init (client_watcher, client_cb, cfd, EV_READ);
+    ev_io_start (EV_A_ client_watcher);
+
+    fprintf(stderr, "accepted connection\n");
+}
+
+static void
+client_cb (EV_P_ ev_io *w, int revents)
 {
     char buf[BUFSIZE];
-    int result;
-    while ((result = recv(sfd, buf, BUFSIZE, 0)) > 0) {
-        send(sfd, buf, result, 0);
+    char* p;
+    ssize_t nread;
+    p = buf;
+    while ((nread = recv(w->fd, p, buf+BUFSIZE-p, 0)) > 0)
+        p += nread;
+    if (nread == 0) {
+        /* Orderly shutdown of the other endpoint */
+        close(w->fd);
+        ev_io_stop(EV_A_ w);
+        /* Not that nice, should first check ev_is_active and ev_is_pending
+         * on the watcher. Maybe tomorrow ;) */
+        free(w);
+        fprintf(stderr, "closed connection\n");
     }
-    if (result == -1)
+    if (nread == -1 && errno != EAGAIN)
+        /* Non-blocking mode so -1 doesn't have to be an error */
         handle_error("recv");
+    if (p != buf)
+        /* We actually received something */
+        send(w->fd, buf, p-buf, 0);
 }
