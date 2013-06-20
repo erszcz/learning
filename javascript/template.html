@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Underscore.js template in action</title>
+
+    <script src="js/jquery-2.0.2.min.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+var hi = _.template("Hi <span style='color: green'><%= name %></span>!");
+var list = _.template("<% _.each(items, function (item) { %> <li><%= item %></li> <% }); %>");
+//var list = "<% _.each(items, function(item) { %> <li><%= item %></li> <% }); %>";
+
+    </script>
+</head>
+<body>
+    <p>My first web page.</p>
+
+    <script type="text/javascript" charset="utf-8">
+document.write(hi({name: "Joe"}));
+document.write("<ul>");
+document.write(list({items: [1,2,3,4,5]}));
+document.write("</ul>");
+//document.write( _.template(list, {items : ['moe', 'curly', 'larry']}) );
+    </script>
+
+    <ul id="the-ul">
+    </ul>
+
+    <script type="text/javascript" charset="utf-8">
+$("#the-ul").html(list({items: ["asd", "qwe", "zxc"]}));
+    </script>
+</body>
+</html>
