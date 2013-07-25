@@ -22,3 +22,10 @@ Given the files in this directory, there's no much else to do:
     ^C^C
     $ erlgrind outfile.fprof outfile.cgrind
     $ qcachegrind outfile.cgrind
+
+It's also possible to trace everything that happens in the system between
+two distinct points in time:
+
+    > fprof:trace([start, file]).
+    %% Code to profile
+    > fprof:trace(stop).
