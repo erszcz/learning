@@ -1,0 +1,37 @@
+diff --git a/src/ejabberd_c2s.erl b/src/ejabberd_c2s.erl
+index be6560f..8050175 100644
+--- a/src/ejabberd_c2s.erl
++++ b/src/ejabberd_c2s.erl
+@@ -1077,6 +1077,7 @@ session_established2(El, StateData) ->
+ 			StateData
+ 		end;
+ 	    _ ->
++		maybe_start_seq_trace(FromJID, ToJID, NewEl),
+ 		case Name of
+ 		    "presence" ->
+ 			PresenceEl = ejabberd_hooks:run_fold(
+@@ -1135,7 +1136,23 @@ session_established2(El, StateData) ->
+     ejabberd_hooks:run(c2s_loop_debug, [{xmlstreamelement, El}]),
+     fsm_next_state(session_established, NewState).
+ 
+-
++maybe_start_seq_trace({jid,"bob","localhost","res1","bob","localhost","res1"},
++		      {jid,[],"localhost",[],[],"localhost",[]},
++		      _) ->
++    start_seq_trace(15),
++    seq_trace;
++maybe_start_seq_trace({jid, "asd", "localhost", "x3", "asd", "localhost", "x3"},
++		      {jid, "qwe", "localhost", [], "qwe", "localhost", []},
++		      {xmlelement, "message", _, _}) ->
++    start_seq_trace(17),
++    seq_trace;
++maybe_start_seq_trace(From, To, Packet) ->
++    no_seq_trace.
++
++start_seq_trace(Label) ->
++    seq_trace:set_token(label, Label),
++    seq_trace:set_token('receive', true),
++    seq_trace:set_token(send, true).
+ 
+ %%----------------------------------------------------------------------
+ %% Func: StateName/3
