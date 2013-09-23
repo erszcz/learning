@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+abspath () {
+    pushd $(dirname $0) > /dev/null
+    P=$(pwd)
+    popd > /dev/null
+    echo $P
+}
+
+PASS=$(abspath $0)/.pass
+
+case "$1" in
+    init)
+        echo "$2" > $PASS
+        ;;
+    echopass)
+        echo $PASS
+        ;;
+    *)
+        cat $PASS
+        ;;
+esac

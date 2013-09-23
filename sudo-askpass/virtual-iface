@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+abspath () {
+    pushd $(dirname $0) > /dev/null
+    P=$(pwd)
+    popd > /dev/null
+    echo $P
+}
+
+export SUDO_ASKPASS=$(abspath $0)/pass
+
+if [ "$(uname)" = Darwin ]; then
+    IFACE=lo0
+    UP=mac_up
+    DOWN=mac_down
+else
+    IFACE=lo
+    UP=linux_up
+    DOWN=linux_down
+fi
+
+INET=127.0.1.1
+
+mac_up () {
+    sudo -A ifconfig "$IFACE" alias "$INET"
+}
+
+mac_down () {
+    sudo -A ifconfig "$IFACE" -alias "$INET"
+}
+
+linux_up () {
+    sudo -A ifconfig "$IFACE:1" add "$INET"
+}
+
+linux_down () {
+    sudo -A ifconfig "$IFACE:1:0" down
+}
+
+case "$1" in
+    up)
+        $UP
+        ;;
+    down)
+        $DOWN
+        ;;
+    *)
+        echo "usage: $0 up|down"
+        echo "Will use interface $IFACE with address $INET"
+        echo "SUDO_ASKPASS set to $SUDO_ASKPASS"
+esac
