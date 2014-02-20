@@ -12,7 +12,8 @@ fn mergesort(a: ~[int], l: uint, r: uint) -> ~[int] {
 
 fn merge(a: ~[int],
          lstart: uint, lend: uint,
-         rstart: uint, rend: uint) -> ~[int] {
+         rstart: uint, rend: uint) -> ~[int]
+{
     assert!(lend < a.len());
     assert!(rend < a.len());
     if lstart >= rend {
@@ -32,18 +33,22 @@ fn merge(a: ~[int],
         }
         k += 1;
     }
-    if k < b.capacity() {
-        while i <= lend {
-            b[k] = a[i];
-            k += 1;
-            i += 1;
-        }
-        while j <= rend {
-            b[k] = a[j];
-            k += 1;
-            j += 1;
-        }
+    assert!(k <= b.capacity());
+    assert!(b.capacity() - k == lend - i + rend - j + 2);
+    while i <= lend {
+        b[k] = a[i];
+        k += 1;
+        i += 1;
     }
+    while j <= rend {
+        b[k] = a[j];
+        k += 1;
+        j += 1;
+    }
+    /* At this moment we must've copied all elements from the left and right
+     * subvectors. */
+    assert!(i-1 == lend);
+    assert!(j-1 == rend);
     let mut c = a;
     i = lstart;
     k = 0;
