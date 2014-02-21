@@ -1,27 +1,24 @@
 use std::vec;
 
-fn mergesort(a: &mut [int], l: uint, r: uint) {
-    if l >= r {
+fn mergesort(a: &mut [int]) {
+    let len = a.len();
+    if len <= 1 {
         return;
     }
-    mergesort(a, l, (l+r) / 2);
-    mergesort(a, (l+r) / 2+1, r);
-    merge(a, l, (l+r) / 2, (l+r) / 2+1, r);
+    mergesort(a.mut_slice(0, len / 2));
+    mergesort(a.mut_slice(len / 2, len));
+    merge(a.mut_slice(0, len));
 }
 
-fn merge(a: &mut [int],
-         lstart: uint, lend: uint,
-         rstart: uint, rend: uint)
-{
-    assert!(lend < a.len());
-    assert!(rend < a.len());
-    if lstart >= rend {
+fn merge(a: &mut [int]) {
+    let alen = a.len();
+    if alen <= 1 {
         return;
     }
-    let mut i = lstart;
-    let mut j = rstart;
-    let mut b: ~[int] = vec::with_capacity(lend - lstart + rend - rstart + 2);
-    while i <= lend && j <= rend {
+    let mut i = 0;
+    let mut j = alen / 2;
+    let mut b: ~[int] = vec::with_capacity(alen);
+    while i < alen / 2 && j < alen {
         if a[i] < a[j] {
             b.push(a[i]);
             i += 1;
@@ -30,14 +27,14 @@ fn merge(a: &mut [int],
             j += 1;
         }
     }
-    assert!(b.capacity() - b.len() == lend - i + rend - j + 2);
-    b = vec::append(b, a.slice(i, lend+1));
-    b = vec::append(b, a.slice(j, rend+1));
+    assert!(b.capacity() - b.len() == alen / 2 - i + alen - j);
+    b = vec::append(b, a.slice(i, alen / 2));
+    b = vec::append(b, a.slice(j, alen));
     /* At this moment we must've copied all elements from the left and right
      * subvectors. */
     assert!(b.len() == b.capacity());
-    let len = b.len();
-    a.mut_slice(lstart, rend+1).move_from(b, 0, len);
+    let blen = b.len();
+    a.mut_slice(0, alen).move_from(b, 0, blen);
 }
 
 #[test]
@@ -50,13 +47,13 @@ fn referential_transparency() {
 #[test]
 fn sorts_sorted() {
     let mut v = ~[1,2,3];
-    mergesort(v, 0, 2);
+    mergesort(v);
     assert!(v == ~[1,2,3])
 }
 
 #[test]
 fn sorts_unsorted() {
     let mut v = ~[3,1,2];
-    mergesort(v, 0, 2);
+    mergesort(v);
     assert!(v == ~[1,2,3])
 }
