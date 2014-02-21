@@ -1,6 +1,6 @@
 use std::vec;
 
-fn mergesort(a: &mut [int]) {
+fn mergesort(a: &mut [u8]) {
     let len = a.len();
     if len <= 1 {
         return;
@@ -10,14 +10,14 @@ fn mergesort(a: &mut [int]) {
     merge(a.mut_slice(0, len));
 }
 
-fn merge(a: &mut [int]) {
+fn merge(a: &mut [u8]) {
     let alen = a.len();
     if alen <= 1 {
         return;
     }
     let mut i = 0;
     let mut j = alen / 2;
-    let mut b: ~[int] = vec::with_capacity(alen);
+    let mut b: ~[u8] = vec::with_capacity(alen);
     while i < alen / 2 && j < alen {
         if a[i] < a[j] {
             b.push(a[i]);
