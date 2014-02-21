@@ -1,7 +1,7 @@
 use std::vec;
 use std::io::File;
 
-fn mergesort(a: &mut [u8]) {
+fn mergesort<T: Clone + Ord>(a: &mut [T]) {
     let len = a.len();
     if len <= 1 {
         return;
@@ -11,20 +11,20 @@ fn mergesort(a: &mut [u8]) {
     merge(a.mut_slice(0, len));
 }
 
-fn merge(a: &mut [u8]) {
+fn merge<T: Clone + Ord>(a: &mut [T]) {
     let alen = a.len();
     if alen <= 1 {
         return;
     }
     let mut i = 0;
     let mut j = alen / 2;
-    let mut b: ~[u8] = vec::with_capacity(alen);
+    let mut b: ~[T] = vec::with_capacity(alen);
     while i < alen / 2 && j < alen {
         if a[i] < a[j] {
-            b.push(a[i]);
+            b.push(a[i].clone());
             i += 1;
         } else {
-            b.push(a[j]);
+            b.push(a[j].clone());
             j += 1;
         }
     }
