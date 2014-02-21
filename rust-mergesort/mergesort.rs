@@ -1,4 +1,5 @@
 use std::vec;
+use std::io::File;
 
 fn mergesort(a: &mut [u8]) {
     let len = a.len();
@@ -56,4 +57,18 @@ fn sorts_unsorted() {
     let mut v = ~[3,1,2];
     mergesort(v);
     assert!(v == ~[1,2,3])
+}
+
+fn main() {
+    let args = std::os::args();
+    if args.len() < 2 {
+        println!("usage: {} file-to-sort", args[0]);
+        return;
+    }
+    let mut contents = File::open(&Path::new(args[1])).read_to_end();
+    mergesort(contents);
+    for &e in contents.iter() {
+        print!("{} ", e);
+    }
+    println!("");
 }
