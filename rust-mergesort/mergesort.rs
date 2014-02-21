@@ -1,23 +1,22 @@
 use std::vec;
 
-fn mergesort(a: ~[int], l: uint, r: uint) -> ~[int] {
+fn mergesort(a: &mut [int], l: uint, r: uint) {
     if l >= r {
-        return a;
+        return;
     }
-    let mut b = a;
-    b = mergesort(b, l, (l+r) / 2);
-    b = mergesort(b, (l+r) / 2+1, r);
-    merge(b, l, (l+r) / 2, (l+r) / 2+1, r)
+    mergesort(a, l, (l+r) / 2);
+    mergesort(a, (l+r) / 2+1, r);
+    merge(a, l, (l+r) / 2, (l+r) / 2+1, r);
 }
 
-fn merge(a: ~[int],
+fn merge(a: &mut [int],
          lstart: uint, lend: uint,
-         rstart: uint, rend: uint) -> ~[int]
+         rstart: uint, rend: uint)
 {
     assert!(lend < a.len());
     assert!(rend < a.len());
     if lstart >= rend {
-        return a;
+        return;
     }
     let mut i = lstart;
     let mut j = rstart;
@@ -37,10 +36,8 @@ fn merge(a: ~[int],
     /* At this moment we must've copied all elements from the left and right
      * subvectors. */
     assert!(b.len() == b.capacity());
-    let mut c = a;
     let len = b.len();
-    c.mut_slice(lstart, rend+1).move_from(b, 0, len);
-    c
+    a.mut_slice(lstart, rend+1).move_from(b, 0, len);
 }
 
 #[test]
@@ -53,13 +50,13 @@ fn referential_transparency() {
 #[test]
 fn sorts_sorted() {
     let mut v = ~[1,2,3];
-    v = mergesort(v, 0, 2);
+    mergesort(v, 0, 2);
     assert!(v == ~[1,2,3])
 }
 
 #[test]
 fn sorts_unsorted() {
     let mut v = ~[3,1,2];
-    v = mergesort(v, 0, 2);
+    mergesort(v, 0, 2);
     assert!(v == ~[1,2,3])
 }
