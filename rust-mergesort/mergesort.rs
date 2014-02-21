@@ -21,42 +21,25 @@ fn merge(a: ~[int],
     }
     let mut i = lstart;
     let mut j = rstart;
-    let mut k = 0;
-    let mut b: ~[int] = vec::from_elem(lend - lstart + rend - rstart + 2, 0);
-    while k < b.capacity() && i <= lend && j <= rend {
+    let mut b: ~[int] = vec::with_capacity(lend - lstart + rend - rstart + 2);
+    while i <= lend && j <= rend {
         if a[i] < a[j] {
-            b[k] = a[i];
+            b.push(a[i]);
             i += 1;
         } else {
-            b[k] = a[j];
+            b.push(a[j]);
             j += 1;
         }
-        k += 1;
     }
-    assert!(k <= b.capacity());
-    assert!(b.capacity() - k == lend - i + rend - j + 2);
-    while i <= lend {
-        b[k] = a[i];
-        k += 1;
-        i += 1;
-    }
-    while j <= rend {
-        b[k] = a[j];
-        k += 1;
-        j += 1;
-    }
+    assert!(b.capacity() - b.len() == lend - i + rend - j + 2);
+    b = vec::append(b, a.slice(i, lend+1));
+    b = vec::append(b, a.slice(j, rend+1));
     /* At this moment we must've copied all elements from the left and right
      * subvectors. */
-    assert!(i-1 == lend);
-    assert!(j-1 == rend);
+    assert!(b.len() == b.capacity());
     let mut c = a;
-    i = lstart;
-    k = 0;
-    while k < b.capacity() && i <= rend {
-        c[i] = b[k];
-        i += 1;
-        k += 1;
-    }
+    let len = b.len();
+    c.mut_slice(lstart, rend+1).move_from(b, 0, len);
     c
 }
 
