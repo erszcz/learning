@@ -20,6 +20,7 @@ int main(int argc, const char *argv[]) {
     if (fread(&_ehdr, sizeof(_ehdr), 1, f) == 0) {
         err(2, "error reading file");
     }
+    fclose(f);
 
     int8_t* e_ident = (int8_t*)_ehdr.ehdr32.e_ident;
     if (e_ident[EI_MAG0] != ELFMAG0 ||
@@ -35,6 +36,7 @@ int main(int argc, const char *argv[]) {
 
     ehdr = (Elf64_Ehdr*)&_ehdr;
     printf("e_entry: 0x%lx\n", ehdr->e_entry);
+    printf("e_entry: 0x%lx\n", (int)ehdr->e_entry);
 
     return 0;
 }
