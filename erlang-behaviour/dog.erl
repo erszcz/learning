@@ -5,6 +5,9 @@
 -export([says/0,
          does/1]).
 
+%% This is not available in Erlang R16+.
+%-extend(animal).
+
 %% These should actually be in a header file for easy reuse.
 -define(FORWARD0(M, F), F() -> M:F()).
 -define(FORWARD1(M, F), F(A1) -> M:F(A1)).
