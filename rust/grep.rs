@@ -16,7 +16,7 @@ fn is_substr(haystack: &str, needle: &str) -> bool {
 }
 
 fn test_is_substr() {
-    print("Testing is_substr... ");
+    print!("Testing is_substr... ");
     let example = "ala ma kota";
     assert!(true == is_substr(" ", ""));
     assert!(true == is_substr(example, "kota"));
@@ -24,15 +24,17 @@ fn test_is_substr() {
     assert!(true == is_substr(example, "a m"));
     assert!(false == is_substr(example, "konia"));
     assert!(false == is_substr(example, "al "));
-    println("ok.");
+    println!("ok.");
 }
 
 fn grep(needle: &str) {
-    let stdin = std::io::stdin();
-    while ! stdin.eof() {
-        let line = stdin.read_line();
-        if is_substr(line, needle) {
-            println(line);
+    for l in std::io::stdin().lines() {
+        match l {
+            Ok(line) =>
+                if is_substr(line, needle) {
+                    print!("{}", line);
+                },
+            Err(_) => {}
         }
     }
 }
