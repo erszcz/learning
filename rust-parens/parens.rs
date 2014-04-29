@@ -17,25 +17,20 @@
 //}
 
 fn is_well_formed(text: &str) -> bool {
-    parse_open(0, text)
+    parse(0, text)
 }
 
-fn parse_open(nesting: uint, text: &str) -> bool {
+fn parse(nesting: int, text: &str) -> bool {
+    if nesting < 0                { return false; }
     if nesting == 0 && text == "" { return true; }
     if text == ""                 { return false; }
-    if text.char_at(0) != '('     { return false; }
-    let new_nesting = nesting + 1;
     let new_slice = text.slice_chars(1, text.len());
-    parse_open(new_nesting, new_slice) || parse_close(new_nesting, new_slice)
-}
-
-fn parse_close(nesting: uint, text: &str) -> bool {
-    //if nesting == 0 && text == "" { return true; }
-    if text == ""                 { return false; }
-    if text.char_at(0) != ')'     { return false; }
-    let new_nesting = nesting - 1;
-    let new_slice = text.slice_chars(1, text.len());
-    parse_open(new_nesting, new_slice) || parse_close(new_nesting, new_slice)
+    let new_nesting = match text.char_at(0) {
+        '(' => nesting + 1,
+        ')' => nesting - 1,
+        ___ => return false
+    };
+    parse(new_nesting, new_slice)
 }
 
 #[test]
