@@ -10,13 +10,11 @@ fn main() {
 }
 
 fn sum_of_divisibles(max: int) -> int {
-  let mut sum = 0;
-  for i in range(1, max) {
-    if is_divisible_by(i, 3) || is_divisible_by(i, 5) { sum += i; }
-  }
-  sum
+  range(1, max)
+    .filter(|x| { is_divisible_by(x, 3) || is_divisible_by(x, 5) })
+    .fold(0, |acc, x| { acc + x })
 }
 
-fn is_divisible_by(num: int, divisor: int) -> bool {
+fn is_divisible_by(num: &int, divisor: int) -> bool {
   num % divisor == 0
 }
