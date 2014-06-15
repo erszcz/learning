@@ -1,10 +1,12 @@
+use std::iter::AdditiveIterator;
 use std::iter::Unfold;
 
 fn main() {
-  for i in fibonacci().take(10) {
-    print!("{} ", i)
-  }
-  println!("")
+  let sum = fibonacci()
+    .take_while(|&e| e < 4_000_000)
+    .filter(is_even)
+    .sum();
+  println!("{}", sum);
 }
 
 fn fibonacci() -> Unfold<uint, FibState> {
@@ -23,3 +25,5 @@ fn fib_next(st: &mut FibState) -> Option<uint> {
   st.next = prev + st.next;
   Some (prev)
 }
+
+fn is_even(i: &uint) -> bool { i % 2 == 0 }
