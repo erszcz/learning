@@ -9,20 +9,15 @@ fn main() {
   println!("{}", sum);
 }
 
-fn fibonacci() -> Unfold<uint, FibState> {
-  let st = FibState{curr: 1, next: 2};
-  Unfold::new(st, fib_next)
+fn fibonacci() -> Unfold<uint, (uint, uint)> {
+  Unfold::new((1, 2), fib_next)
 }
 
-struct FibState {
-  curr: uint,
-  next: uint
-}
-
-fn fib_next(st: &mut FibState) -> Option<uint> {
-  let prev = st.curr;
-  st.curr = st.next;
-  st.next = prev + st.next;
+fn fib_next(st: &mut (uint, uint)) -> Option<uint> {
+  let prev = st.val0();
+  let next = st.val1();
+  *st.mut0() = next;
+  *st.mut1() = prev + next;
   Some (prev)
 }
 
