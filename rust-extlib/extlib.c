@@ -1,4 +1,6 @@
-typedef void (*rust_callback)(int32_t);
+#include <stdint.h>
+
+typedef void (*rust_callback)(void*, int32_t);
 void* cb_target;
 rust_callback cb;
 
