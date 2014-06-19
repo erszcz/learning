@@ -59,38 +59,68 @@ fn parse_members(tokens: &[lexer::Token]) -> ParseResult {
   let mut midpoint = tokens.len();
   'g: loop {
     let tokens_before_midpoint = tokens.slice(0, midpoint);
-    match parse_sexp(tokens_before_midpoint) {
-      Error (_) => {
-        log!(log::INFO, "parse_members: parse_sexp error: {}",
-             tokens_before_midpoint);
-        if midpoint >= 2 {
-          midpoint -= 1;
-          continue 'g
-        } else {
-          return Error ("can't match initial sexp")
-        }
-      },
-      Ok (ref sexp) if midpoint == tokens.len() => {
+    let tokens_past_midpoint = tokens.slice(midpoint, tokens.len());
+    let sexp_result = parse_sexp(tokens_before_midpoint);
+    match parse_members_match(midpoint,
+                              tokens.len(),
+                              tokens_past_midpoint,
+                              sexp_result) {
+      Matched1st (result) => {
         log!(log::INFO, "parse_members: matched 1st rule");
-        return Ok (List (~[sexp.clone()]))
+        return result
       },
-      Ok (ref sexp) => {
+      Matched2nd (result) => {
         log!(log::INFO, "parse_members: matched 2nd rule");
-        let tokens_past_midpoint = tokens.slice(midpoint, tokens.len());
-        match parse_members(tokens_past_midpoint) {
-          Ok (List (inner_members)) => {
-            assert_eq!(1, inner_members.len());
-            let inner_sexp = inner_members[0];
-            return Ok (List (~[sexp.clone(), inner_sexp]))
-          },
-          Ok (Atom (_)) => {
-            log!(log::INFO, "parse_members: inner member can't be an atom");
-            return Error ("parse_members: inner member can't be an atom")
-          }
-          Error (reason) => {
-            log!(log::INFO, "parse_members: inner members error");
-            return Error (reason)
-          }
+        return result
+      },
+      Retry (new_midpoint) => {
+        midpoint = new_midpoint;
+        continue 'g
+      },
+      MatchError (reason) =>
+        return Error (reason)
+    }
+  }
+}
+
+enum ParseMembersResult<'a> {
+  Matched1st (ParseResult<'a>),
+  Matched2nd (ParseResult<'a>),
+  Retry (uint),
+  MatchError (&'a str)
+}
+
+fn parse_members_match(midpoint: uint,
+                       tokens_len: uint,
+                       tokens_past_midpoint: &[lexer::Token],
+                       sexp_result: ParseResult) -> ParseMembersResult {
+  match sexp_result {
+    Error (_) => {
+      if midpoint >= 2 {
+        Retry (midpoint - 1)
+      } else {
+        MatchError ("can't match initial sexp")
+      }
+    },
+    Ok (ref sexp) if midpoint == tokens_len => {
+      let parse_result = Ok (List (~[sexp.clone()]));
+      Matched1st (parse_result)
+    },
+    Ok (ref sexp) => {
+      match parse_members(tokens_past_midpoint) {
+        Ok (List (inner_members)) => {
+          assert_eq!(1, inner_members.len());
+          let inner_sexp = inner_members[0];
+          let members_2nd = Ok (List (~[sexp.clone(), inner_sexp]));
+          Matched2nd (members_2nd)
+        },
+        Ok (Atom (_)) => {
+          log!(log::INFO, "parse_members: inner member can't be an atom");
+          MatchError ("parse_members: inner member can't be an atom")
+        }
+        Error (_) => {
+          log!(log::INFO, "parse_members: inner members error");
+          MatchError ("parse_members: inner members error")
         }
       }
     }
