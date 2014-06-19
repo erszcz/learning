@@ -154,3 +154,9 @@ fn test_parse_3() {
   assert_eq!(List (~[List (~[Atom (~"asd")]), Atom (~"qwe")]),
              tokeparse("((asd) qwe)"));
 }
+
+#[test]
+fn test_parse_4() {
+  assert_eq!(List (~[List (~[Atom (~"asd")]), List (~[Atom (~"qwe")])]),
+             tokeparse("((asd) (qwe))"));
+}
