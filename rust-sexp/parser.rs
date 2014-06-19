@@ -32,8 +32,10 @@ enum ParseResult<'a> {
 fn parse_sexp(tokens: &[Token]) -> ParseResult {
   log!(log::INFO, "parse_sexp: {}", tokens);
   match tokens {
-    [] =>
-      Error ("no tokens"),
+    [] => {
+      log!(log::INFO, "parse_sexp: no tokens");
+      Error ("no tokens")
+    },
     [ATOM (ref atom)] =>
       Ok (Atom (atom.to_owned())),
     _ =>
@@ -49,8 +51,10 @@ fn parse_list(tokens: &[lexer::Token]) -> ParseResult {
       Ok (List (~[])),
     _ if tokens[0] == LPAREN && tokens[last] == RPAREN =>
       parse_members(tokens.slice(1, last)),
-    _ =>
+    _ => {
+      log!(log::INFO, "parse_list: tokens do not form a list");
       Error ("parse_list: tokens do not form a list")
+    }
   }
 }
 
@@ -99,7 +103,8 @@ fn parse_members_match(midpoint: uint,
       if midpoint >= 2 {
         Retry (midpoint - 1)
       } else {
-        MatchError ("can't match initial sexp")
+        log!(log::INFO, "parse_members: can't match initial sexp");
+        MatchError ("parse_members: can't match initial sexp")
       }
     },
     Ok (ref sexp) if midpoint == tokens_len => {
