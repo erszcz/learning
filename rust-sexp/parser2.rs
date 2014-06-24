@@ -1,35 +1,35 @@
 #![feature(phase, globs)]
-#[phase(syntax, link)] extern crate log;
+#[phase(plugin, link)] extern crate log;
 
-fn tokenize(s: &str) -> ~[&str] {
-    let t = std::str::replace(s, "(", " ( ");
-    let u = std::str::replace(t, ")", " ) ");
-    u.words().collect()
+fn tokenize(s: &str) -> Vec<&str> {
+    let t = std::str::replace(s.as_slice(), "(", " ( ");
+    let u = std::str::replace(t.as_slice(), ")", " ) ");
+    u.as_slice().words().collect()
 }
 
-#[deriving(Eq, Show, Clone)]
+#[deriving(PartialEq, Eq, Show, Clone)]
 pub enum SExp {
-    Atom (~str),
-    List (~[SExp])
+    Atom (Box<String>),
+    List (Vec<SExp>)
 }
 
-fn parse(tokens: ~[&str]) -> SExp {
+fn parse(tokens: Vec<&str>) -> SExp {
     log!(log::INFO, "parse({})", tokens);
     println!("tokens = {}", tokens);
     let (_, sexp) = do_parse(0, tokens);
     sexp
 }
 
-fn do_parse(mut i: uint, tokens: &[&str]) -> (uint, SExp) {
+fn do_parse(mut i: uint, tokens: Vec<&str>) -> (uint, SExp) {
     log!(log::INFO, "do_parse({}, {})", i, tokens);
     if tokens.is_empty() { fail!("unexpected EOF") }
-    let token = tokens[i];
+    let token = *tokens.get(i);
     if token == ")" { fail!("unexpected )") }
-    if token != "(" { return ( 1, Atom (token.to_owned()) ) }
-    let mut sexps: ~[SExp] = ~[];
+    if token != "(" { return ( 1, Atom (box token.to_owned()) ) }
+    let mut sexps: Vec<SExp> = Vec::new();
     i += 1;
-    while tokens[i] != ")" {
-        log!(log::INFO, "tokens[{}] = '{}'", i, tokens[i]);
+    while *tokens.get(i) != ")" {
+        log!(log::INFO, "tokens[{}] = '{}'", i, tokens.get(i));
         let (n, sexp) = do_parse(i, tokens);
         sexps.push(sexp);
         i += n;
@@ -39,13 +39,13 @@ fn do_parse(mut i: uint, tokens: &[&str]) -> (uint, SExp) {
 
 #[test]
 fn tokenize_test() {
-    assert_eq!(~["(", "set!", "a",
-                      "(", "*", "(", "+", "1", "2", ")", "3", ")", ")"],
+    assert_eq!(vec!["(", "set!", "a",
+                         "(", "*", "(", "+", "1", "2", ")", "3", ")", ")"],
                tokenize("(set! a (* (+ 1 2) 3))"));
-    assert_eq!(~["(", ")", "asd"], tokenize("()asd"));
-    assert_eq!(~["asd"], tokenize("asd"));
-    assert_eq!(~["asd", "qwe"], tokenize("asd qwe"));
-    assert_eq!(~["asd", ")", "(", "qwe"], tokenize("asd)(qwe"));
+    assert_eq!(vec!["(", ")", "asd"], tokenize("()asd"));
+    assert_eq!(vec!["asd"], tokenize("asd"));
+    assert_eq!(vec!["asd", "qwe"], tokenize("asd qwe"));
+    assert_eq!(vec!["asd", ")", "(", "qwe"], tokenize("asd)(qwe"));
 }
 
 fn tokeparse(s: &str) -> SExp {
@@ -54,25 +54,26 @@ fn tokeparse(s: &str) -> SExp {
 
 #[test]
 fn test_parse_1() {
-  assert_eq!(Atom (~"asd"), tokeparse("asd"));
+  assert_eq!(Atom (box "asd".to_string()), tokeparse("asd"));
 }
 
 #[test]
 fn test_parse_2() {
-  let tokens = tokenize(~"(asd qwe)");
+  let tokens = tokenize("(asd qwe)");
   println!("test_parse_2: tokens = {}", tokens);
-  assert_eq!(List (~[Atom (~"asd"), Atom (~"qwe")]),
+  assert_eq!(List (vec![Atom (box "asd".to_string()), Atom (box "qwe".to_string())]),
              parse(tokens));
 }
 
 #[test]
 fn test_parse_3() {
-  assert_eq!(List (~[List (~[Atom (~"asd")]), Atom (~"qwe")]),
+  assert_eq!(List (vec![List (vec![Atom (box "asd".to_string())]), Atom (box "qwe".to_string())]),
              tokeparse("((asd) qwe)"));
 }
 
 #[test]
 fn test_parse_4() {
-  assert_eq!(List (~[List (~[Atom (~"asd")]), List (~[Atom (~"qwe")])]),
+  assert_eq!(List (vec![List (vec![Atom (box "asd".to_string())]),
+                        List (vec![Atom (box "qwe".to_string())])]),
              tokeparse("((asd) (qwe))"));
 }
