@@ -13,15 +13,11 @@ pub enum SExp {
 }
 
 fn parse(tokens: Vec<String>) -> SExp {
-    //log!(log::INFO, "call parse({})", tokens);
     let (_, sexp) = do_parse(0, &tokens);
-    //log!(log::INFO, "ret parse({}) -> {}", tokens, sexp.clone());
     sexp
 }
 
 fn do_parse(mut i: uint, tokens: &Vec<String>) -> (uint, SExp) {
-    //let saved_i = i;
-    //log!(log::INFO, "call do_parse({}, {})", i, tokens);
     if tokens.is_empty() { fail!("unexpected EOF") }
     let token = tokens.get(i);
     if *token == ")".to_string() { fail!("unexpected )") }
@@ -30,17 +26,11 @@ fn do_parse(mut i: uint, tokens: &Vec<String>) -> (uint, SExp) {
     i += 1;
     let mut ntotal = 2;
     while i < tokens.len() && *tokens.get(i) != ")".to_string() {
-        //log!(log::INFO, "tokens[{}] = '{}'", i, tokens.get(i));
         let (n, sexp) = do_parse(i, tokens);
-        //log!(log::INFO, "(n, sexp) = ({}, {})", n, sexp);
         sexps.push(sexp);
-        //log!(log::INFO, "sexps = {}", sexps);
-        //log!(log::INFO, "i = {}, i+n = {}", i, i+n);
         ntotal += n;
         i += n;
     }
-    //log!(log::INFO, "ret do_parse({}, {}) -> ({}, {})",
-    //                saved_i, tokens, ntotal, List (sexps.clone()));
     (ntotal, List (sexps))
 }
 
