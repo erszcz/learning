@@ -1,167 +1,154 @@
 #![feature(phase, globs)]
-#[phase(syntax, link)] extern crate log;
+#[phase(plugin, link)] extern crate log;
 
-// S Expression Parser
-//
-// This parser should correspond to the following grammar:
-//
-// sexp :: ATOM
-//       | list
-// list :: LPAREN members RPAREN
-//       | LPAREN RPAREN
-// members :: sexp
-//          | sexp members
-//
-// Terminals: ATOM LPAREN RPAREN
-
-use lexer::*;
-mod lexer;
-
-#[deriving(Eq, Show, Clone)]
-enum SExp {
-  Atom (~str),
-  List (~[SExp])
+fn tokenize(r: &str) -> Vec<String> {
+    r.to_string().replace("(", " ( ").replace(")", " ) ")
+     .as_slice().words().map(|s| s.to_string()).collect()
 }
 
-#[deriving(Eq, Show)]
-enum ParseResult<'a> {
-  Ok (SExp),
-  Error (&'a str)
+#[deriving(PartialEq, Eq, Show, Clone)]
+pub enum SExp {
+    Atom (Box<String>),
+    List (Vec<SExp>)
 }
 
-fn parse_sexp(tokens: &[Token]) -> ParseResult {
-  log!(log::INFO, "parse_sexp: {}", tokens);
-  match tokens {
-    [] => {
-      log!(log::INFO, "parse_sexp: no tokens");
-      Error ("no tokens")
-    },
-    [ATOM (ref atom)] =>
-      Ok (Atom (atom.to_owned())),
-    _ =>
-      parse_list(tokens)
-  }
+fn parse(tokens: Vec<String>) -> SExp {
+    let (_, sexp) = do_parse(0, &tokens);
+    sexp
 }
 
-fn parse_list(tokens: &[lexer::Token]) -> ParseResult {
-  log!(log::INFO, "parse_list: {}", tokens);
-  let last = tokens.len()-1;
-  match tokens {
-    [LPAREN, RPAREN] =>
-      Ok (List (~[])),
-    _ if tokens[0] == LPAREN && tokens[last] == RPAREN =>
-      parse_members(tokens.slice(1, last)),
-    _ => {
-      log!(log::INFO, "parse_list: tokens do not form a list");
-      Error ("parse_list: tokens do not form a list")
+fn do_parse(mut i: uint, tokens: &Vec<String>) -> (uint, SExp) {
+    if tokens.is_empty() { fail!("unexpected EOF") }
+    let token = tokens.get(i);
+    if *token == ")".to_string() { fail!("unexpected )") }
+    if *token != "(".to_string() { return ( 1, Atom (box token.to_string()) ) }
+    let mut sexps: Vec<SExp> = Vec::new();
+    i += 1;
+    let mut ntotal = 2;
+    while i < tokens.len() && *tokens.get(i) != ")".to_string() {
+        let (n, sexp) = do_parse(i, tokens);
+        sexps.push(sexp);
+        ntotal += n;
+        i += n;
     }
-  }
+    (ntotal, List (sexps))
 }
 
-fn parse_members(tokens: &[lexer::Token]) -> ParseResult {
-  log!(log::INFO, "parse_members: {}", tokens);
-  let mut midpoint = tokens.len();
-  'g: loop {
-    let tokens_before_midpoint = tokens.slice(0, midpoint);
-    let tokens_past_midpoint = tokens.slice(midpoint, tokens.len());
-    let sexp_result = parse_sexp(tokens_before_midpoint);
-    match parse_members_match(midpoint,
-                              tokens.len(),
-                              tokens_past_midpoint,
-                              sexp_result) {
-      Matched1st (result) => {
-        log!(log::INFO, "parse_members: matched 1st rule");
-        return result
-      },
-      Matched2nd (result) => {
-        log!(log::INFO, "parse_members: matched 2nd rule");
-        return result
-      },
-      Retry (new_midpoint) => {
-        midpoint = new_midpoint;
-        continue 'g
-      },
-      MatchError (reason) =>
-        return Error (reason)
-    }
-  }
+// needed for tests
+fn tokens(a: &[&str]) -> Vec<String> {
+    a.iter().map(|s| s.to_string()).collect()
 }
 
-enum ParseMembersResult<'a> {
-  Matched1st (ParseResult<'a>),
-  Matched2nd (ParseResult<'a>),
-  Retry (uint),
-  MatchError (&'a str)
+fn atom(s: &str) -> SExp {
+    Atom (box s.to_string())
 }
 
-fn parse_members_match(midpoint: uint,
-                       tokens_len: uint,
-                       tokens_past_midpoint: &[lexer::Token],
-                       sexp_result: ParseResult) -> ParseMembersResult {
-  match sexp_result {
-    Error (_) => {
-      if midpoint >= 2 {
-        Retry (midpoint - 1)
-      } else {
-        log!(log::INFO, "parse_members: can't match initial sexp");
-        MatchError ("parse_members: can't match initial sexp")
-      }
-    },
-    Ok (ref sexp) if midpoint == tokens_len => {
-      let parse_result = Ok (List (~[sexp.clone()]));
-      Matched1st (parse_result)
-    },
-    Ok (ref sexp) => {
-      match parse_members(tokens_past_midpoint) {
-        Ok (List (inner_members)) => {
-          assert_eq!(1, inner_members.len());
-          let inner_sexp = inner_members[0];
-          let members_2nd = Ok (List (~[sexp.clone(), inner_sexp]));
-          Matched2nd (members_2nd)
-        },
-        Ok (Atom (_)) => {
-          log!(log::INFO, "parse_members: inner member can't be an atom");
-          MatchError ("parse_members: inner member can't be an atom")
-        }
-        Error (_) => {
-          log!(log::INFO, "parse_members: inner members error");
-          MatchError ("parse_members: inner members error")
-        }
-      }
-    }
-  }
+fn list(sexps: &[SExp]) -> SExp {
+    List ( sexps.iter().map(|sexp| sexp.clone()).collect() )
 }
 
-fn unwrap(parse_result: ParseResult) -> SExp {
-  match parse_result {
-    Ok (sexp) => sexp,
-    Error (reason) => fail!(reason.to_owned())
+#[test]
+fn tokenize_test() {
+    assert_eq!(tokens(["(", "set!", "a",
+                            "(", "*", "(", "+", "1", "2", ")", "3", ")", ")"]),
+               tokenize("(set! a (* (+ 1 2) 3))"));
+    assert_eq!(tokens(["(", ")", "asd"]), tokenize("()asd"));
+    assert_eq!(tokens(["asd"]), tokenize("asd"));
+    assert_eq!(tokens(["asd", "qwe"]), tokenize("asd qwe"));
+    assert_eq!(tokens(["asd", ")", "(", "qwe"]), tokenize("asd)(qwe"));
   }
-}
 
 fn tokeparse(s: &str) -> SExp {
-  unwrap( parse_sexp( lexer::tokenize(s) ) )
+  parse(tokenize(s))
 }
 
 #[test]
 fn test_parse_1() {
-  assert_eq!(Atom (~"asd"), tokeparse("asd"));
+  assert_eq!(atom("asd"), tokeparse("asd"));
 }
 
 #[test]
 fn test_parse_2() {
-  assert_eq!(List (~[Atom (~"asd"), Atom (~"qwe")]),
-             tokeparse("(asd qwe)"));
+  let tokens = tokenize("(asd qwe)");
+  println!("test_parse_2: tokens = {}", tokens);
+  assert_eq!(list ([atom ("asd"), atom ("qwe")]),
+             parse(tokens));
 }
 
 #[test]
 fn test_parse_3() {
-  assert_eq!(List (~[List (~[Atom (~"asd")]), Atom (~"qwe")]),
+  assert_eq!(list ([list ([atom ("asd")]), atom ("qwe")]),
              tokeparse("((asd) qwe)"));
 }
 
 #[test]
 fn test_parse_4() {
-  assert_eq!(List (~[List (~[Atom (~"asd")]), List (~[Atom (~"qwe")])]),
+  assert_eq!(list ([list ([atom ("asd")]),
+                    list ([atom ("qwe")])]),
              tokeparse("((asd) (qwe))"));
+}
+
+#[test]
+fn test_parse_5() {
+  assert_eq!(list ([atom ("asd"),
+                    atom ("qwe"),
+                    atom ("zxc"),
+                    atom ("fgh")]),
+             tokeparse("(asd qwe zxc fgh)"));
+}
+
+#[test]
+fn test_parse_6() {
+  assert_eq!(list ([atom ("asd"),
+                    atom ("qwe"),
+                    atom ("zxc"),
+                    list ([atom ("fgh")])]),
+             tokeparse("(asd qwe zxc (fgh))"));
+}
+
+#[test]
+fn test_parse_7() {
+  assert_eq!(list ([list ([atom ("zxc")]),
+                    list ([atom ("fgh")])]),
+             tokeparse("((zxc) (fgh))"));
+}
+
+#[test]
+fn test_parse_8() {
+  assert_eq!(list ([atom ("zxc"),
+                    list ([atom ("fgh")])]),
+             tokeparse("(zxc (fgh))"));
+}
+
+#[test]
+fn test_parse_9() {
+  assert_eq!(list ([atom ("qwe"),
+                    atom ("zxc"),
+                    list ([atom ("fgh")])]),
+             tokeparse("(qwe zxc (fgh))"));
+}
+
+#[test]
+fn test_parse_10() {
+  assert_eq!(list ([atom ("qwe"),
+                    list ([atom ("zxc")]),
+                    list ([atom ("fgh")])]),
+             tokeparse("(qwe (zxc) (fgh))"));
+}
+
+#[test]
+fn test_parse_11() {
+  assert_eq!(list ([atom ("qwe"),
+                    list ([atom ("zxc"), atom ("bnm")]),
+                    list ([atom ("fgh")])]),
+             tokeparse("(qwe (zxc bnm) (fgh))"));
+}
+
+#[test]
+fn test_parse_12() {
+  assert_eq!(list ([atom ("+"),
+                    list ([atom ("*"), atom ("2"), atom ("3")]),
+                    list ([atom ("/"), atom ("12"), atom ("4")]),
+                    list ([atom ("magic-constant-lookup")])]),
+             tokeparse("(+ (* 2 3) (/ 12 4) (magic-constant-lookup))"));
 }
