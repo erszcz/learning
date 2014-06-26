@@ -5,11 +5,11 @@ use std::fmt::Formatter;
 use std::fmt::Result;
 use std::fmt::Show;
 
-fn atom(s: &str) -> SExp {
+pub fn atom(s: &str) -> SExp {
     Atom (box s.to_string())
 }
 
-fn list(sexps: &[SExp]) -> SExp {
+pub fn list(sexps: &[SExp]) -> SExp {
     List ( sexps.iter().map(|sexp| sexp.clone()).collect() )
 }
 

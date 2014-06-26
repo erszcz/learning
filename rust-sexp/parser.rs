@@ -1,15 +1,14 @@
 #![feature(phase, globs)]
 #[phase(plugin, link)] extern crate log;
 
+use sexp::SExp;
+use sexp::atom;
+use sexp::list;
+mod sexp;
+
 fn tokenize(r: &str) -> Vec<String> {
     r.to_string().replace("(", " ( ").replace(")", " ) ")
      .as_slice().words().map(|s| s.to_string()).collect()
-}
-
-#[deriving(PartialEq, Eq, Show, Clone)]
-pub enum SExp {
-    Atom (Box<String>),
-    List (Vec<SExp>)
 }
 
 fn parse(tokens: Vec<String>) -> SExp {
@@ -21,7 +20,7 @@ fn do_parse(mut i: uint, tokens: &Vec<String>) -> (uint, SExp) {
     if tokens.is_empty() { fail!("unexpected EOF") }
     let token = tokens.get(i);
     if *token == ")".to_string() { fail!("unexpected )") }
-    if *token != "(".to_string() { return ( 1, Atom (box token.to_string()) ) }
+    if *token != "(".to_string() { return ( 1, sexp::Atom (box token.to_string()) ) }
     let mut sexps: Vec<SExp> = Vec::new();
     i += 1;
     let mut ntotal = 2;
@@ -31,20 +30,12 @@ fn do_parse(mut i: uint, tokens: &Vec<String>) -> (uint, SExp) {
         ntotal += n;
         i += n;
     }
-    (ntotal, List (sexps))
+    (ntotal, sexp::List (sexps))
 }
 
 // needed for tests
 fn tokens(a: &[&str]) -> Vec<String> {
     a.iter().map(|s| s.to_string()).collect()
-}
-
-fn atom(s: &str) -> SExp {
-    Atom (box s.to_string())
-}
-
-fn list(sexps: &[SExp]) -> SExp {
-    List ( sexps.iter().map(|sexp| sexp.clone()).collect() )
 }
 
 #[test]
