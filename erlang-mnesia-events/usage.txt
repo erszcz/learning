@@ -1,0 +1,6 @@
+c(mnesia_helper), c(mnesia_listener).
+rr(mnesia_helper).
+mnesia_helper:setup().
+mnesia_listener:start().
+F = fun() -> mnesia:write(#some_record{name=john, value=doe}) end.
+mnesia:transaction(F).
