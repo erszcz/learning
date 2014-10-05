@@ -1,0 +1,12 @@
+[package]
+name = "plchecker"
+version = "0.0.1"
+authors = ["Radek Szymczyszyn <lavrin@gmail.com>"]
+
+[lib]
+name = "nlp"
+path = "src/nlp/lib.rs"
+
+[[bin]]
+name = "plchecker"
+path = "src/bin/plchecker.rs"
