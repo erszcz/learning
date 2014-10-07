@@ -6,12 +6,15 @@ pub fn levenshtein(s: &str, t: &str) -> uint {
     let mut d: Vec<Vec<uint>> = Vec::from_elem(m+1, Vec::from_elem(n+1, 0u));
     for i in range(0u, m+1) { *d.get_mut(i).get_mut(0) = i; }
     for j in range(0u, n+1) { *d.get_mut(0).get_mut(j) = j; }
-    for j in range(1, n+1) {
-        for i in range(1, m+1) {
-            if s.char_at(i-1) == t.char_at(j-1) {
+    let mut j = 0;
+    for q in t.chars() {
+        j += 1;
+        let mut i = 0;
+        for p in s.chars() {
+            i += 1;
+            if p == q {
                 // no operation required
-                let mut e = d[i][j];
-                e = d[i-1][j-1];
+                *d.get_mut(i).get_mut(j) = d[i-1][j-1];
             }
             else {
                 *d.get_mut(i).get_mut(j) = min(min(// a deletion
