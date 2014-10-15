@@ -62,9 +62,9 @@ impl<'a> Word<'a> {
         word_distances.sort_by(|&(_,a), &(_,b)| a.cmp(b));
         word_distances
             .iter()
-            .map(|&(word, score)|
-                 Correction { word: word.to_string(),
-                              score: *score }).take(n).collect()
+            .map(|&(word, score)| Correction { word: word.to_string(),
+                                               score: *score })
+            .take(n).collect()
     }
 
     fn calculate_distances(&mut self) {

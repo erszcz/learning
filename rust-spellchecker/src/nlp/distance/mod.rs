@@ -15,8 +15,7 @@ pub fn levenshtein(s: &str, t: &str) -> uint {
             if p == q {
                 // no operation required
                 *d.get_mut(i).get_mut(j) = d[i-1][j-1];
-            }
-            else {
+            } else {
                 *d.get_mut(i).get_mut(j) = min(min(// a deletion
                                                    d[i-1][j] + 1u,
                                                    // an insertion
