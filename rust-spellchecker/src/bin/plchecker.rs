@@ -14,8 +14,7 @@ struct Dict {
 
 impl Dict {
 
-    fn new(p: &str) -> Dict {
-        let path = Path::new(p);
+    fn from_file(path: Path) -> Dict {
         let mut file = BufferedReader::new(File::open(&path));
         let lines: Vec<String> = file.lines().map(|x| {
             x.unwrap().as_slice().trim().to_string()
@@ -85,7 +84,7 @@ struct Correction {
 }
 
 fn main() {
-    let dict = Dict::new(DATA_PATH);
+    let dict = Dict::from_file(Path::new(DATA_PATH));
     let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
     let ncorrections = 5u;
     if to_check.is_valid()
