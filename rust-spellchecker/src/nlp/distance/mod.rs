@@ -1,11 +1,14 @@
 use std::cmp::min;
 
 pub fn levenshtein(s: &str, t: &str) -> uint {
+    // Prepare empty 2D vector.
     let m = s.char_len();
     let n = t.char_len();
     let mut d: Vec<Vec<uint>> = Vec::from_elem(m+1, Vec::from_elem(n+1, 0u));
+    // Set the boundary condition.
     for i in range(0u, m+1) { *d.get_mut(i).get_mut(0) = i; }
     for j in range(0u, n+1) { *d.get_mut(0).get_mut(j) = j; }
+    // Calculate the distance.
     let mut j = 0;
     for q in t.chars() {
         j += 1;
