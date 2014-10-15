@@ -1,8 +1,12 @@
+#![feature(phase)]
+#[phase(plugin, link)] extern crate log;
 extern crate nlp;
+extern crate time;
 
 use std::io::BufferedReader;
 use std::io::File;
 use std::slice::Items;
+use time::precise_time_ns;
 
 use nlp::distance::levenshtein as distance;
 
@@ -84,19 +88,36 @@ struct Correction {
 }
 
 fn main() {
+
+    info!("building the dictionary from {:s}", DATA_PATH);
+    let ns_build_start = precise_time_ns();
+
     let dict = Dict::from_file(Path::new(DATA_PATH));
+
+    let ns_build_elapsed = precise_time_ns() - ns_build_start;
+    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
+
     let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
     let ncorrections = 5u;
     if to_check.is_valid()
         { println!("ok!") }
     else {
         println!("not a valid word");
+
+        info!("checking for corrections");
+        let ns_check_start = precise_time_ns();
+
         to_check.calculate_distances();
+
         println!("did you mean?");
         for correction in to_check.best_corrections(ncorrections).iter() {
             println!("- {:s} ({:u})",
                      correction.word.as_slice(),
                      correction.score);
         }
+
+        let ns_check_elapsed = precise_time_ns() - ns_check_start;
+        info!("checking for corrections took {:u}ms",
+              ns_check_elapsed / 1000 / 1000);
     }
 }
