@@ -80,48 +80,28 @@ impl<'a> Word<'a> {
         self.distances = Some(distances)
     }
 
-    fn mutations(&self) -> WordMutations {
-        let mut mutations = WordMutations { original: self.word.to_string(),
-                                            mutation: vec!(),
-                                            idx: 0 };
-        mutations.reset();
-        mutations
+    fn shortenings(&self) -> WordShortenings {
+        WordShortenings { word: self.word.to_utf16(),
+                          idx: 0 }
     }
 
 }
 
-//fn mutate_word<'a>(word: &'a String) -> Iterator<'a, String> {
-//    let mutated = MutatedWord { u16_word: word.to_utf16() };
-//    let v = vec!(String::from_utf16(mutated.u16_word.as_slice()).unwrap());
-//    v.items()
-//}
-
-struct WordMutations {
-    original: String,
-    mutation: Vec<u16>,
+struct WordShortenings {
+    word: Vec<u16>,
     idx: uint
 }
 
-impl WordMutations {
-
-    fn reset(&mut self) {
-        self.mutation = self.original.to_utf16();
-        self.idx = 0;
-    }
-
-}
-
-impl Iterator<String> for WordMutations {
+impl Iterator<String> for WordShortenings {
 
     fn next(&mut self) -> Option<String> {
-        if self.idx > self.mutation.len()
+        if self.idx >= self.word.len()
             { None }
         else {
-            let idx = self.idx;
-            self.reset();
-            self.idx = idx + 1;
-            self.mutation.remove(idx);
-            String::from_utf16(self.mutation.as_slice())
+            let mut shortened = Vec::from_slice(self.word.as_slice());
+            shortened.remove(self.idx);
+            self.idx += 1;
+            String::from_utf16(shortened.as_slice())
         }
     }
 
@@ -147,7 +127,7 @@ struct Correction {
 fn main() {
     let dict = Dict::from_file(Path::new(DATA_PATH));
     let w = Word::new( std::os::args()[1].as_slice(), &dict );
-    for mutation in w.mutations()
+    for mutation in w.shortenings()
         { println!("{:s}", mutation.as_slice()); }
 }
 
