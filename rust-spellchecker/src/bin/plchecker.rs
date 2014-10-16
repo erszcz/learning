@@ -98,10 +98,12 @@ impl Iterator<String> for WordShortenings {
         if self.idx >= self.word.len()
             { None }
         else {
-            let mut shortened = Vec::from_slice(self.word.as_slice());
-            shortened.remove(self.idx);
+            let i = self.idx;
             self.idx += 1;
-            String::from_utf16(shortened.as_slice())
+            let prefix = self.word.iter().take(i).map(|c|*c);
+            let suffix = self.word.tailn(i+1).iter().map(|c|*c);
+            let short : Vec<u16> = prefix.chain(suffix).collect();
+            String::from_utf16(short.as_slice())
         }
     }
 
