@@ -92,8 +92,14 @@ impl<'a> Word<'a> {
                       letters: alphabet()}
     }
 
-    fn mutations(&self) -> Chain<ShorterWords, LongerWords> {
-        self.shorter().chain(self.longer())
+    fn equal(&self) -> EqualWords {
+        EqualWords { word: self.word.as_slice().utf16_units().collect(),
+                     idx: 0,
+                     letters: alphabet()}
+    }
+
+    fn mutations(&self) -> Chain<Chain<ShorterWords, LongerWords>, EqualWords> {
+        self.shorter().chain(self.longer()).chain(self.equal())
     }
 
 }
@@ -144,25 +150,57 @@ impl<'a> Iterator<String> for LongerWords<'a> {
     fn next(&mut self) -> Option<String> {
         match self.letters.next() {
             Some (l) => {
-                make_longer(&self.word, self.idx, l)
+                embed(&self.word, self.idx, self.idx,
+                      std::iter::iterate(l, |e| e).take(1))
             }
             None => {
                 self.idx += 1;
                 if self.idx > self.word.len()
                     { return None }
                 self.letters = alphabet();
-                make_longer(&self.word, self.idx, self.letters.next().unwrap())
+                embed(&self.word, self.idx, self.idx,
+                      std::iter::iterate(self.letters.next().unwrap(),
+                                         |e| e).take(1))
             }
         }
     }
 
 }
 
-fn make_longer(word: &Vec<u16>, idx: uint, letter: u16) -> Option<String> {
-    let mut longer : Vec<u16> = Vec::with_capacity(1 + word.len());
-    longer.extend(word.iter().map(|c| *c));
-    longer.insert(idx, letter);
-    String::from_utf16(longer.as_slice())
+struct EqualWords<'a> {
+    word: Vec<u16>,
+    idx: uint,
+    letters: Unfold<'a, u16, (uint, Vec<u16>)>
+}
+
+impl<'a> Iterator<String> for EqualWords<'a> {
+
+    fn next(&mut self) -> Option<String> {
+        match self.letters.next() {
+            Some (l) => {
+                embed(&self.word, self.idx, self.idx+1,
+                      std::iter::iterate(l, |e| e).take(1))
+            }
+            None => {
+                self.idx += 1;
+                if self.idx >= self.word.len()
+                    { return None }
+                self.letters = alphabet();
+                embed(&self.word, self.idx, self.idx+1,
+                      std::iter::iterate(self.letters.next().unwrap(),
+                                         |e| e).take(1))
+            }
+        }
+    }
+
+}
+
+fn embed<I: Iterator<u16>>(word: &Vec<u16>, from: uint, to: uint, infix: I)
+        -> Option<String> {
+    let prefix = word.iter().take(from).map(|c| *c);
+    let suffix = word.slice_from(to).iter().map(|c| *c);
+    let short : Vec<u16> = prefix.chain(infix).chain(suffix).collect();
+    String::from_utf16(short.as_slice())
 }
 
 struct Correction {
@@ -171,36 +209,15 @@ struct Correction {
 }
 
 fn main() {
-
-    info!("building the dictionary from {:s}", DATA_PATH);
-    let ns_build_start = precise_time_ns();
-
     let dict = Dict::from_file(Path::new(DATA_PATH));
-
-    let ns_build_elapsed = precise_time_ns() - ns_build_start;
-    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
-
-    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
-    let ncorrections = 5u;
-    if to_check.is_valid()
-        { println!("ok!") }
-    else {
-        println!("not a valid word");
-
-        info!("checking for corrections");
-        let ns_check_start = precise_time_ns();
-
-        to_check.calculate_distances();
-
-        println!("did you mean?");
-        for correction in to_check.best_corrections(ncorrections).iter() {
-            println!("- {:s} ({:u})",
-                     correction.word.as_slice(),
-                     correction.score);
-        }
-
-        let ns_check_elapsed = precise_time_ns() - ns_check_start;
-        info!("checking for corrections took {:u}ms",
-              ns_check_elapsed / 1000 / 1000);
-    }
+    let w = Word::new( std::os::args()[1].as_slice(), &dict );
+    //println!("shorter words:");
+    //for mutation in w.shorter()
+    //    { println!("{:s}", mutation.as_slice()); }
+    println!("longer words:");
+    for mutation in w.longer()
+        { println!("{:s}", mutation.as_slice()); }
+    println!("equal words:");
+    for mutation in w.equal()
+        { println!("{:s}", mutation.as_slice()); }
 }
