@@ -9,11 +9,9 @@ pub fn levenshtein(s: &str, t: &str) -> uint {
     for i in range(0u, m+1) { *d.get_mut(i).get_mut(0) = i; }
     for j in range(0u, n+1) { *d.get_mut(0).get_mut(j) = j; }
     // Calculate the distance.
-    let mut j = 0;
-    for q in t.chars() {
+    for (mut j, q) in t.chars().enumerate() {
         j += 1;
-        let mut i = 0;
-        for p in s.chars() {
+        for (mut i, p) in s.chars().enumerate() {
             i += 1;
             if p == q {
                 // no operation required
