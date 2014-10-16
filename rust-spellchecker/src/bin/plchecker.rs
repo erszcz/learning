@@ -176,7 +176,7 @@ impl<'a> Iterator<String> for LongerWords<'a> {
     fn next(&mut self) -> Option<String> {
         match self.letters.next() {
             Some (l) => {
-                embed(&self.word, self.idx, self.idx,
+                embed(self.word.as_slice(), self.idx, self.idx,
                       std::iter::iterate(l, |e| e).take(1))
             }
             None => {
@@ -184,7 +184,7 @@ impl<'a> Iterator<String> for LongerWords<'a> {
                 if self.idx > self.word.len()
                     { return None }
                 self.letters = alphabet();
-                embed(&self.word, self.idx, self.idx,
+                embed(self.word.as_slice(), self.idx, self.idx,
                       std::iter::iterate(self.letters.next().unwrap(),
                                          |e| e).take(1))
             }
@@ -204,7 +204,7 @@ impl<'a> Iterator<String> for EqualWords<'a> {
     fn next(&mut self) -> Option<String> {
         match self.letters.next() {
             Some (l) => {
-                embed(&self.word, self.idx, self.idx+1,
+                embed(self.word.as_slice(), self.idx, self.idx+1,
                       std::iter::iterate(l, |e| e).take(1))
             }
             None => {
@@ -212,7 +212,7 @@ impl<'a> Iterator<String> for EqualWords<'a> {
                 if self.idx >= self.word.len()
                     { return None }
                 self.letters = alphabet();
-                embed(&self.word, self.idx, self.idx+1,
+                embed(self.word.as_slice(), self.idx, self.idx+1,
                       std::iter::iterate(self.letters.next().unwrap(),
                                          |e| e).take(1))
             }
@@ -221,7 +221,7 @@ impl<'a> Iterator<String> for EqualWords<'a> {
 
 }
 
-fn embed<I: Iterator<u16>>(word: &Vec<u16>, from: uint, to: uint, infix: I)
+fn embed<I: Iterator<u16>>(word: &[u16], from: uint, to: uint, infix: I)
         -> Option<String> {
     let prefix = word.iter().take(from).map(|c| *c);
     let suffix = word.slice_from(to).iter().map(|c| *c);
