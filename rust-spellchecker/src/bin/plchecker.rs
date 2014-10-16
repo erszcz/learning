@@ -89,8 +89,7 @@ impl<'a> Word<'a> {
     fn longer(&self) -> LongerWords {
         LongerWords { word: self.word.as_slice().utf16_units().collect(),
                       idx: 0,
-                      letters: alphabet(),
-                      exhausted: false}
+                      letters: alphabet()}
     }
 
     fn mutations(&self) -> Chain<ShorterWords, LongerWords> {
@@ -120,7 +119,7 @@ impl Iterator<String> for ShorterWords {
 }
 
 fn alphabet<'a>() -> Unfold<'a, u16, (uint, Vec<u16>)> {
-    let mut abc : Vec<u16> =
+    let abc : Vec<u16> =
         "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż".utf16_units().collect();
     Unfold::new((0, abc),
                 |&(ref mut idx, ref abc)| {
@@ -137,8 +136,7 @@ fn alphabet<'a>() -> Unfold<'a, u16, (uint, Vec<u16>)> {
 struct LongerWords<'a> {
     word: Vec<u16>,
     idx: uint,
-    letters: Unfold<'a, u16, (uint, Vec<u16>)>,
-    exhausted: bool
+    letters: Unfold<'a, u16, (uint, Vec<u16>)>
 }
 
 impl<'a> Iterator<String> for LongerWords<'a> {
