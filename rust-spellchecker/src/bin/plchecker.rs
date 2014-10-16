@@ -80,7 +80,48 @@ impl<'a> Word<'a> {
         self.distances = Some(distances)
     }
 
+    fn mutations(&self) -> WordMutations {
+        WordMutations { u16_word: self.word.to_utf16(),
+                        depleted: false }
+    }
+
 }
+
+//fn mutate_word<'a>(word: &'a String) -> Iterator<'a, String> {
+//    let mutated = MutatedWord { u16_word: word.to_utf16() };
+//    let v = vec!(String::from_utf16(mutated.u16_word.as_slice()).unwrap());
+//    v.items()
+//}
+
+struct WordMutations {
+    u16_word: Vec<u16>,
+    depleted: bool
+}
+
+impl Iterator<String> for WordMutations {
+
+    fn next(&mut self) -> Option<String> {
+        if self.depleted
+            { None }
+        else {
+            self.depleted = true;
+            String::from_utf16(self.u16_word.as_slice())
+        }
+    }
+
+}
+
+//fn fibonacci() -> Unfold<uint, (uint, uint)> {
+//  Unfold::new((1, 2), fib_next)
+//}
+
+//fn fib_next(st: &mut (uint, uint)) -> Option<uint> {
+//  let prev = st.val0();
+//  let next = st.val1();
+//  *st.mut0() = next;
+//  *st.mut1() = prev + next;
+//  Some (prev)
+//}
 
 struct Correction {
     word: String,
@@ -88,36 +129,43 @@ struct Correction {
 }
 
 fn main() {
-
-    info!("building the dictionary from {:s}", DATA_PATH);
-    let ns_build_start = precise_time_ns();
-
     let dict = Dict::from_file(Path::new(DATA_PATH));
-
-    let ns_build_elapsed = precise_time_ns() - ns_build_start;
-    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
-
-    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
-    let ncorrections = 5u;
-    if to_check.is_valid()
-        { println!("ok!") }
-    else {
-        println!("not a valid word");
-
-        info!("checking for corrections");
-        let ns_check_start = precise_time_ns();
-
-        to_check.calculate_distances();
-
-        println!("did you mean?");
-        for correction in to_check.best_corrections(ncorrections).iter() {
-            println!("- {:s} ({:u})",
-                     correction.word.as_slice(),
-                     correction.score);
-        }
-
-        let ns_check_elapsed = precise_time_ns() - ns_check_start;
-        info!("checking for corrections took {:u}ms",
-              ns_check_elapsed / 1000 / 1000);
-    }
+    let w = Word::new( std::os::args()[1].as_slice(), &dict );
+    for mutation in w.mutations()
+        { println!("{:s}", mutation.as_slice()); }
 }
+
+//fn main() {
+
+//    info!("building the dictionary from {:s}", DATA_PATH);
+//    let ns_build_start = precise_time_ns();
+
+//    let dict = Dict::from_file(Path::new(DATA_PATH));
+
+//    let ns_build_elapsed = precise_time_ns() - ns_build_start;
+//    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
+
+//    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
+//    let ncorrections = 5u;
+//    if to_check.is_valid()
+//        { println!("ok!") }
+//    else {
+//        println!("not a valid word");
+
+//        info!("checking for corrections");
+//        let ns_check_start = precise_time_ns();
+
+//        to_check.calculate_distances();
+
+//        println!("did you mean?");
+//        for correction in to_check.best_corrections(ncorrections).iter() {
+//            println!("- {:s} ({:u})",
+//                     correction.word.as_slice(),
+//                     correction.score);
+//        }
+
+//        let ns_check_elapsed = precise_time_ns() - ns_check_start;
+//        info!("checking for corrections took {:u}ms",
+//              ns_check_elapsed / 1000 / 1000);
+//    }
+//}
