@@ -81,8 +81,11 @@ impl<'a> Word<'a> {
     }
 
     fn mutations(&self) -> WordMutations {
-        WordMutations { u16_word: self.word.to_utf16(),
-                        depleted: false }
+        let mut mutations = WordMutations { original: self.word.to_string(),
+                                            mutation: vec!(),
+                                            idx: 0 };
+        mutations.reset();
+        mutations
     }
 
 }
@@ -94,18 +97,31 @@ impl<'a> Word<'a> {
 //}
 
 struct WordMutations {
-    u16_word: Vec<u16>,
-    depleted: bool
+    original: String,
+    mutation: Vec<u16>,
+    idx: uint
+}
+
+impl WordMutations {
+
+    fn reset(&mut self) {
+        self.mutation = self.original.to_utf16();
+        self.idx = 0;
+    }
+
 }
 
 impl Iterator<String> for WordMutations {
 
     fn next(&mut self) -> Option<String> {
-        if self.depleted
+        if self.idx > self.mutation.len()
             { None }
         else {
-            self.depleted = true;
-            String::from_utf16(self.u16_word.as_slice())
+            let idx = self.idx;
+            self.reset();
+            self.idx = idx + 1;
+            self.mutation.remove(idx);
+            String::from_utf16(self.mutation.as_slice())
         }
     }
 
