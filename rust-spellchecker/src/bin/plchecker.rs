@@ -38,12 +38,17 @@ impl Dict {
 }
 
 struct Word<'a> {
-    word: String,
+    // Dictionary to spellcheck against.
     dict: &'a Dict,
 
+    // Word to spellcheck.
+    word: String,
+
+    // Candidate corrections.
+    candidates: Option<Vec<String>>,
+
     // Word is the origin of the coordinate space.
-    // Distances define how far other words of the dictionary
-    // are in the 1 dimensional space.
+    // Distances define how far the propositions are in 1D space.
     distances: Option<Vec<uint>>
 }
 
@@ -52,6 +57,7 @@ impl<'a> Word<'a> {
     fn new(s: &str, dict: &'a Dict) -> Word<'a> {
         Word{word: s.to_string(),
              dict: dict,
+             candidates: None,
              distances: None}
     }
 
@@ -60,25 +66,45 @@ impl<'a> Word<'a> {
     }
 
     fn best_corrections(self, n: uint) -> Vec<Correction> {
-        let unwrapped_distances = self.distances.unwrap();
-        let mut word_distances : Vec<(&String, &uint)> =
-            self.dict.iter().zip(unwrapped_distances.iter()).collect();
-        word_distances.sort_by(|&(_,a), &(_,b)| a.cmp(b));
-        word_distances
-            .iter()
-            .map(|&(word, score)| Correction { word: word.to_string(),
-                                               score: *score })
-            .take(n).collect()
+        match (self.candidates, self.distances) {
+            (None, None) => fail!(),
+            (Some (_), None) => fail!(),
+            (None, Some (_)) => fail!(),
+            (Some (ref candidates), Some (ref distances)) => {
+                let mut scored : Vec<(&String,&uint)> =
+                    candidates.iter().zip(distances.iter()).collect();
+                scored.sort_by(|&(_,a), &(_,b)| a.cmp(b));
+                scored.iter()
+                    .map(|&(word, score)| Correction { word: word.to_string(),
+                                                       score: *score })
+                    .take(n).collect()
+            }
+        }
+    }
+
+    fn generate_candidates(&mut self) {
+        if self.candidates.is_some()
+            { return }
+        let dict = self.dict;
+        let is_valid = |word: &String| dict.contains(word);
+        let candidates : Vec<String> = self.mutations().filter(is_valid).collect();
+        debug!("#candidates = {}", candidates.len());
+        self.candidates = Some (candidates);
     }
 
     fn calculate_distances(&mut self) {
         if self.distances.is_some()
             { return }
-        let distances =
-            self.dict.iter().map(|other_word| {
-                distance(self.word.as_slice(), other_word.as_slice())
-            }).collect();
-        self.distances = Some(distances)
+        match self.candidates {
+            None => (),
+            Some (ref candidates) => {
+                let distances =
+                    candidates.iter().map(|other_word| {
+                        distance(self.word.as_slice(), other_word.as_slice())
+                    }).collect();
+                self.distances = Some (distances)
+            }
+        }
     }
 
     fn shorter(&self) -> ShorterWords {
@@ -209,15 +235,37 @@ struct Correction {
 }
 
 fn main() {
+
+    info!("building the dictionary from {:s}", DATA_PATH);
+    let ns_build_start = precise_time_ns();
+
     let dict = Dict::from_file(Path::new(DATA_PATH));
-    let w = Word::new( std::os::args()[1].as_slice(), &dict );
-    //println!("shorter words:");
-    //for mutation in w.shorter()
-    //    { println!("{:s}", mutation.as_slice()); }
-    println!("longer words:");
-    for mutation in w.longer()
-        { println!("{:s}", mutation.as_slice()); }
-    println!("equal words:");
-    for mutation in w.equal()
-        { println!("{:s}", mutation.as_slice()); }
+
+    let ns_build_elapsed = precise_time_ns() - ns_build_start;
+    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
+
+    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
+    let ncorrections = 5u;
+    if to_check.is_valid()
+        { println!("ok!") }
+    else {
+        println!("not a valid word");
+
+        info!("checking for corrections");
+        let ns_check_start = precise_time_ns();
+
+        to_check.generate_candidates();
+        to_check.calculate_distances();
+
+        println!("did you mean?");
+        for correction in to_check.best_corrections(ncorrections).iter() {
+            println!("- {:s} ({:u})",
+                     correction.word.as_slice(),
+                     correction.score);
+        }
+
+        let ns_check_elapsed = precise_time_ns() - ns_check_start;
+        info!("checking for corrections took {:u}ms",
+              ns_check_elapsed / 1000 / 1000);
+    }
 }
