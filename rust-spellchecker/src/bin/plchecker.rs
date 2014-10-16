@@ -80,19 +80,19 @@ impl<'a> Word<'a> {
         self.distances = Some(distances)
     }
 
-    fn shortenings(&self) -> WordShortenings {
-        WordShortenings { word: self.word.to_utf16(),
-                          idx: 0 }
+    fn shorter(&self) -> ShorterWords {
+        ShorterWords { word: self.word.to_utf16(),
+                       idx: 0 }
     }
 
 }
 
-struct WordShortenings {
+struct ShorterWords {
     word: Vec<u16>,
     idx: uint
 }
 
-impl Iterator<String> for WordShortenings {
+impl Iterator<String> for ShorterWords {
 
     fn next(&mut self) -> Option<String> {
         if self.idx >= self.word.len()
@@ -129,7 +129,7 @@ struct Correction {
 fn main() {
     let dict = Dict::from_file(Path::new(DATA_PATH));
     let w = Word::new( std::os::args()[1].as_slice(), &dict );
-    for mutation in w.shortenings()
+    for mutation in w.shorter()
         { println!("{:s}", mutation.as_slice()); }
 }
 
