@@ -5,6 +5,7 @@ extern crate time;
 
 use std::io::BufferedReader;
 use std::io::File;
+use std::iter::Unfold;
 use std::slice::Items;
 use time::precise_time_ns;
 
@@ -85,6 +86,13 @@ impl<'a> Word<'a> {
                        idx: 0 }
     }
 
+    fn longer(&self) -> LongerWords {
+        LongerWords { word: self.word.as_slice().utf16_units().collect(),
+                      idx: 0,
+                      letters: alphabet(),
+                      exhausted: false}
+    }
+
 }
 
 struct ShorterWords {
@@ -107,6 +115,55 @@ impl Iterator<String> for ShorterWords {
 
 }
 
+fn alphabet<'a>() -> Unfold<'a, u16, (uint, Vec<u16>)> {
+    let mut abc : Vec<u16> =
+        //"aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż".utf16_units().collect();
+        "abc".utf16_units().collect();
+    Unfold::new((0, abc),
+                |&(ref mut idx, ref abc)| {
+                    if *idx >= abc.len()
+                        { None }
+                    else {
+                        let i = *idx;
+                        *idx += 1;
+                        Some (abc[i])
+                    }
+                })
+}
+
+struct LongerWords<'a> {
+    word: Vec<u16>,
+    idx: uint,
+    letters: Unfold<'a, u16, (uint, Vec<u16>)>,
+    exhausted: bool
+}
+
+impl<'a> Iterator<String> for LongerWords<'a> {
+
+    fn next(&mut self) -> Option<String> {
+        match self.letters.next() {
+            Some (l) => {
+                make_longer(&self.word, self.idx, l)
+            }
+            None => {
+                self.idx += 1;
+                if self.idx > self.word.len()
+                    { return None }
+                self.letters = alphabet();
+                make_longer(&self.word, self.idx, self.letters.next().unwrap())
+            }
+        }
+    }
+
+}
+
+fn make_longer(word: &Vec<u16>, idx: uint, letter: u16) -> Option<String> {
+    let mut longer : Vec<u16> = Vec::with_capacity(1 + word.len());
+    longer.extend(word.iter().map(|c| *c));
+    longer.insert(idx, letter);
+    String::from_utf16(longer.as_slice())
+}
+
 //fn fibonacci() -> Unfold<uint, (uint, uint)> {
 //  Unfold::new((1, 2), fib_next)
 //}
@@ -127,7 +184,11 @@ struct Correction {
 fn main() {
     let dict = Dict::from_file(Path::new(DATA_PATH));
     let w = Word::new( std::os::args()[1].as_slice(), &dict );
+    println!("shorter words:");
     for mutation in w.shorter()
+        { println!("{:s}", mutation.as_slice()); }
+    println!("longer words:");
+    for mutation in w.longer()
         { println!("{:s}", mutation.as_slice()); }
 }
 
