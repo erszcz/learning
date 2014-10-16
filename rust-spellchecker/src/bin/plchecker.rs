@@ -96,15 +96,13 @@ impl Iterator<String> for ShorterWords {
 
     fn next(&mut self) -> Option<String> {
         if self.idx >= self.word.len()
-            { None }
-        else {
-            let i = self.idx;
-            self.idx += 1;
-            let prefix = self.word.iter().take(i).map(|c|*c);
-            let suffix = self.word.tailn(i+1).iter().map(|c|*c);
-            let short : Vec<u16> = prefix.chain(suffix).collect();
-            String::from_utf16(short.as_slice())
-        }
+            { return None }
+        let i = self.idx;
+        self.idx += 1;
+        let prefix = self.word.iter().take(i).map(|c|*c);
+        let suffix = self.word.tailn(i+1).iter().map(|c|*c);
+        let short : Vec<u16> = prefix.chain(suffix).collect();
+        String::from_utf16(short.as_slice())
     }
 
 }
