@@ -10,3 +10,11 @@ path = "src/nlp/lib.rs"
 [[bin]]
 name = "plchecker"
 path = "src/bin/plchecker.rs"
+
+[profile.release]
+opt-level = 3
+debug = false
+
+[profile.dev]
+opt-level = 0
+debug = true
