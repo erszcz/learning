@@ -81,7 +81,7 @@ impl<'a> Word<'a> {
     }
 
     fn shorter(&self) -> ShorterWords {
-        ShorterWords { word: self.word.to_utf16(),
+        ShorterWords { word: self.word.as_slice().utf16_units().collect(),
                        idx: 0 }
     }
 
@@ -100,7 +100,7 @@ impl Iterator<String> for ShorterWords {
         let i = self.idx;
         self.idx += 1;
         let prefix = self.word.iter().take(i).map(|c|*c);
-        let suffix = self.word.tailn(i+1).iter().map(|c|*c);
+        let suffix = self.word.slice_from(i+1).iter().map(|c|*c);
         let short : Vec<u16> = prefix.chain(suffix).collect();
         String::from_utf16(short.as_slice())
     }
