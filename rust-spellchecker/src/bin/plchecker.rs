@@ -5,13 +5,13 @@ extern crate time;
 
 use std::io::BufferedReader;
 use std::io::File;
-use std::iter::Unfold;
+use std::iter::{Chain, Unfold};
 use std::slice::Items;
 use time::precise_time_ns;
 
 use nlp::distance::levenshtein as distance;
 
-static DATA_PATH : &'static str = "data/formy-short.utf8";
+static DATA_PATH : &'static str = "data/formy0.125.utf8";
 
 struct Dict {
     items: Vec<String>
@@ -93,6 +93,10 @@ impl<'a> Word<'a> {
                       exhausted: false}
     }
 
+    fn mutations(&self) -> Chain<ShorterWords, LongerWords> {
+        self.shorter().chain(self.longer())
+    }
+
 }
 
 struct ShorterWords {
@@ -117,8 +121,7 @@ impl Iterator<String> for ShorterWords {
 
 fn alphabet<'a>() -> Unfold<'a, u16, (uint, Vec<u16>)> {
     let mut abc : Vec<u16> =
-        //"aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż".utf16_units().collect();
-        "abc".utf16_units().collect();
+        "aąbcćdeęfghijklłmnńoópqrsśtuvwxyzźż".utf16_units().collect();
     Unfold::new((0, abc),
                 |&(ref mut idx, ref abc)| {
                     if *idx >= abc.len()
@@ -164,65 +167,42 @@ fn make_longer(word: &Vec<u16>, idx: uint, letter: u16) -> Option<String> {
     String::from_utf16(longer.as_slice())
 }
 
-//fn fibonacci() -> Unfold<uint, (uint, uint)> {
-//  Unfold::new((1, 2), fib_next)
-//}
-
-//fn fib_next(st: &mut (uint, uint)) -> Option<uint> {
-//  let prev = st.val0();
-//  let next = st.val1();
-//  *st.mut0() = next;
-//  *st.mut1() = prev + next;
-//  Some (prev)
-//}
-
 struct Correction {
     word: String,
     score: uint
 }
 
 fn main() {
+
+    info!("building the dictionary from {:s}", DATA_PATH);
+    let ns_build_start = precise_time_ns();
+
     let dict = Dict::from_file(Path::new(DATA_PATH));
-    let w = Word::new( std::os::args()[1].as_slice(), &dict );
-    println!("shorter words:");
-    for mutation in w.shorter()
-        { println!("{:s}", mutation.as_slice()); }
-    println!("longer words:");
-    for mutation in w.longer()
-        { println!("{:s}", mutation.as_slice()); }
+
+    let ns_build_elapsed = precise_time_ns() - ns_build_start;
+    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
+
+    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
+    let ncorrections = 5u;
+    if to_check.is_valid()
+        { println!("ok!") }
+    else {
+        println!("not a valid word");
+
+        info!("checking for corrections");
+        let ns_check_start = precise_time_ns();
+
+        to_check.calculate_distances();
+
+        println!("did you mean?");
+        for correction in to_check.best_corrections(ncorrections).iter() {
+            println!("- {:s} ({:u})",
+                     correction.word.as_slice(),
+                     correction.score);
+        }
+
+        let ns_check_elapsed = precise_time_ns() - ns_check_start;
+        info!("checking for corrections took {:u}ms",
+              ns_check_elapsed / 1000 / 1000);
+    }
 }
-
-//fn main() {
-
-//    info!("building the dictionary from {:s}", DATA_PATH);
-//    let ns_build_start = precise_time_ns();
-
-//    let dict = Dict::from_file(Path::new(DATA_PATH));
-
-//    let ns_build_elapsed = precise_time_ns() - ns_build_start;
-//    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
-
-//    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
-//    let ncorrections = 5u;
-//    if to_check.is_valid()
-//        { println!("ok!") }
-//    else {
-//        println!("not a valid word");
-
-//        info!("checking for corrections");
-//        let ns_check_start = precise_time_ns();
-
-//        to_check.calculate_distances();
-
-//        println!("did you mean?");
-//        for correction in to_check.best_corrections(ncorrections).iter() {
-//            println!("- {:s} ({:u})",
-//                     correction.word.as_slice(),
-//                     correction.score);
-//        }
-
-//        let ns_check_elapsed = precise_time_ns() - ns_check_start;
-//        info!("checking for corrections took {:u}ms",
-//              ns_check_elapsed / 1000 / 1000);
-//    }
-//}
