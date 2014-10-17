@@ -63,7 +63,11 @@ fn generate_corrections<'b>(word: &str, dict: &'b Dict) -> Vec<&'b str> {
     let is_valid = |word: &String| dict.contains(word.as_slice());
     let candidates : Vec<&'b str> =
         Word { word: word.to_string() }
-            .mutations().filter(is_valid).map(|w| dict.find(w.as_slice())).collect();
+            .mutations().filter(is_valid).map(|w| {
+                // unwrap here is safe since we checked that
+                // the string is in the dictioanry in is_valid()
+                dict.intern(w.as_slice()).unwrap()
+            }).collect();
     debug!("#candidates = {}", candidates.len());
     candidates
 }
@@ -135,9 +139,17 @@ impl Dict {
         self.items.iter().any(|other_word| *word == other_word.as_slice())
     }
 
-    fn find(&self, word: &str) -> &str {
-        let pos = self.items.iter().position(|item| item.as_slice() == word);
-        self.items[pos.unwrap()].as_slice()
+    // Take a &str, find an equivalent in the dictionary
+    // and return a &str to the buffer in the dictionary.
+    // This allows for reusing text data from the dictionary
+    // instead of keeping multiple copies of the same string.
+    fn intern(&self, word: &str) -> Option<&str> {
+        let maybe_pos =
+            self.items.iter().position(|item| item.as_slice() == word);
+        match maybe_pos {
+            None => None,
+            Some (pos) => Some ( self.items[pos].as_slice() )
+        }
     }
 
 }
