@@ -123,7 +123,10 @@ impl Dict {
     fn from_file(path: Path) -> Dict {
         let mut file = BufferedReader::new(File::open(&path));
         let lines: Vec<String> = file.lines().map(|x| {
-            x.unwrap().as_slice().trim().to_string()
+            match x {
+                Err (reason) => fail!("{}", reason),
+                Ok (line) => line.as_slice().trim().to_string()
+            }
         }).collect();
         Dict{items: lines}
     }
