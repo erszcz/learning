@@ -239,6 +239,7 @@ impl<'a> Iterator<String> for LongerWords<'a> {
                 if self.idx > self.word.len()
                     { return None }
                 self.letters = alphabet();
+                // unwrap is safe here, as we just created a new alphabet
                 embed(self.word.as_slice(), self.idx, self.idx,
                       std::iter::iterate(self.letters.next().unwrap(),
                                          |e| e).take(1))
@@ -267,6 +268,7 @@ impl<'a> Iterator<String> for EqualWords<'a> {
                 if self.idx >= self.word.len()
                     { return None }
                 self.letters = alphabet();
+                // unwrap is safe here, as we just created a new alphabet
                 embed(self.word.as_slice(), self.idx, self.idx+1,
                       std::iter::iterate(self.letters.next().unwrap(),
                                          |e| e).take(1))
