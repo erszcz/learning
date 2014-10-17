@@ -1,4 +1,4 @@
-#![feature(phase)]
+#![feature(macro_rules, phase)]
 #[phase(plugin, link)] extern crate log;
 extern crate nlp;
 extern crate time;
@@ -11,7 +11,16 @@ use time::precise_time_ns;
 
 use nlp::distance::levenshtein as distance;
 
-static DATA_PATH : &'static str = "data/formy0.125.utf8";
+/// Create a `Dict` containing the arguments.
+#[macro_export]
+macro_rules! dict(
+    ($($e:expr),*) => ({
+        let _d : Dict = vec!($($e),*).iter().collect();
+        _d
+    })
+)
+
+static DATA_PATH : &'static str = "data/formy.utf8";
 
 struct Dict {
     items: Vec<String>
@@ -46,6 +55,11 @@ impl<'a, 'b> FromIterator<&'a &'b str> for Dict {
 #[test]
 fn dict_from_iterator_test() {
     let d : Dict = vec!("asd", "qwe").iter().collect();
+}
+
+#[test]
+fn dict_macro_test() {
+    let d = dict!("asd", "qwe");
 }
 
 struct Word<'a> {
