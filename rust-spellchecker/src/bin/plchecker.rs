@@ -9,7 +9,7 @@ use std::iter::{Chain, Unfold};
 use std::slice::Items;
 use time::precise_time_ns;
 
-use nlp::distance::levenshtein as distance;
+use nlp::distance::levenshtein;
 
 /// Create a `Dict` containing the arguments.
 #[macro_export]
@@ -21,6 +21,97 @@ macro_rules! dict(
 )
 
 static DATA_PATH : &'static str = "data/formy.utf8";
+
+trait Spellchecker {
+
+    fn is_valid(&self, word: &str) -> bool;
+
+    fn check(&self, word: &str) -> SpellcheckResult;
+
+}
+
+#[deriving(PartialEq, Eq, Show)]
+enum SpellcheckResult<'a> {
+    Valid,
+    Invalid (Vec<Correction>),
+    Error (&'a str)
+}
+
+struct PLChecker {
+    dict: Dict,
+    distance: fn (word1: &str, word2: &str) -> uint,
+    ncorrections: uint
+}
+
+impl Spellchecker for PLChecker {
+
+    fn is_valid(&self, word: &str) -> bool { self.dict.contains(word) }
+
+    fn check(&self, word: &str) -> SpellcheckResult {
+        if self.is_valid(word)
+            { return Valid }
+        let candidates = generate_corrections(word, &self.dict);
+        debug!("candidates: {}", candidates);
+        let scores = score_corrections(word, &candidates, self.distance);
+        debug!("scores: {}", scores);
+        Invalid (get_best_corrections(&candidates, &scores, self.ncorrections))
+    }
+
+}
+
+fn generate_corrections(word: &str, dict: &Dict) -> Vec<String> {
+    let is_valid = |word: &String| dict.contains(word.as_slice());
+    let candidates : Vec<String> =
+        Word { word: word.to_string() }.mutations().filter(is_valid).collect();
+    debug!("#candidates = {}", candidates.len());
+    candidates
+}
+
+fn score_corrections(word: &str, candidates: &Vec<String>,
+                     distance: fn (&str, &str) -> uint) -> Vec<uint> {
+    let scores : Vec<uint> = candidates.iter().map(|other_word| {
+        distance(word, other_word.as_slice())
+    }).collect();
+    scores
+}
+
+fn get_best_corrections(candidates: &Vec<String>,
+                        distances: &Vec<uint>,
+                        ncorrections: uint) -> Vec<Correction> {
+    let mut scored : Vec<(&String, &uint)> =
+        candidates.iter().zip(distances.iter()).collect();
+    scored.sort_by(|&(_,a), &(_,b)| a.cmp(b));
+    scored.iter()
+          .map(|&(word, score)|
+               Correction { word: word.to_string(), score: *score })
+          .take(ncorrections).collect()
+}
+
+#[test]
+fn is_valid_test() {
+    let d = dict!("asd");
+    let c = PLChecker { dict: d, distance: levenshtein, ncorrections: 0u };
+    assert!(c.is_valid("asd"));
+    assert!(! c.is_valid("qwe"));
+}
+
+#[test]
+fn check_valid_test() {
+    let d = dict!("asd");
+    let c = PLChecker { dict: d, distance: levenshtein, ncorrections: 0u };
+    assert!(Valid == c.check("asd"));
+}
+
+#[test]
+fn check_invalid_test() {
+    let d = dict!("asd", "asf");
+    let c = PLChecker { dict: d, distance: levenshtein, ncorrections: 2u };
+    let example = vec!(Correction { word: "asd".to_string(), score: 1 },
+                       Correction { word: "asf".to_string(), score: 1 });
+    let real = c.check("ase");
+    println!("spellcheck result: {}", real);
+    assert!(Invalid (example) == real);
+}
 
 struct Dict {
     items: Vec<String>
@@ -40,10 +131,6 @@ impl Dict {
         self.items.iter().any(|other_word| *word == other_word.as_slice())
     }
 
-    fn iter<'a>(&'a self) -> Items<'a, String> {
-        self.items.iter()
-    }
-
 }
 
 impl<'a, 'b> FromIterator<&'a &'b str> for Dict {
@@ -54,83 +141,20 @@ impl<'a, 'b> FromIterator<&'a &'b str> for Dict {
 
 #[test]
 fn dict_from_iterator_test() {
-    let d : Dict = vec!("asd", "qwe").iter().collect();
+    let _ : Dict = vec!("asd", "qwe").iter().collect();
 }
 
 #[test]
 fn dict_macro_test() {
-    let d = dict!("asd", "qwe");
+    let _ = dict!("asd", "qwe");
 }
 
 struct Word<'a> {
-    // Dictionary to spellcheck against.
-    dict: &'a Dict,
-
     // Word to spellcheck.
     word: String,
-
-    // Candidate corrections.
-    candidates: Option<Vec<String>>,
-
-    // Word is the origin of the coordinate space.
-    // Distances define how far the propositions are in 1D space.
-    distances: Option<Vec<uint>>
 }
 
 impl<'a> Word<'a> {
-
-    fn new(s: &str, dict: &'a Dict) -> Word<'a> {
-        Word{word: s.to_string(),
-             dict: dict,
-             candidates: None,
-             distances: None}
-    }
-
-    fn is_valid(&self) -> bool {
-        self.dict.contains(self.word.as_slice())
-    }
-
-    fn best_corrections(self, n: uint) -> Vec<Correction> {
-        match (self.candidates, self.distances) {
-            (None, None) => fail!(),
-            (Some (_), None) => fail!(),
-            (None, Some (_)) => fail!(),
-            (Some (ref candidates), Some (ref distances)) => {
-                let mut scored : Vec<(&String,&uint)> =
-                    candidates.iter().zip(distances.iter()).collect();
-                scored.sort_by(|&(_,a), &(_,b)| a.cmp(b));
-                scored.iter()
-                    .map(|&(word, score)| Correction { word: word.to_string(),
-                                                       score: *score })
-                    .take(n).collect()
-            }
-        }
-    }
-
-    fn generate_candidates(&mut self) {
-        if self.candidates.is_some()
-            { return }
-        let dict = self.dict;
-        let is_valid = |word: &String| dict.contains(word.as_slice());
-        let candidates : Vec<String> = self.mutations().filter(is_valid).collect();
-        debug!("#candidates = {}", candidates.len());
-        self.candidates = Some (candidates);
-    }
-
-    fn calculate_distances(&mut self) {
-        if self.distances.is_some()
-            { return }
-        match self.candidates {
-            None => (),
-            Some (ref candidates) => {
-                let distances =
-                    candidates.iter().map(|other_word| {
-                        distance(self.word.as_slice(), other_word.as_slice())
-                    }).collect();
-                self.distances = Some (distances)
-            }
-        }
-    }
 
     fn shorter(&self) -> ShorterWords {
         ShorterWords { word: self.word.as_slice().utf16_units().collect(),
@@ -254,43 +278,8 @@ fn embed<I: Iterator<u16>>(word: &[u16], from: uint, to: uint, infix: I)
     String::from_utf16(short.as_slice())
 }
 
+#[deriving(PartialEq, Eq, Show)]
 struct Correction {
     word: String,
     score: uint
-}
-
-fn main() {
-
-    info!("building the dictionary from {:s}", DATA_PATH);
-    let ns_build_start = precise_time_ns();
-
-    let dict = Dict::from_file(Path::new(DATA_PATH));
-
-    let ns_build_elapsed = precise_time_ns() - ns_build_start;
-    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
-
-    let mut to_check = Word::new( std::os::args()[1].as_slice(), &dict );
-    let ncorrections = 5u;
-    if to_check.is_valid()
-        { println!("ok!") }
-    else {
-        println!("not a valid word");
-
-        info!("checking for corrections");
-        let ns_check_start = precise_time_ns();
-
-        to_check.generate_candidates();
-        to_check.calculate_distances();
-
-        println!("did you mean?");
-        for correction in to_check.best_corrections(ncorrections).iter() {
-            println!("- {:s} ({:u})",
-                     correction.word.as_slice(),
-                     correction.score);
-        }
-
-        let ns_check_elapsed = precise_time_ns() - ns_check_start;
-        info!("checking for corrections took {:u}ms",
-              ns_check_elapsed / 1000 / 1000);
-    }
 }
