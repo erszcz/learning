@@ -59,15 +59,16 @@ impl Spellchecker for PLChecker {
 
 }
 
-fn generate_corrections(word: &str, dict: &Dict) -> Vec<String> {
+fn generate_corrections<'b>(word: &str, dict: &'b Dict) -> Vec<&'b str> {
     let is_valid = |word: &String| dict.contains(word.as_slice());
-    let candidates : Vec<String> =
-        Word { word: word.to_string() }.mutations().filter(is_valid).collect();
+    let candidates : Vec<&'b str> =
+        Word { word: word.to_string() }
+            .mutations().filter(is_valid).map(|w| dict.find(w.as_slice())).collect();
     debug!("#candidates = {}", candidates.len());
     candidates
 }
 
-fn score_corrections(word: &str, candidates: &Vec<String>,
+fn score_corrections(word: &str, candidates: &Vec<&str>,
                      distance: fn (&str, &str) -> uint) -> Vec<uint> {
     let scores : Vec<uint> = candidates.iter().map(|other_word| {
         distance(word, other_word.as_slice())
@@ -75,10 +76,10 @@ fn score_corrections(word: &str, candidates: &Vec<String>,
     scores
 }
 
-fn get_best_corrections(candidates: &Vec<String>,
+fn get_best_corrections(candidates: &Vec<&str>,
                         distances: &Vec<uint>,
                         ncorrections: uint) -> Vec<Correction> {
-    let mut scored : Vec<(&String, &uint)> =
+    let mut scored : Vec<(&&str, &uint)> =
         candidates.iter().zip(distances.iter()).collect();
     scored.sort_by(|&(_,a), &(_,b)| a.cmp(b));
     scored.iter()
@@ -129,6 +130,11 @@ impl Dict {
 
     fn contains(&self, word: &str) -> bool {
         self.items.iter().any(|other_word| *word == other_word.as_slice())
+    }
+
+    fn find(&self, word: &str) -> &str {
+        let pos = self.items.iter().position(|item| item.as_slice() == word);
+        self.items[pos.unwrap()].as_slice()
     }
 
 }
