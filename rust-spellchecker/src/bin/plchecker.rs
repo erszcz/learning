@@ -27,8 +27,8 @@ impl Dict {
         Dict{items: lines}
     }
 
-    fn contains(&self, word: &String) -> bool {
-        self.items.iter().any(|other_word| *word == *other_word)
+    fn contains(&self, word: &str) -> bool {
+        self.items.iter().any(|other_word| *word == other_word.as_slice())
     }
 
     fn iter<'a>(&'a self) -> Items<'a, String> {
@@ -62,7 +62,7 @@ impl<'a> Word<'a> {
     }
 
     fn is_valid(&self) -> bool {
-        self.dict.contains(&self.word)
+        self.dict.contains(self.word.as_slice())
     }
 
     fn best_corrections(self, n: uint) -> Vec<Correction> {
@@ -86,7 +86,7 @@ impl<'a> Word<'a> {
         if self.candidates.is_some()
             { return }
         let dict = self.dict;
-        let is_valid = |word: &String| dict.contains(word);
+        let is_valid = |word: &String| dict.contains(word.as_slice());
         let candidates : Vec<String> = self.mutations().filter(is_valid).collect();
         debug!("#candidates = {}", candidates.len());
         self.candidates = Some (candidates);
