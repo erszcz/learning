@@ -37,6 +37,17 @@ impl Dict {
 
 }
 
+impl<'a, 'b> FromIterator<&'a &'b str> for Dict {
+    fn from_iter<T: Iterator<&'a &'b str>>(i: T) -> Dict {
+        Dict { items :i.map(|word| word.to_string()).collect() }
+    }
+}
+
+#[test]
+fn dict_from_iterator_test() {
+    let d : Dict = vec!("asd", "qwe").iter().collect();
+}
+
 struct Word<'a> {
     // Dictionary to spellcheck against.
     dict: &'a Dict,
