@@ -50,7 +50,8 @@ impl Spellchecker for PLChecker {
     fn check(&self, word: &str) -> SpellcheckResult {
         if self.is_valid(word)
             { return Valid }
-        let candidates = generate_corrections(word, &self.dict);
+        //let candidates = generate_corrections(word, &self.dict);
+        let candidates = all_words_as_corrections(word, &self.dict);
         debug!("candidates: {}", candidates);
         let scores = score_corrections(word, &candidates, self.distance);
         debug!("scores: {}", scores);
@@ -59,15 +60,20 @@ impl Spellchecker for PLChecker {
 
 }
 
+fn all_words_as_corrections<'b>(_: &str, dict: &'b Dict) -> Vec<&'b str> {
+    let corrections : Vec<&'b str> =
+        dict.items.iter().map(|item| item.as_slice()).collect();
+    corrections
+}
+
 fn generate_corrections<'b>(word: &str, dict: &'b Dict) -> Vec<&'b str> {
     let is_valid = |word: &String| dict.contains(word.as_slice());
     let candidates : Vec<&'b str> =
         Word { word: word.to_string() }
-            .mutations().filter(is_valid).map(|w| {
-                // unwrap here is safe since we checked that
-                // the string is in the dictioanry in is_valid()
-                dict.intern(w.as_slice()).unwrap()
-            }).collect();
+            .mutations()
+            .map(|w| dict.intern(w.as_slice()))
+            .filter(|opt| opt.is_some())
+            .map(|opt| opt.unwrap()).collect();
     debug!("#candidates = {}", candidates.len());
     candidates
 }
