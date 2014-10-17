@@ -283,3 +283,41 @@ struct Correction {
     word: String,
     score: uint
 }
+
+fn main() {
+
+    info!("building the dictionary from {:s}", DATA_PATH);
+    let ns_build_start = precise_time_ns();
+
+    let dict = Dict::from_file(Path::new(DATA_PATH));
+
+    let ns_build_elapsed = precise_time_ns() - ns_build_start;
+    info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
+
+    let spellchecker = PLChecker { dict: dict,
+                                   distance: levenshtein,
+                                   ncorrections: 15u };
+
+    info!("checking for corrections");
+    let ns_check_start = precise_time_ns();
+
+    let to_check = std::os::args()[1].clone();
+    match spellchecker.check(to_check.as_slice()) {
+        Valid => println!("ok!"),
+        Error (reason) => fail!("{}", reason),
+        Invalid (corrections) => {
+            println!("not a valid word");
+            println!("did you mean?");
+            for correction in corrections.iter() {
+                println!("- {:s} ({:u})",
+                         correction.word.as_slice(),
+                         correction.score);
+            }
+        }
+    }
+
+    let ns_check_elapsed = precise_time_ns() - ns_check_start;
+    info!("checking for corrections took {:u}ms",
+          ns_check_elapsed / 1000 / 1000);
+
+}
