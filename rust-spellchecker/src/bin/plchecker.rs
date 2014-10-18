@@ -9,7 +9,7 @@ use std::iter::{Chain, Unfold};
 use std::slice::Items;
 use time::precise_time_ns;
 
-use nlp::distance::levenshtein;
+use nlp::distance::{damerau, levenshtein};
 
 /// Create a `Dict` containing the arguments.
 #[macro_export]
@@ -324,7 +324,7 @@ fn main() {
     info!("built in {:u}ms", ns_build_elapsed / 1000 / 1000);
 
     let spellchecker = PLChecker { dict: dict,
-                                   distance: levenshtein,
+                                   distance: damerau,
                                    ncorrections: 15u };
 
     info!("checking for corrections");
