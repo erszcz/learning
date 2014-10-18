@@ -117,8 +117,8 @@ fn check_valid_test() {
 fn check_invalid_test() {
     let d = dict!("asd", "asf");
     let c = PLChecker { dict: d, distance: levenshtein, ncorrections: 2u };
-    let example = vec!(Correction { word: "asd".to_string(), score: 1 },
-                       Correction { word: "asf".to_string(), score: 1 });
+    let example = vec!(Correction { word: "asd".to_string(), score: 100 },
+                       Correction { word: "asf".to_string(), score: 100 });
     let real = c.check("ase");
     println!("spellcheck result: {}", real);
     assert!(Invalid (example) == real);
