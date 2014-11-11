@@ -23,13 +23,10 @@ enum SupMsg {
 // The Controls should returned to the outside world and can be freely copied,
 // while the ServiceState should be moved to Service::serve method
 // started in its own task.
-trait Service<Controls: ServiceControls, ServiceState>: Send {
+trait Service<Controls: ServiceControls>: Send {
 
     // Called to start (using spawn) the service in a new task.
     fn start(handle: Handle) -> Controls;
-
-    // Called by the supervisor in a new task.
-    fn serve(&self, h: Handle, s: ServiceState);
 
 }
 
@@ -53,15 +50,7 @@ struct BasicServiceControls {
     tx: Sender<SupMsg>
 }
 
-impl Service<BasicServiceControls, BasicServiceState> for BasicService {
-
-    fn start(handle: Handle) -> BasicServiceControls {
-        let (tx, rx) = channel();
-        let control_tx = tx.clone();
-        let state = BasicServiceState { tx: tx, rx: rx };
-        spawn(proc() BasicService.serve(handle, state));
-        BasicServiceControls { tx: control_tx }
-    }
+impl BasicService {
 
     fn serve(&self, _: Handle, s: BasicServiceState) {
         let mut timer = Timer::new().unwrap();
@@ -85,6 +74,18 @@ impl Service<BasicServiceControls, BasicServiceState> for BasicService {
                 println!("timed out, no message received in {} seconds", seconds)
             }
         }
+    }
+
+}
+
+impl Service<BasicServiceControls> for BasicService {
+
+    fn start(handle: Handle) -> BasicServiceControls {
+        let (tx, rx) = channel();
+        let control_tx = tx.clone();
+        let state = BasicServiceState { tx: tx, rx: rx };
+        spawn(proc() BasicService.serve(handle, state));
+        BasicServiceControls { tx: control_tx }
     }
 
 }
@@ -147,15 +148,6 @@ impl Supervisor {
         SupervisorControls { id: id, tx: controls_tx }
     }
 
-}
-
-impl Service<SupervisorControls, SupervisorState> for Supervisor {
-
-    fn start(handle: Handle) -> SupervisorControls {
-        let id = CURRENT_SUPERVISOR_ID.fetch_add(1, SeqCst);
-        Supervisor::start_with_handle_id(handle, id)
-    }
-
     fn serve(&self, _: Handle, s: SupervisorState) {
         loop {
             match s.rx.recv() {
@@ -171,9 +163,18 @@ impl Service<SupervisorControls, SupervisorState> for Supervisor {
 
 }
 
+impl Service<SupervisorControls> for Supervisor {
+
+    fn start(handle: Handle) -> SupervisorControls {
+        let id = CURRENT_SUPERVISOR_ID.fetch_add(1, SeqCst);
+        Supervisor::start_with_handle_id(handle, id)
+    }
+
+}
+
 impl SupervisorControls {
 
-    fn add<C: ServiceControls, ServiceState, Child: Service<C, ServiceState>>
+    fn add<C: ServiceControls, Child: Service<C>>
           (&self, service: Child) -> C {
         let child_tx = self.tx.clone();
         let handle = Handle(Some(child_tx.clone()));
