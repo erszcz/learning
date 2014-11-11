@@ -14,30 +14,62 @@ enum SupMsg {
     Stop
 }
 
-trait Service: Send {
+// Service is a service description.
+//
+// Due to unique ownership of a Receiver end of a channel a service
+// can't store a receiver in its struct implementing the Service trait.
+// Therefore, the channel(s) has(ve) to be created in Service::start(),
+// Controls can store the Sender(s) and ServiceState the Receiver(s).
+// The Controls should returned to the outside world and can be freely copied,
+// while the ServiceState should be moved to Service::serve method
+// started in its own task.
+trait Service<Controls: ServiceControls, ServiceState>: Send {
+
+    // Called to start (using spawn) the service in a new task.
+    fn start(handle: Handle) -> Controls;
 
     // Called by the supervisor in a new task.
-    fn serve(&self, h: Handle);
+    fn serve(&self, h: Handle, s: ServiceState);
+
+}
+
+// ServiceControls is an interface for interacting with the service,
+// which, unlike its state, can be freely copied.
+trait ServiceControls: Send {
 
     // Called to stop execution, most probably from outside of the service's task.
     fn stop(&self);
 
 }
 
-struct BasicService {
+struct BasicService;
+
+struct BasicServiceState {
     tx: Sender<SupMsg>,
     rx: Receiver<SupMsg>
 }
 
-impl Service for BasicService {
+struct BasicServiceControls {
+    tx: Sender<SupMsg>
+}
 
-    fn serve(&self, _: Handle) {
+impl Service<BasicServiceControls, BasicServiceState> for BasicService {
+
+    fn start(handle: Handle) -> BasicServiceControls {
+        let (tx, rx) = channel();
+        let control_tx = tx.clone();
+        let state = BasicServiceState { tx: tx, rx: rx };
+        spawn(proc() BasicService.serve(handle, state));
+        BasicServiceControls { tx: control_tx }
+    }
+
+    fn serve(&self, _: Handle, s: BasicServiceState) {
         let mut timer = Timer::new().unwrap();
         loop {
             let seconds = 1;
             let timeout = timer.oneshot(Duration::seconds(seconds));
             let sel = Select::new();
-            let mut rx = sel.handle(&self.rx);
+            let mut rx = sel.handle(&s.rx);
             let mut timeout = sel.handle(&timeout);
             unsafe {
                 rx.add();
@@ -54,6 +86,10 @@ impl Service for BasicService {
             }
         }
     }
+
+}
+
+impl ServiceControls for BasicServiceControls {
 
     fn stop(&self) {
         self.tx.send(Stop);
@@ -103,17 +139,16 @@ impl Supervisor {
                      tx: tx, rx: rx }
     }
 
-    fn add<Child: Service>(&self, service: Child) {
+    fn add<C: ServiceControls,
+           ServiceState,
+           Child: Service<C, ServiceState>>(&self, service: Child) -> C {
         let child_tx = self.tx.clone();
         let service_id =
             ServiceId { sup: self.id,
                         service: self.current_service_id.fetch_add(1, SeqCst) };
-        spawn(proc() {
-            let child_tx = child_tx;
-            let handle = Handle { tx: child_tx.clone(),
-                                  service_id: service_id };
-            service.serve(handle);
-        });
+        let handle = Handle { tx: child_tx.clone(),
+                              service_id: service_id };
+        Service::start(handle)
     }
 
     fn supervise(&self) {
@@ -146,18 +181,16 @@ impl Drop for Handle {
 }
 
 fn main() {
-    let (tx, rx) = channel();
-    let s_tx = tx.clone();
-    let service = BasicService { tx: tx, rx: rx };
+    let service = BasicService;
     let sup = Supervisor::new();
     let sup2 = Supervisor::new();
     println!("{}\n{}", sup, sup2);
-    sup.add(service);
+    let controls = sup.add(service);
     spawn(proc() sup.supervise());
 
     let mut timer = Timer::new().unwrap();
     let timeout = timer.oneshot(Duration::seconds(2));
     timeout.recv();
-    //s_tx.send(Stop);
-    s_tx.send(Panic);
+    //controls.tx.send(Stop);
+    controls.tx.send(Panic);
 }
