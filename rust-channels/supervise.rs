@@ -8,8 +8,8 @@ use std::time::Duration;
 
 #[deriving(Show)]
 enum SupMsg {
-    Exited (ServiceId),
-    Panicked (ServiceId),
+    Exited,
+    Panicked,
     Panic,
     Stop
 }
@@ -107,17 +107,18 @@ fn handle_message(msg: SupMsg) -> bool {
     proceed
 }
 
-struct Supervisor {
+struct Supervisor;
+
+struct SupervisorControls {
     id: SupervisorId,
-    current_service_id: AtomicUint,
-    tx: Sender<SupMsg>,
-    rx: Receiver<SupMsg>
+    tx: Sender<SupMsg>
 }
 
-impl Show for Supervisor {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Supervisor {} id: {} {}", "{", self.id, "}")
-    }
+struct SupervisorState {
+    id: SupervisorId,
+    current_service_id: uint,
+    tx: Sender<SupMsg>,
+    rx: Receiver<SupMsg>
 }
 
 static CURRENT_SUPERVISOR_ID : AtomicUint = INIT_ATOMIC_UINT;
@@ -132,30 +133,34 @@ struct ServiceId {
 
 impl Supervisor {
 
-    fn new() -> Supervisor {
+    pub fn start() -> SupervisorControls {
+        Service::start(Handle(None))
+    }
+
+    fn start_with_handle_id(handle: Handle, id: uint) -> SupervisorControls {
         let (tx, rx) = channel();
-        Supervisor { id: CURRENT_SUPERVISOR_ID.fetch_add(1, SeqCst),
-                     current_service_id: INIT_ATOMIC_UINT,
-                     tx: tx, rx: rx }
+        let controls_tx = tx.clone();
+        let state =
+            SupervisorState { id: id, current_service_id: 0,
+                              tx: tx, rx: rx };
+        spawn(proc() Supervisor.serve(handle, state));
+        SupervisorControls { id: id, tx: controls_tx }
     }
 
-    fn add<C: ServiceControls,
-           ServiceState,
-           Child: Service<C, ServiceState>>(&self, service: Child) -> C {
-        let child_tx = self.tx.clone();
-        let service_id =
-            ServiceId { sup: self.id,
-                        service: self.current_service_id.fetch_add(1, SeqCst) };
-        let handle = Handle { tx: child_tx.clone(),
-                              service_id: service_id };
-        Service::start(handle)
+}
+
+impl Service<SupervisorControls, SupervisorState> for Supervisor {
+
+    fn start(handle: Handle) -> SupervisorControls {
+        let id = CURRENT_SUPERVISOR_ID.fetch_add(1, SeqCst);
+        Supervisor::start_with_handle_id(handle, id)
     }
 
-    fn supervise(&self) {
+    fn serve(&self, _: Handle, s: SupervisorState) {
         loop {
-            match self.rx.recv() {
-                Exited (service) | Panicked (service) =>
-                    println!("child {} died", service),
+            match s.rx.recv() {
+                Exited | Panicked =>
+                    println!("child died"),
                 other =>
                     println!("sup received {}", other)
             };
@@ -166,31 +171,56 @@ impl Supervisor {
 
 }
 
-struct Handle {
-    tx: Sender<SupMsg>,
-    service_id: ServiceId
+impl SupervisorControls {
+
+    fn add<C: ServiceControls, ServiceState, Child: Service<C, ServiceState>>
+          (&self, service: Child) -> C {
+        let child_tx = self.tx.clone();
+        let handle = Handle(Some(child_tx.clone()));
+        Service::start(handle)
+    }
+
 }
+
+impl ServiceControls for SupervisorControls {
+
+    fn stop(&self) { self.tx.send(Stop); }
+
+}
+
+impl Show for SupervisorControls {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "SupervisorControls {} id: {} {}", "{", self.id, "}")
+    }
+}
+
+// Handle passed to the top-level supervisor does not have a supervisor channel.
+struct Handle(Option<Sender<SupMsg>>);
 
 impl Drop for Handle {
     fn drop(&mut self) {
-        if std::task::failing()
-            { self.tx.send(Panicked (self.service_id)); }
-        else
-            { self.tx.send(Exited (self.service_id)); }
+        match *self {
+            Handle(None) => (),
+            Handle(Some (ref tx)) => {
+                if std::task::failing()
+                    { tx.send(Panicked); }
+                else
+                    { tx.send(Exited); }
+            }
+        }
     }
 }
 
 fn main() {
-    let service = BasicService;
-    let sup = Supervisor::new();
-    let sup2 = Supervisor::new();
-    println!("{}\n{}", sup, sup2);
-    let controls = sup.add(service);
-    spawn(proc() sup.supervise());
-
+    let sup = Supervisor::start();
+    println!("sup = {}", sup);
+    let controls = sup.add(BasicService);
     let mut timer = Timer::new().unwrap();
-    let timeout = timer.oneshot(Duration::seconds(2));
+    let mut timeout = timer.oneshot(Duration::seconds(1));
     timeout.recv();
-    //controls.tx.send(Stop);
-    controls.tx.send(Panic);
+    //controls.ping();
+    timeout = timer.oneshot(Duration::seconds(1));
+    timeout.recv();
+    controls.stop();
+    //sup.remove(id);
 }
