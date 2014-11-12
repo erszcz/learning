@@ -7,11 +7,21 @@ use std::sync::atomic::{AtomicUint, SeqCst, INIT_ATOMIC_UINT};
 use std::time::Duration;
 
 #[deriving(Show)]
-enum SupMsg {
+enum ExitSignal {
     Exited,
-    Panicked,
+    Panicked
+}
+
+#[deriving(Show)]
+enum BasicServiceMsg {
     Panic,
     Stop
+}
+
+enum SupervisorMsg {
+    AddChild (Box<Service<ServiceControls> + Send>),
+    // TODO: simplify to just Stop once split into modules is done
+    StopSupervisor
 }
 
 // Service is a service description.
@@ -42,12 +52,12 @@ trait ServiceControls: Send {
 struct BasicService;
 
 struct BasicServiceState {
-    tx: Sender<SupMsg>,
-    rx: Receiver<SupMsg>
+    tx: Sender<BasicServiceMsg>,
+    rx: Receiver<BasicServiceMsg>
 }
 
 struct BasicServiceControls {
-    tx: Sender<SupMsg>
+    tx: Sender<BasicServiceMsg>
 }
 
 impl BasicService {
@@ -66,8 +76,8 @@ impl BasicService {
             }
             let ret = sel.wait();
             if ret == rx.id() {
-                let sup_msg = rx.recv();
-                if !handle_message(sup_msg)
+                let msg = rx.recv();
+                if !handle_message(msg)
                     { break  }
             } else if ret == timeout.id() {
                 let () = timeout.recv();
@@ -98,12 +108,11 @@ impl ServiceControls for BasicServiceControls {
 
 }
 
-fn handle_message(msg: SupMsg) -> bool {
+fn handle_message(msg: BasicServiceMsg) -> bool {
     println!("received {}", msg);
     let proceed = match msg {
         Stop => false,
-        Panic => panic!("intentional panic"),
-        _ => true
+        Panic => panic!("intentional panic")
     };
     proceed
 }
@@ -112,14 +121,18 @@ struct Supervisor;
 
 struct SupervisorControls {
     id: SupervisorId,
-    tx: Sender<SupMsg>
+    tx: Sender<SupervisorMsg>,
+    exit_tx: Sender<ExitSignal>
 }
 
 struct SupervisorState {
     id: SupervisorId,
     current_service_id: uint,
-    tx: Sender<SupMsg>,
-    rx: Receiver<SupMsg>
+    tx: Sender<SupervisorMsg>,
+    rx: Receiver<SupervisorMsg>,
+    exit_tx: Sender<ExitSignal>,
+    exit_rx: Receiver<ExitSignal>
+
 }
 
 static CURRENT_SUPERVISOR_ID : AtomicUint = INIT_ATOMIC_UINT;
@@ -140,21 +153,21 @@ impl Supervisor {
 
     fn start_with_handle_id(handle: Handle, id: uint) -> SupervisorControls {
         let (tx, rx) = channel();
+        let (exit_tx, exit_rx) = channel();
         let controls_tx = tx.clone();
         let state =
             SupervisorState { id: id, current_service_id: 0,
-                              tx: tx, rx: rx };
+                              tx: tx, rx: rx,
+                              exit_tx: exit_tx.clone(), exit_rx: exit_rx };
         spawn(proc() Supervisor.serve(handle, state));
-        SupervisorControls { id: id, tx: controls_tx }
+        SupervisorControls { id: id, tx: controls_tx, exit_tx: exit_tx }
     }
 
     fn serve(&self, _: Handle, s: SupervisorState) {
         loop {
-            match s.rx.recv() {
+            match s.exit_rx.recv() {
                 Exited | Panicked =>
-                    println!("child died"),
-                other =>
-                    println!("sup received {}", other)
+                    println!("child died")
             };
             //println!("supervisor exiting");
             //break
@@ -176,8 +189,7 @@ impl SupervisorControls {
 
     fn add<C: ServiceControls, Child: Service<C>>
           (&self, service: Child) -> C {
-        let child_tx = self.tx.clone();
-        let handle = Handle(Some(child_tx.clone()));
+        let handle = Handle(Some(self.exit_tx.clone()));
         Service::start(handle)
     }
 
@@ -185,7 +197,7 @@ impl SupervisorControls {
 
 impl ServiceControls for SupervisorControls {
 
-    fn stop(&self) { self.tx.send(Stop); }
+    fn stop(&self) { self.tx.send(StopSupervisor); }
 
 }
 
@@ -196,7 +208,7 @@ impl Show for SupervisorControls {
 }
 
 // Handle passed to the top-level supervisor does not have a supervisor channel.
-struct Handle(Option<Sender<SupMsg>>);
+struct Handle(Option<Sender<ExitSignal>>);
 
 impl Drop for Handle {
     fn drop(&mut self) {
