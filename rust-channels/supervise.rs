@@ -1,5 +1,6 @@
 #![feature(macro_rules)]
 
+use std::any::{Any, AnyRefExt};
 use std::comm::Select;
 use std::fmt::{mod, Show};
 use std::io::timer::Timer;
@@ -19,7 +20,8 @@ enum BasicServiceMsg {
 }
 
 enum SupervisorMsg {
-    AddChild (Box<Service<ServiceControls> + Send>),
+    //AddChild (Box<Service<ServiceControls + 'static + Send> + Send>),
+    AddChild (Box<Any + Send>),
     // TODO: simplify to just Stop once split into modules is done
     StopSupervisor
 }
@@ -42,7 +44,7 @@ trait Service<Controls: ServiceControls>: Send {
 
 // ServiceControls is an interface for interacting with the service,
 // which, unlike its state, can be freely copied.
-trait ServiceControls: Send {
+trait ServiceControls {
 
     // Called to stop execution, most probably from outside of the service's task.
     fn stop(&self);
@@ -189,6 +191,7 @@ impl SupervisorControls {
 
     fn add<C: ServiceControls, Child: Service<C>>
           (&self, service: Child) -> C {
+        self.tx.send(AddChild(box service));
         let handle = Handle(Some(self.exit_tx.clone()));
         Service::start(handle)
     }
