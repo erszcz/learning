@@ -65,3 +65,45 @@ and then the node is brought up again, the table might be in two states:
 **This might lead to inconsistency between table contents on different nodes!**
 When a node is its own master for a given table, it won't properly
 reconcile table contents with other nodes on Mnesia startup.
+
+# Exercise: content changing when one node is down
+
+Shell A:
+
+```erlang
+./start.sh a
+rd(row, {id, data}).
+application:start(mnesia).
+mnesia:change_table_copy_type(schema, node(), disc_copies).
+mnesia:create_table(row, [{attributes, record_info(fields, row)}]).
+mnesia:activity(transaction, fun mnesia:write/1, [#row{id=1, data="ala"}]).
+mnesia:activity(transaction, fun mnesia:write/1, [#row{id=2, data="bolo"}]).
+ets:tab2list(row).
+```
+
+Shell B:
+
+```erlang
+./start.sh b
+application:start(mnesia).
+mnesia:change_config(extra_db_nodes, [a@x4]).
+mnesia:change_table_copy_type(schema, node(), disc_copies).
+mnesia:add_table_copy(row, b@x4, ram_copies).
+ets:tab2list(row).
+erlang:halt().
+```
+
+Shell A when node B is down:
+
+```erlang
+mnesia:activity(transaction, fun mnesia:delete/1, [{row, 1}]).
+ets:tab2list(row).
+```
+
+Again shell B:
+
+```erlang
+./start.sh b
+application:start(mnesia).
+ets:tab2list(row).
+```
