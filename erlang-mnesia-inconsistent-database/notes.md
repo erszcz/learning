@@ -76,6 +76,7 @@ rd(row, {id, data}).
 application:start(mnesia).
 mnesia:change_table_copy_type(schema, node(), disc_copies).
 mnesia:create_table(row, [{attributes, record_info(fields, row)}]).
+mnesia:change_table_copy_type(row, node(), disc_copies).
 mnesia:activity(transaction, fun mnesia:write/1, [#row{id=1, data="ala"}]).
 mnesia:activity(transaction, fun mnesia:write/1, [#row{id=2, data="bolo"}]).
 ets:tab2list(row).
@@ -89,6 +90,7 @@ application:start(mnesia).
 mnesia:change_config(extra_db_nodes, [a@x4]).
 mnesia:change_table_copy_type(schema, node(), disc_copies).
 mnesia:add_table_copy(row, b@x4, ram_copies).
+mnesia:change_table_copy_type(row, node(), disc_copies).
 ets:tab2list(row).
 erlang:halt().
 ```
