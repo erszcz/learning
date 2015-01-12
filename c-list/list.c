@@ -24,8 +24,6 @@ struct item*
 find(struct item* item, int data) {
     while (item != NULL && item->data != data)
         item = item->next;
-    if (item == NULL)
-        return NULL;
     return item;
 }
 
@@ -90,6 +88,10 @@ int main(int argc, const char *argv[])
     print(list);
 
     print_element(find(list, 3), "\n");
+
+    assert(find(list, 7) == NULL);
+    printf("list doesn't contain element 7: ");
+    print(list);
 
     assert(!is_cycle(list));
     printf("list *is not* a cycle: ");
