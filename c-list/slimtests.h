@@ -20,7 +20,7 @@ run_tests(test_spec* tests, size_t ntests) {
             fprintf(stderr, "ok \"%s\"\n", tests[i].name);
     }
     if (failed == 0) {
-        fprintf(stderr, "\nAll ok!\n");
+        fprintf(stderr, "\nAll %ld tests ok!\n", ntests);
         return 0;
     } else {
         fprintf(stderr, "\nFailed %d of %ld tests.\n", failed, ntests);
