@@ -179,7 +179,7 @@ delete_head_from_two_element_list() {
 
 bool
 delete_tail_from_two_element_list() {
-    //cleanup();
+    cleanup();
     // given
     head = calloc(1, sizeof(*head));
     head->data = 3;
@@ -192,6 +192,51 @@ delete_tail_from_two_element_list() {
     return (head == tail &&
             head->next == NULL &&
             head->data == 3);
+}
+
+bool
+delete_middle() {
+    struct item* middle;
+    cleanup();
+    // given
+    head = calloc(1, sizeof(*head));
+    head->data = 5;
+    middle = calloc(1, sizeof(*middle));
+    middle->data = 6;
+    tail = calloc(1, sizeof(*tail));
+    tail->data = 7;
+    head->next = middle;
+    middle->next = tail;
+    // when
+    delete(middle);
+    // then
+    return (head->data == 5 &&
+            tail->data == 7 &&
+            head->next == tail &&
+            tail->next == NULL);
+}
+
+bool
+delete_tail_from_longer_list() {
+    struct item* middle;
+    cleanup();
+    // given
+    head = calloc(1, sizeof(*head));
+    head->data = 8;
+    middle = calloc(1, sizeof(*middle));
+    middle->data = 9;
+    tail = calloc(1, sizeof(*tail));
+    tail->data = 10;
+    head->next = middle;
+    middle->next = tail;
+    // when
+    delete(tail);
+    // then
+    return (head->data == 8 &&
+            tail->data == 9 &&
+            head->next == middle &&
+            middle->next == NULL &&
+            middle == tail);
 }
 
 bool
@@ -209,6 +254,8 @@ test_spec tests[] = {
     TEST_SPEC(delete_a_null_element),
     TEST_SPEC(delete_head_from_two_element_list),
     TEST_SPEC(delete_tail_from_two_element_list),
+    TEST_SPEC(delete_middle),
+    TEST_SPEC(delete_tail_from_longer_list),
     // cleanup
     TEST_SPEC(cleanup_after_tests)
 };
