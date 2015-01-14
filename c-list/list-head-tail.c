@@ -186,11 +186,9 @@ delete_tail_from_two_element_list() {
     tail = calloc(1, sizeof(*tail));
     tail->data = 4;
     head->next = tail;
-    //print(head);
     // when
     delete(tail);
     // then
-    print(head);
     return (head == tail &&
             head->next == NULL &&
             head->data == 3);
