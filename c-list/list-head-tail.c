@@ -17,11 +17,12 @@ void
 delete_list(struct item** root) {
     if (*root == NULL)
         return;
-    struct item* this = *root;
-    while (this != NULL) {
-        free(this);
-        this = (*root)->next;
-        *root = this;
+    struct item* next = (*root)->next;
+    while (*root != NULL) {
+        free(*root);
+        *root = next;
+        if (next != NULL)
+            next = next->next;
     }
 }
 
@@ -105,6 +106,8 @@ cleanup() {
         delete_list(&head);
         tail = NULL;
     }
+    assert(head == NULL);
+    assert(tail == NULL);
 }
 
 bool sanity_check() { return true; }

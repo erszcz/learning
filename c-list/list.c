@@ -32,10 +32,11 @@ delete(struct item** root) {
     if (*root == NULL)
         return;
     struct item* this = *root;
-    while (this != NULL) {
-        free(this);
-        this = (*root)->next;
-        *root = this;
+    while (*root != NULL) {
+        free(*root);
+        *root = next;
+        if (next != NULL)
+            next = next->next;
     }
 }
 
