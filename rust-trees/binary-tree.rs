@@ -36,6 +36,24 @@ fn search<'b, T: Ord>(key: T, tree: &'b Option<Box<Tree<T>>>)
     }
 }
 
+#[inline]
+fn height<'b, T: Ord>(tree: &'b Option<Box<Tree<T>>>)
+    -> usize { height_r(tree, 0) - 1 }
+
+fn height_r<'b, T: Ord>(tree: &'b Option<Box<Tree<T>>>, acc: usize)
+    -> usize
+{
+    match *tree {
+        None => acc,
+        Some (ref boxed) => {
+            let lh = height_r(&boxed.l, acc);
+            let rh = height_r(&boxed.r, acc);
+            if lh > rh { lh + 1 }
+            else       { rh + 1 }
+        }
+    }
+}
+
 #[test]
 fn search_in_one_element_tree() {
     let t = Tree { l: None, r: None, data: 123 };
@@ -71,4 +89,17 @@ fn search_in_two_level_deep_tree(expected: i64) {
     let root = Tree { l: Some (box l), r: Some (box r), data: 123i64 };
     let res = *search(expected, &Some(box root)).unwrap();
     assert_eq!(expected, res);
+}
+
+#[test]
+fn height_of_one_element_tree() {
+    let t = Tree { l: None, r: None, data: 123 };
+    assert_eq!(0, height(&Some(box t)));
+}
+
+#[test]
+fn height_of_two_element_tree() {
+    let r = Tree { l: None, r: None, data: 456i64 };
+    let root = Tree { l: None, r: Some (box r), data: 123i64 };
+    assert_eq!(1, height(&Some(box root)));
 }
