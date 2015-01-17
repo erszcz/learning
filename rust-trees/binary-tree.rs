@@ -89,7 +89,19 @@ fn height_r<'b, T: TreeData>(tree: &'b Option<Box<Tree<T>>>, acc: usize)
 }
 
 // Perform a preorder traversal not using recursion.
-fn preorder_traversal<T: TreeData, F: FnMut(T)>
+//
+// After some thought I've got a hunch that this approach is grossly inefficient.
+// Since the left/right subtrees are uniquely owned and T is copyable,
+// putting a subtree on the stack probably means **copying the whole subtree!**
+//
+// It's nice as an exercise of substituting a stack for the recursion call-stack,
+// but in practice, when coupled with Rust's unique ownership, probably results
+// in horrendous performance.
+//
+// One way to alleviate the problem (i.e. use iterative approach with stack)
+// by avoiding copying would be to use `Rc<Tree>` or `Gc<Tree>` instead
+// of `Box<Tree>` for subtrees.
+fn preorder_traversal_i<T: TreeData, F: FnMut(T)>
                      (tree: Option<Box<Tree<T>>>, mut f: F) {
     if tree.is_none()
         { return }
@@ -101,6 +113,16 @@ fn preorder_traversal<T: TreeData, F: FnMut(T)>
         if this.r.is_some() { stack.push(*this.r.unwrap()) }
         if this.l.is_some() { stack.push(*this.l.unwrap()) }
     }
+}
+
+fn preorder_traversal<T: Ord, F: FnMut(T)>
+                     (tree: Option<Box<Tree<T>>>, f: &mut F) {
+    if tree.is_none()
+        { return }
+    let unboxed_tree = *tree.expect("empty tree");
+    f(unboxed_tree.data);
+    preorder_traversal(unboxed_tree.l, f);
+    preorder_traversal(unboxed_tree.r, f);
 }
 
 // Perform an inorder traversal not using recursion.
@@ -215,9 +237,11 @@ fn four_element_bst<T: TreeData>(d1: T, d2: T, d3: T, d4: T) -> Tree<T> {
 fn preorder_traversal_3bst() {
     let t = three_element_bst(23, 123, 456);
     let mut v: Vec<i32> = vec!();
-    preorder_traversal(Some (box t),
-                       |&mut:node_data|{ print!("{} ", node_data);
-                                         v.push(node_data) });
+    {
+        let mut f = |&mut:node_data|{ print!("{} ", node_data);
+                                      v.push(node_data) };
+        preorder_traversal(Some (box t), &mut f);
+    }
     assert_eq!(v, vec![123, 23, 456]);
 }
 
@@ -225,9 +249,11 @@ fn preorder_traversal_3bst() {
 fn preorder_traversal_4bst() {
     let t = four_element_bst(2, 5, 7, 9);
     let mut v: Vec<i32> = vec!();
-    preorder_traversal(Some (box t),
-                       |&mut:node_data|{ print!("{} ", node_data);
-                                         v.push(node_data) });
+    {
+        let mut f = |&mut:node_data|{ print!("{} ", node_data);
+                                      v.push(node_data) };
+        preorder_traversal(Some (box t), &mut f);
+    }
     assert_eq!(v, vec![7, 2, 5, 9]);
 }
 
