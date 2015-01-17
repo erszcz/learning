@@ -97,11 +97,17 @@ fn inorder_traversal <T: Ord+String+Clone, F: FnMut(T)>
     }
 }
 
+#[cfg(test)]
+fn one_element_tree(data: i32) -> Tree<i32> {
+    Tree { l: None, r: None, data: data }
+}
+
 #[test]
 fn search_in_one_element_tree() {
-    let t = Tree { l: None, r: None, data: 123 };
-    let res: i32 = *search(123, &Some(box t)).unwrap();
-    assert_eq!(123, res);
+    let needle = 123;
+    let t = one_element_tree(needle);
+    let res: i32 = *search(needle, &Some(box t)).unwrap();
+    assert_eq!(needle, res);
 }
 
 #[test]
@@ -119,12 +125,6 @@ fn search_root_in_two_level_deep_tree() {
     search_in_two_level_deep_tree(123);
 }
 
-#[test]
-fn search_nonexistent_in_tree() {
-    let t = Tree { l: None, r: None, data: 123 };
-    assert!(search(456, &Some(box t)).is_none());
-}
-
 #[cfg(test)]
 fn search_in_two_level_deep_tree(expected: i32) {
     let l = Tree { l: None, r: None, data: 23 };
@@ -135,38 +135,86 @@ fn search_in_two_level_deep_tree(expected: i32) {
 }
 
 #[test]
+fn search_nonexistent_in_tree() {
+    let data = 123;
+    let t = one_element_tree(data);
+    assert!(search(456, &Some(box t)).is_none());
+}
+
+#[test]
 fn height_of_one_element_tree() {
-    let t = Tree { l: None, r: None, data: 123 };
+    let t = one_element_tree(123);
     assert_eq!(0, height(&Some(box t)));
 }
 
-#[test]
-fn height_of_two_element_tree() {
-    let r = Tree { l: None, r: None, data: 456 };
-    let root = Tree { l: None, r: Some (box r), data: 123 };
-    assert_eq!(1, height(&Some(box root)));
+#[cfg(test)]
+fn two_element_bst<T>(d1: T, d2: T) -> Tree<T> {
+    let r = Tree { l: None, r: None, data: d2 };
+    Tree { l: None, r: Some (box r), data: d1 }
 }
 
 #[test]
-fn preorder_traversal_test() {
-    let l = Tree { l: None, r: None, data: 23 };
-    let r = Tree { l: None, r: None, data: 456 };
-    let root = Tree { l: Some (box l), r: Some (box r), data: 123 };
+fn height_of_two_element_bst() {
+    let t = two_element_bst(123, 456);
+    assert_eq!(1, height(&Some(box t)));
+}
+
+#[cfg(test)]
+fn three_element_bst<T: Ord>(d1: T, d2: T, d3: T) -> Tree<T> {
+    assert!(d1 < d2);
+    assert!(d2 < d3);
+    let l = Tree { l: None, r: None, data: d1 };
+    let r = Tree { l: None, r: None, data: d3 };
+    Tree { l: Some (box l), r: Some (box r), data: d2 }
+}
+
+#[cfg(test)]
+fn four_element_bst<T: Ord>(d1: T, d2: T, d3: T, d4: T) -> Tree<T> {
+    assert!(d1 < d2);
+    assert!(d2 < d3);
+    assert!(d3 < d4);
+    let lr = Tree { l: None, r: None, data: d2 };
+    let l = Tree { l: None, r: Some (box lr), data: d1 };
+    let r = Tree { l: None, r: None, data: d4 };
+    Tree { l: Some (box l), r: Some (box r), data: d3 }
+}
+
+#[test]
+fn preorder_traversal_3bst() {
+    let t = three_element_bst(23, 123, 456);
     let mut v: Vec<i32> = vec!();
-    preorder_traversal(Some (box root),
+    preorder_traversal(Some (box t),
                        |&mut:node_data|{ print!("{} ", node_data);
                                          v.push(node_data) });
     assert_eq!(v, vec![123, 23, 456]);
 }
 
 #[test]
-fn inorder_traversal_test() {
-    let l = Tree { l: None, r: None, data: 23 };
-    let r = Tree { l: None, r: None, data: 456 };
-    let root = Tree { l: Some (box l), r: Some (box r), data: 123 };
+fn preorder_traversal_4bst() {
+    let t = four_element_bst(2, 5, 7, 9);
     let mut v: Vec<i32> = vec!();
-    inorder_traversal(Some (box root),
+    preorder_traversal(Some (box t),
+                       |&mut:node_data|{ print!("{} ", node_data);
+                                         v.push(node_data) });
+    assert_eq!(v, vec![7, 2, 5, 9]);
+}
+
+#[test]
+fn inorder_traversal_3bst() {
+    let t = three_element_bst(23, 123, 456);
+    let mut v: Vec<i32> = vec!();
+    inorder_traversal(Some (box t),
                       |&mut:node_data|{ print!("{} ", node_data);
                                         v.push(node_data) });
     assert_eq!(v, vec![23, 123, 456]);
+}
+
+#[test]
+fn inorder_traversal_4bst() {
+    let t = four_element_bst(2, 5, 7, 9);
+    let mut v: Vec<i32> = vec!();
+    inorder_traversal(Some (box t),
+                      |&mut:node_data|{ print!("{} ", node_data);
+                                        v.push(node_data) });
+    assert_eq!(v, vec![2, 5, 7, 9]);
 }
