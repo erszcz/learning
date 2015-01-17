@@ -1,11 +1,26 @@
 #![feature(box_syntax)]
-use std::fmt::String;
+
+trait TreeData : Clone + Ord {}
+
+impl TreeData for i32 {}
 
 #[derive(Clone)]
-struct Tree<T> {
+struct Tree<T: TreeData> {
     l    : Option<Box<Tree<T>>>,
     r    : Option<Box<Tree<T>>>,
     data : T
+}
+
+impl<T: TreeData> Tree<T> {
+
+    fn new(data: T) -> Tree<T> { Tree { data: data, l: None, r: None } }
+
+    fn to_vec(t: Tree<T>) -> Vec<T> {
+        let mut v: Vec<T> = vec!();
+        inorder_traversal(Some (box t), |&mut:node_data|{ v.push(node_data) });
+        v
+    }
+
 }
 
 #[allow(unused_parens)]
@@ -19,7 +34,7 @@ impl<T: PartialEq> PartialEq for Tree<T> {
 
 impl<T: Eq> Eq for Tree<T> {}
 
-fn search<'b, T: Ord>(key: T, tree: &'b Option<Box<Tree<T>>>)
+fn search<'b, T: TreeData>(key: T, tree: &'b Option<Box<Tree<T>>>)
     -> Option<&'b T>
 {
     let mut this: &'b Option<Box<Tree<T>>> = tree;
@@ -38,11 +53,28 @@ fn search<'b, T: Ord>(key: T, tree: &'b Option<Box<Tree<T>>>)
     }
 }
 
+fn insert<T: TreeData>(key: T, tree: &mut Option<Box<Tree<T>>>)
+{
+    match *tree {
+        None => {
+            *tree = Some (box Tree::new(key));
+            return;
+        },
+        Some (ref mut boxed) => {
+            match key {
+                _ if key < boxed.data => insert(key, &mut boxed.l),
+                _ if key > boxed.data => insert(key, &mut boxed.r),
+                _ => ()
+            }
+        }
+    }
+}
+
 #[inline]
-fn height<'b, T: Ord>(tree: &'b Option<Box<Tree<T>>>)
+fn height<'b, T: TreeData>(tree: &'b Option<Box<Tree<T>>>)
     -> usize { height_r(tree, 0) - 1 }
 
-fn height_r<'b, T: Ord>(tree: &'b Option<Box<Tree<T>>>, acc: usize)
+fn height_r<'b, T: TreeData>(tree: &'b Option<Box<Tree<T>>>, acc: usize)
     -> usize
 {
     match *tree {
@@ -57,7 +89,7 @@ fn height_r<'b, T: Ord>(tree: &'b Option<Box<Tree<T>>>, acc: usize)
 }
 
 // Perform a preorder traversal not using recursion.
-fn preorder_traversal<T: Ord+String+Clone, F: FnMut(T)>
+fn preorder_traversal<T: TreeData, F: FnMut(T)>
                      (tree: Option<Box<Tree<T>>>, mut f: F) {
     if tree.is_none()
         { return }
@@ -72,7 +104,7 @@ fn preorder_traversal<T: Ord+String+Clone, F: FnMut(T)>
 }
 
 // Perform an inorder traversal not using recursion.
-fn inorder_traversal <T: Ord+String+Clone, F: FnMut(T)>
+fn inorder_traversal <T: TreeData, F: FnMut(T)>
                      (tree: Option<Box<Tree<T>>>, mut f: F) {
     enum Visit { Descent, Ascent }
     if tree.is_none()
@@ -148,7 +180,7 @@ fn height_of_one_element_tree() {
 }
 
 #[cfg(test)]
-fn two_element_bst<T>(d1: T, d2: T) -> Tree<T> {
+fn two_element_bst<T: TreeData>(d1: T, d2: T) -> Tree<T> {
     let r = Tree { l: None, r: None, data: d2 };
     Tree { l: None, r: Some (box r), data: d1 }
 }
@@ -160,7 +192,7 @@ fn height_of_two_element_bst() {
 }
 
 #[cfg(test)]
-fn three_element_bst<T: Ord>(d1: T, d2: T, d3: T) -> Tree<T> {
+fn three_element_bst<T: TreeData>(d1: T, d2: T, d3: T) -> Tree<T> {
     assert!(d1 < d2);
     assert!(d2 < d3);
     let l = Tree { l: None, r: None, data: d1 };
@@ -169,7 +201,7 @@ fn three_element_bst<T: Ord>(d1: T, d2: T, d3: T) -> Tree<T> {
 }
 
 #[cfg(test)]
-fn four_element_bst<T: Ord>(d1: T, d2: T, d3: T, d4: T) -> Tree<T> {
+fn four_element_bst<T: TreeData>(d1: T, d2: T, d3: T, d4: T) -> Tree<T> {
     assert!(d1 < d2);
     assert!(d2 < d3);
     assert!(d3 < d4);
@@ -217,4 +249,50 @@ fn inorder_traversal_4bst() {
                       |&mut:node_data|{ print!("{} ", node_data);
                                         v.push(node_data) });
     assert_eq!(v, vec![2, 5, 7, 9]);
+}
+
+#[test]
+fn build_1bst() {
+    let t1 = one_element_tree(123);
+    let mut maybe_tree = None;
+    insert(123, &mut maybe_tree);
+    let v1 = Tree::to_vec(t1);
+    let v2 = Tree::to_vec(*maybe_tree.expect("empty tree"));
+    assert_eq!(v1, v2);
+}
+
+#[test]
+fn build_2bst() {
+    let t1 = two_element_bst(123, 456);
+    let mut maybe_tree = None;
+    insert(123, &mut maybe_tree);
+    insert(456, &mut maybe_tree);
+    let v1 = Tree::to_vec(t1);
+    let v2 = Tree::to_vec(*maybe_tree.expect("empty tree"));
+    assert_eq!(v1, v2);
+}
+
+#[test]
+fn build_3bst() {
+    let t1 = three_element_bst(23, 123, 456);
+    let mut maybe_tree = None;
+    insert(123, &mut maybe_tree);
+    insert(23, &mut maybe_tree);
+    insert(456, &mut maybe_tree);
+    let v1 = Tree::to_vec(t1);
+    let v2 = Tree::to_vec(*maybe_tree.expect("empty tree"));
+    assert_eq!(v1, v2);
+}
+
+#[test]
+fn build_4bst() {
+    let t1 = four_element_bst(2, 5, 7, 9);
+    let mut maybe_tree = None;
+    insert(7, &mut maybe_tree);
+    insert(2, &mut maybe_tree);
+    insert(9, &mut maybe_tree);
+    insert(5, &mut maybe_tree);
+    let v1 = Tree::to_vec(t1);
+    let v2 = Tree::to_vec(*maybe_tree.expect("empty tree"));
+    assert_eq!(v1, v2);
 }
