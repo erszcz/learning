@@ -1,0 +1,14 @@
+{application, mad,
+ [
+  {description, "Erlang port scanner"},
+  {vsn, git},
+  {modules, [
+             mad
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
