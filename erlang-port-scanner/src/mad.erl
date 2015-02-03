@@ -2,10 +2,17 @@
 
 -export([scan/2]).
 
--compile(export_all).
+%% Internal exports.
+-export([scan_addr_port/3]).
+
+%% Test-only exports.
+-export([generate_subnet_addrs/2,
+         parse_addr_or_subnet/1]).
 
 -export_type([s_ip4_address/0,
               s_ip4_subnet/0]).
+
+-define(DEFAULT_TIMEOUT, 1000). %% milliseconds
 
 -define(l2i(L), list_to_integer(L)).
 -define(i2b(I), integer_to_binary(I)).
@@ -17,11 +24,26 @@
 %% IPv4 subnet: "1.2.3.0/24"
 -type s_ip4_subnet() :: string().
 
+%%
+%% API
+%%
+
+-spec scan(AddrOrSubnet, Port) -> OpenPortsAddrs
+      when AddrOrSubnet :: s_ip4_address() | s_ip4_subnet(),
+           Port :: inet:port_number(),
+           OpenPortsAddrs :: [{inet:ip4_address(), inet:port_number()}].
 scan(AddrOrSubnet, Port) when is_integer(Port) ->
     scan(AddrOrSubnet, [Port]);
 scan(AddrOrSubnet, Ports) ->
     Addrs = parse_addr_or_subnet(AddrOrSubnet),
-    ok.
+    %% TODO: allow to customize timeout
+    ScanOpts = [],
+    scan_addrs_ports(Addrs, Ports, ScanOpts),
+    receive_all(length(Addrs) * length(Ports), ScanOpts).
+
+%%
+%% Helpers
+%%
 
 -spec parse_addr_or_subnet(AddrOrSubnet) -> Addrs
       when AddrOrSubnet :: s_ip4_address() | s_ip4_subnet(),
@@ -51,3 +73,46 @@ generate_subnet_addrs(Subnet, Mask) ->
 binary_to_ip4_address(Binary) ->
     <<A:8, B:8, C:8, D:8>> = Binary,
     {A, B, C, D}.
+
+scan_addrs_ports(Addrs, Ports, Opts) ->
+    [ erlang:spawn_monitor(?MODULE, scan_addr_port, [Addr, Port, Opts])
+      || Addr <- Addrs, Port <- Ports ],
+    verbose(Opts) andalso stderr("~n").
+
+scan_addr_port(Addr, Port, Opts) ->
+    verbose(Opts) andalso stderr("."),
+    ConnectOpts = [inet, {packet, 0}],
+    case gen_tcp:connect(Addr, Port, ConnectOpts, timeout(Opts)) of
+        {ok, Socket} ->
+            gen_tcp:close(Socket),
+            exit({ok, Addr, Port});
+        Error ->
+            exit(Error)
+    end.
+
+timeout(Opts) -> get_opt(timeout, Opts, ?DEFAULT_TIMEOUT).
+
+verbose(Opts) -> get_opt(verbose, Opts, false).
+
+get_opt(Opt, Opts, Default) ->
+    case lists:keyfind(Opt, 1, Opts) of
+        {Opt, Val} -> Val;
+        false -> Default
+    end.
+
+receive_all(N, Opts) ->
+    receive_all(N, [], Opts).
+
+receive_all(0, Acc, _) -> Acc;
+receive_all(N, Acc, Opts) ->
+    receive
+        {'DOWN', _, process, _, {ok, Addr, Port}} ->
+            receive_all(N-1, [{Addr, Port} | Acc], Opts);
+        _ ->
+            receive_all(N-1, Acc, Opts)
+    after timeout(Opts) ->
+        verbose(Opts) andalso stderr("error: timeout~n"),
+        Acc
+    end.
+
+stderr(Msg) -> io:format(standard_error, Msg, []).
