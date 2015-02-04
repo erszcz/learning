@@ -38,6 +38,7 @@ scan(AddrOrSubnet, Ports) ->
     Addrs = parse_addr_or_subnet(AddrOrSubnet),
     %% TODO: allow to customize timeout
     ScanOpts = [],
+    %ScanOpts = [{verbose, true}, {timeout, 2000}],
     scan_addrs_ports(Addrs, Ports, ScanOpts),
     receive_all(length(Addrs) * length(Ports), ScanOpts).
 
@@ -76,11 +77,9 @@ binary_to_ip4_address(Binary) ->
 
 scan_addrs_ports(Addrs, Ports, Opts) ->
     [ erlang:spawn_monitor(?MODULE, scan_addr_port, [Addr, Port, Opts])
-      || Addr <- Addrs, Port <- Ports ],
-    verbose(Opts) andalso stderr("~n").
+      || Addr <- Addrs, Port <- Ports ].
 
 scan_addr_port(Addr, Port, Opts) ->
-    verbose(Opts) andalso stderr("."),
     ConnectOpts = [inet, {packet, 0}],
     case gen_tcp:connect(Addr, Port, ConnectOpts, timeout(Opts)) of
         {ok, Socket} ->
@@ -103,16 +102,20 @@ get_opt(Opt, Opts, Default) ->
 receive_all(N, Opts) ->
     receive_all(N, [], Opts).
 
-receive_all(0, Acc, _) -> Acc;
+receive_all(0, Acc, Opts) ->
+    verbose(Opts) andalso stderr("~n"),
+    Acc;
 receive_all(N, Acc, Opts) ->
     receive
         {'DOWN', _, process, _, {ok, Addr, Port}} ->
+            verbose(Opts) andalso stderr("."),
             receive_all(N-1, [{Addr, Port} | Acc], Opts);
         _ ->
+            verbose(Opts) andalso stderr("."),
             receive_all(N-1, Acc, Opts)
-    after timeout(Opts) ->
+    after 2 * timeout(Opts) ->
         verbose(Opts) andalso stderr("error: timeout~n"),
-        Acc
+        receive_all(0, Acc, Opts)
     end.
 
 stderr(Msg) -> io:format(standard_error, Msg, []).
