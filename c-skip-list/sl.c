@@ -29,9 +29,10 @@ int sl_snprint(char* str, size_t size, struct sl_head sl) {
     size_t left = size, written;
     for (l = 0; l < MAXL; l++) {
         n = sl.next[l];
-        while (n) {
+        while (n != NULL) {
             written = snprintf(p, left, "%d%s",
-                               n->data, n->next[l] ? " " : "\n");
+                               n->data,
+                               n->next[l] ? " " : "\n");
             left -= written;
             assert(written < size);
             assert(left >= 0);
@@ -48,17 +49,70 @@ int sl_fprint(FILE* f, struct sl_head sl) {
     fprintf(f, "%s", buf);
 }
 
-int sl_scan(struct sl_head* sl) {
-    int i;
-    for (i = 0; i < MAXL; i++) {
-        sl->next[i] = NULL;
-    }
-    return 0;
+void sl_head_init(struct sl_head* sl) {
+    memset(sl, 0, sizeof(*sl));
 }
 
 void sl_node_init(struct sl_node* n, int data) {
     memset(n, 0, sizeof(*n));
     n->data = data;
+}
+
+int sl_read(const char* from, size_t size, struct sl_head* sl) {
+    char * save_line, * save_token;
+    char * str, * l, * t;
+    int i;
+    int k;
+    struct sl_node* n;
+    struct sl_node** here;
+
+    // Copy input string - we'll have to cut it in pieces.
+    str = calloc(size, 1);
+    // So lame!
+    assert(str != NULL);
+    strlcpy(str, from, size);
+
+    // Find first EOL.
+    i = 0;
+    l = strtok_r(str, "\n", &save_line);
+    // Lameness strikes again!
+    assert(l != NULL);
+
+    // Split first line into tokens;
+    // for each token allocate a node, then link them into a list.
+    t = strtok_r(l, " ", &save_token);
+    here = &sl->next[i];
+    while (t != NULL) {
+        n = calloc(1, sizeof(*n));
+        // Lameness again.
+        assert(n != NULL);
+        sl_node_init(n, atoi(t));
+        *here = n;
+        here = &n->next[i];
+        t = strtok_r(NULL, " ", &save_token);
+    }
+
+    // For each line after the first one iterate over the tokens
+    // and link only the nodes listed in the line.
+    i = 1;
+    l = strtok_r(NULL, "\n", &save_line);
+    t = strtok_r(l, " ", &save_token);
+    n = sl->next[0];
+    here = &sl->next[i];
+    while (t != NULL) {
+        k = atoi(t);
+        // Instead of allocating, as done on the first line,
+        // find n in the already linked list.
+        while (n != NULL && n->data != k)
+            n = n->next[0];
+        // Assert we didn't reach the end of the list without finding
+        // a node which already stores k.
+        assert(n != NULL);
+        *here = n;
+        here = &n->next[i];
+        t = strtok_r(NULL, " ", &save_token);
+    }
+    return 0;
 }
 
 #define size(arr) (sizeof(arr) / sizeof(arr[0]))
@@ -84,12 +138,34 @@ bool test_print() {
     sl_snprint(buf, PRINT_BUFSIZE, sl);
     //fprintf(stderr, "%s", example);
     //fprintf(stderr, "%s", buf);
-    return strncmp(example, buf, strlen(example)) == 0;
+    return strncmp(example, buf, PRINT_BUFSIZE) == 0;
 }
+
+bool test_read() {
+    char* example = "1 2 3\n"
+                    "1 3\n";
+    struct sl_head sl;
+    sl_head_init(&sl);
+    sl_read(example, strlen(example) + 1, &sl);
+    //sl_fprint(stderr, sl);
+    return (sl.next[0] && sl.next[0]->data == 1 &&
+            sl.next[0]->next[0] && sl.next[0]->next[0]->data == 2 &&
+            sl.next[0]->next[0]->next[0] &&
+            sl.next[0]->next[0]->next[0]->data == 3 &&
+            sl.next[0]->next[0]->next[0]->next[0] == NULL &&
+            sl.next[1] && sl.next[1]->data == 1 &&
+            sl.next[1]->next[1] && sl.next[1]->next[1]->data == 3 &&
+            sl.next[1]->next[1]->next[1] == NULL &&
+            sl.next[2] == NULL);
+}
+
+bool identity() { return false; }
 
 test_spec tests[] = {
     TEST_SPEC(sanity_check),
-    TEST_SPEC(test_print)
+    TEST_SPEC(test_print),
+    TEST_SPEC(test_read),
+    TEST_SPEC(identity)
 };
 
 int main(int argc, const char *argv[])
