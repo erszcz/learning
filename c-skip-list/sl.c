@@ -93,24 +93,28 @@ int sl_read(const char* from, size_t size, struct sl_head* sl) {
     }
 
     // For each line after the first one iterate over the tokens
-    // and link only the nodes listed in the line.
+    // and link only the nodes listed on the line.
     i = 1;
     l = strtok_r(NULL, "\n", &save_line);
-    t = strtok_r(l, " ", &save_token);
-    n = sl->next[0];
-    here = &sl->next[i];
-    while (t != NULL) {
-        k = atoi(t);
-        // Instead of allocating, as done on the first line,
-        // find n in the already linked list.
-        while (n != NULL && n->data != k)
-            n = n->next[0];
-        // Assert we didn't reach the end of the list without finding
-        // a node which already stores k.
-        assert(n != NULL);
-        *here = n;
-        here = &n->next[i];
-        t = strtok_r(NULL, " ", &save_token);
+    while (l != NULL) {
+        n = sl->next[0];
+        here = &sl->next[i];
+        t = strtok_r(l, " ", &save_token);
+        while (t != NULL) {
+            k = atoi(t);
+            // Instead of allocating, as done on the first line,
+            // find n in the already linked list.
+            while (n != NULL && n->data != k)
+                n = n->next[0];
+            // Assert we didn't reach the end of the list without finding
+            // a node which already stores k.
+            assert(n != NULL);
+            *here = n;
+            here = &n->next[i];
+            t = strtok_r(NULL, " ", &save_token);
+        }
+        l = strtok_r(NULL, "\n", &save_line);
+        i += 1;
     }
     return 0;
 }
@@ -159,7 +163,28 @@ bool test_read() {
             sl.next[2] == NULL);
 }
 
-bool identity() { return false; }
+bool identity() {
+    char* example[] = {
+        "1\n",
+        "1 2 3\n",
+        "1 2 3\n1 3\n",
+        "1 2 3 4 5 6 7\n1 3 4 6 7\n1 4 6\n1 4\n"
+    };
+    int i;
+    bool success = true;
+    char buf[PRINT_BUFSIZE+1];
+    for (i = 0; i < size(example); i++) {
+        memset(buf, 0, PRINT_BUFSIZE+1);
+        struct sl_head sl;
+        sl_head_init(&sl);
+        sl_read(example[i], strlen(example[i]) + 1, &sl);
+        sl_snprint(buf, PRINT_BUFSIZE, sl);
+        //fprintf(stderr, "%s", example[i]);
+        //fprintf(stderr, "%s", buf);
+        success = success && (strncmp(example[i], buf, PRINT_BUFSIZE) == 0);
+    }
+    return success;
+}
 
 test_spec tests[] = {
     TEST_SPEC(sanity_check),
