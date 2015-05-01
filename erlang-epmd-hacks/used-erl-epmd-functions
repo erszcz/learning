@@ -1,0 +1,10 @@
+     {{inet6_tcp_dist,do_setup,6},{erl_epmd,port_please,2}},
+     {{inet6_tcp_dist,listen,1},{erl_epmd,register_node,2}},
+     {{inet_tcp_dist,do_setup,6},{erl_epmd,port_please,2}},
+     {{inet_tcp_dist,listen,1},{erl_epmd,register_node,2}},
+     {{inet_tls_dist,do_setup,6},{erl_epmd,port_please,2}},
+     {{net_adm,names,1},{erl_epmd,names,1}},
+     {{ssl_tls_dist_proxy,handle_call,3},
+      {erl_epmd,register_node,2}},
+     {{ts_run,tricky_print_data,2},{erl_epmd,names,0}}]}
+

@@ -1,0 +1,32 @@
+(test2@x2)5> net_adm:ping(nktest@x2).
+(<0.53.0>) call erl_epmd:port_please("nktest",{127,0,1,1})
+(<0.53.0>) call erl_epmd:port_please("nktest",{127,0,1,1},infinity)
+(<0.53.0>) call erl_epmd:get_port("nktest",{127,0,1,1},infinity)
+(<0.53.0>) call erl_epmd:open({127,0,1,1},infinity)
+(<0.53.0>) call erl_epmd:get_epmd_port()
+(<0.53.0>) returned from erl_epmd:get_epmd_port/0 -> 4369
+(<0.53.0>) returned from erl_epmd:open/2 -> {ok,#Port<0.668>}
+(<0.53.0>) call erl_epmd:to_string("nktest")
+(<0.53.0>) returned from erl_epmd:to_string/1 -> "nktest"
+(<0.53.0>) call erl_epmd:wait_for_port_reply(#Port<0.668>,[])
+(<0.53.0>) call erl_epmd:wait_for_port_reply_cont(#Port<0.668>,[162,37,77,0,0,5,0,5,0,6,110,107,116,101,115,116,0,0])
+(<0.53.0>) call erl_epmd:wait_for_port_reply_cont2(#Port<0.668>,[162,37,77,0,0,5,0,5,0,6,110,107,116,101,115,116,0,0])
+(<0.53.0>) call erl_epmd:wait_for_port_reply_name(#Port<0.668>,6,[110,107,116,101,115,116,0,0])
+(<0.53.0>) returned from erl_epmd:wait_for_port_reply_name/3 -> ok
+(<0.53.0>) call erl_epmd:best_version(5,5)
+(<0.53.0>) call erl_epmd:epmd_dist_low()
+(<0.53.0>) returned from erl_epmd:epmd_dist_low/0 -> 5
+(<0.53.0>) call erl_epmd:epmd_dist_high()
+(<0.53.0>) returned from erl_epmd:epmd_dist_high/0 -> 5
+(<0.53.0>) call erl_epmd:select_best_version(5,5,5,5)
+(<0.53.0>) returned from erl_epmd:select_best_version/4 -> 5
+(<0.53.0>) returned from erl_epmd:best_version/2 -> 5
+(<0.53.0>) returned from erl_epmd:wait_for_port_reply_cont2/2 -> {port,41509,
+                                                                  5}
+(<0.53.0>) returned from erl_epmd:wait_for_port_reply_cont/2 -> {port,41509,5}
+(<0.53.0>) returned from erl_epmd:wait_for_port_reply/2 -> {port,41509,5}
+(<0.53.0>) returned from erl_epmd:get_port/3 -> {port,41509,5}
+(<0.53.0>) returned from erl_epmd:port_please/3 -> {port,41509,5}
+(<0.53.0>) returned from erl_epmd:port_please/2 -> {port,41509,5}
+pong
+

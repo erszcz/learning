@@ -1,0 +1,148 @@
+(epmd-hacks@x2)15> net_adm:names().
+(<0.70.0>) call erl_epmd:names({127,0,1,1})
+(<0.70.0>) call erl_epmd:get_names({127,0,1,1})
+(<0.70.0>) call erl_epmd:open({127,0,1,1})
+(<0.70.0>) call erl_epmd:get_epmd_port()
+(<0.70.0>) returned from erl_epmd:get_epmd_port/0 -> 4369
+(<0.70.0>) returned from erl_epmd:open/1 -> {ok,#Port<0.678>}
+(<0.70.0>) call erl_epmd:do_get_names(#Port<0.678>)
+(<0.70.0>) call erl_epmd:get_epmd_port()
+(<0.70.0>) returned from erl_epmd:get_epmd_port/0 -> 4369
+(<0.70.0>) call erl_epmd:names_loop(#Port<0.678>,"name epmd-hacks at port 46293\n",[])
+(<0.70.0>) call erl_epmd:scan_names("name epmd-hacks at port 46293\n",[])
+(<0.70.0>) call erl_epmd:scan_line("name epmd-hacks at port 46293\n",[])
+(<0.70.0>) call erl_epmd:scan_line("ame epmd-hacks at port 46293\n","n")
+(<0.70.0>) call erl_epmd:scan_line("me epmd-hacks at port 46293\n","an")
+(<0.70.0>) call erl_epmd:scan_line("e epmd-hacks at port 46293\n","man")
+(<0.70.0>) call erl_epmd:scan_line(" epmd-hacks at port 46293\n","eman")
+(<0.70.0>) call erl_epmd:scan_line("epmd-hacks at port 46293\n"," eman")
+(<0.70.0>) call erl_epmd:scan_line("pmd-hacks at port 46293\n","e eman")
+(<0.70.0>) call erl_epmd:scan_line("md-hacks at port 46293\n","pe eman")
+(<0.70.0>) call erl_epmd:scan_line("d-hacks at port 46293\n","mpe eman")
+(<0.70.0>) call erl_epmd:scan_line("-hacks at port 46293\n","dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("hacks at port 46293\n","-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("acks at port 46293\n","h-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("cks at port 46293\n","ah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("ks at port 46293\n","cah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("s at port 46293\n","kcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line(" at port 46293\n","skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("at port 46293\n"," skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("t port 46293\n","a skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line(" port 46293\n","ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("port 46293\n"," ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("ort 46293\n","p ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("rt 46293\n","op ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("t 46293\n","rop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line(" 46293\n","trop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("46293\n"," trop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("6293\n","4 trop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("293\n","64 trop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("93\n","264 trop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("3\n","9264 trop ta skcah-dmpe eman")
+(<0.70.0>) call erl_epmd:scan_line("\n","39264 trop ta skcah-dmpe eman")
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> {"name epmd-hacks at port 46293",
+                                                  []}
+(<0.70.0>) call erl_epmd:parse_line("name epmd-hacks at port 46293")
+(<0.70.0>) call erl_epmd:parse_name("epmd-hacks at port 46293",[])
+(<0.70.0>) call erl_epmd:parse_name("pmd-hacks at port 46293","e")
+(<0.70.0>) call erl_epmd:parse_name("md-hacks at port 46293","pe")
+(<0.70.0>) call erl_epmd:parse_name("d-hacks at port 46293","mpe")
+(<0.70.0>) call erl_epmd:parse_name("-hacks at port 46293","dmpe")
+(<0.70.0>) call erl_epmd:parse_name("hacks at port 46293","-dmpe")
+(<0.70.0>) call erl_epmd:parse_name("acks at port 46293","h-dmpe")
+(<0.70.0>) call erl_epmd:parse_name("cks at port 46293","ah-dmpe")
+(<0.70.0>) call erl_epmd:parse_name("ks at port 46293","cah-dmpe")
+(<0.70.0>) call erl_epmd:parse_name("s at port 46293","kcah-dmpe")
+(<0.70.0>) call erl_epmd:parse_name(" at port 46293","skcah-dmpe")
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_name/2 -> {"epmd-hacks",
+                                                   "at port 46293"}
+(<0.70.0>) returned from erl_epmd:parse_line/1 -> {ok,{"epmd-hacks",46293}}
+(<0.70.0>) call erl_epmd:scan_names([],[{"epmd-hacks",46293}])
+(<0.70.0>) call erl_epmd:scan_line([],[])
+(<0.70.0>) returned from erl_epmd:scan_line/2 -> []
+(<0.70.0>) returned from erl_epmd:scan_names/2 -> {[],[{"epmd-hacks",46293}]}
+(<0.70.0>) returned from erl_epmd:scan_names/2 -> {[],[{"epmd-hacks",46293}]}
+(<0.70.0>) returned from erl_epmd:names_loop/3 -> {ok,[{"epmd-hacks",46293}]}
+(<0.70.0>) returned from erl_epmd:do_get_names/1 -> {ok,
+                                                     [{"epmd-hacks",46293}]}
+(<0.70.0>) returned from erl_epmd:get_names/1 -> {ok,[{"epmd-hacks",46293}]}
+(<0.70.0>) returned from erl_epmd:names/1 -> {ok,[{"epmd-hacks",46293}]}
+{ok,[{"epmd-hacks",46293}]}

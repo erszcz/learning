@@ -1,0 +1,3 @@
+%% {node, NodeName, Port, Creation}.
+{node, somenode@somehost, 33333, 1}.
+{node, someothernode@somehost, 33334, 2}.

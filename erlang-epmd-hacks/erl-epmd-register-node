@@ -1,0 +1,34 @@
+4> net_kernel:start([nktest, shortnames]).
+(<0.47.0>) call erl_epmd:start_link()
+(<0.48.0>) call erl_epmd:init([])
+(<0.48.0>) returned from erl_epmd:init/1 -> {ok,{state,-1,-1,[]}}
+(<0.47.0>) returned from erl_epmd:start_link/0 -> {ok,<0.48.0>}
+(<0.50.0>) call erl_epmd:register_node(nktest,41509)
+(<0.48.0>) call erl_epmd:handle_call({register,nktest,41509},{<0.50.0>,#Ref<0.0.0.279>},{state,-1,-1,[]})
+(<0.48.0>) call erl_epmd:do_register_node(nktest,41509)
+(<0.48.0>) call erl_epmd:open()
+(<0.48.0>) call erl_epmd:open({127,0,0,1})
+(<0.48.0>) call erl_epmd:get_epmd_port()
+(<0.48.0>) returned from erl_epmd:get_epmd_port/0 -> 4369
+(<0.48.0>) returned from erl_epmd:open/1 -> {ok,#Port<0.605>}
+(<0.48.0>) returned from erl_epmd:open/0 -> {ok,#Port<0.605>}
+(<0.48.0>) call erl_epmd:to_string(nktest)
+(<0.48.0>) returned from erl_epmd:to_string/1 -> "nktest"
+(<0.48.0>) call erl_epmd:epmd_dist_high()
+(<0.48.0>) returned from erl_epmd:epmd_dist_high/0 -> 5
+(<0.48.0>) call erl_epmd:epmd_dist_high()
+(<0.48.0>) returned from erl_epmd:epmd_dist_high/0 -> 5
+(<0.48.0>) call erl_epmd:epmd_dist_low()
+(<0.48.0>) returned from erl_epmd:epmd_dist_low/0 -> 5
+(<0.48.0>) call erl_epmd:epmd_dist_low()
+(<0.48.0>) returned from erl_epmd:epmd_dist_low/0 -> 5
+(<0.48.0>) call erl_epmd:wait_for_reg_reply(#Port<0.605>,[])
+(<0.48.0>) returned from erl_epmd:wait_for_reg_reply/2 -> {alive,
+                                                           #Port<0.605>,3}
+(<0.48.0>) returned from erl_epmd:do_register_node/2 -> {alive,#Port<0.605>,3}
+(<0.48.0>) returned from erl_epmd:handle_call/3 -> {reply,
+                                                    {ok,3},
+                                                    {state,#Port<0.605>,
+                                                     41509,nktest}}
+(<0.50.0>) returned from erl_epmd:register_node/2 -> {ok,3}
+
