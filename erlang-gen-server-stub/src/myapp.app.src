@@ -1,0 +1,12 @@
+{application, myapp,
+ [
+  {description, "Show how to substitute a plain module for a gen_server in a supervision tree"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { myapp_app, []}},
+  {env, []}
+ ]}.
