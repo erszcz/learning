@@ -1,4 +1,5 @@
 -module(epmd_propfile).
+-behaviour(gen_server).
 
 %% API
 -export([start_link/0,
@@ -12,21 +13,30 @@
          %% open/0, open/1, open/2
         ]).
 
+%% gen_server callbacks
+-export([init/1,
+         handle_call/3,
+         handle_cast/2,
+         handle_info/2,
+         terminate/2,
+         code_change/3]).
+
 -define(EPMD_PROPFILE, "/tmp/epmd.dat").
+-define(SERVER, erl_epmd).
 %% This probably should not be hardcoded, but I don't know yet what it means.
 -define(VERSION, 5).
+
+-record(state, {}).
 
 %%%===================================================================
 %%% API
 %%%===================================================================
 
 start_link() ->
-    %% Ultimately, this should be a gen_server, so that write-access
-    %% to the managed resource is serialized and, therefore, safe.
-    %% For simplicity's sake, though, we don't pay attention for now.
-    ignore.
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-stop() -> ok.
+stop() ->
+    gen_server:call(?SERVER, stop, infinity).
 
 %% (<0.53.0>) call erl_epmd:port_please("nktest",{127,0,1,1})
 %% (<0.53.0>) returned from erl_epmd:port_please/2 -> {port,41509,5}
@@ -51,6 +61,45 @@ names(_EpmdAddr) ->
     get_names(?EPMD_PROPFILE).
 
 %%%===================================================================
+%%% gen_server callbacks
+%%%===================================================================
+
+init([]) ->
+    {ok, #state{}}.
+
+handle_call({register, Name, PortNo} = Request, _From, State) ->
+    io:format("request: ~p~n", [Request]),
+    try register_node(Name, PortNo) of
+        {ok, Creation} ->
+            {reply, {ok, Creation}, State}
+    catch
+        _:Reason ->
+            {reply, {error, Reason}, State}
+    end;
+
+handle_call(stop, _From, State) ->
+    {stop, shutdown, ok, State};
+
+handle_call(Request, _From, State) ->
+    io:format("request: ~p~n", [Request]),
+    Reply = ok,
+    {reply, Reply, State}.
+
+handle_cast(Msg, State) ->
+    io:format("msg: ~p~n", [Msg]),
+    {noreply, State}.
+
+handle_info(Info, State) ->
+    io:format("info: ~p~n", [Info]),
+    {noreply, State}.
+
+terminate(_Reason, _State) ->
+    ok.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
+
+%%%===================================================================
 %%% Internal functions
 %%%===================================================================
 
@@ -61,15 +110,19 @@ do_register_node(EpmdPropfile, Name, PortNo) ->
                       end,
     erlang:display(RegisteredNodes),
     FullName = full_name(Name),
-    NewNodes = case lists:keyfind(FullName, 2, RegisteredNodes) of
-                   false ->
-                       [{node, FullName, PortNo, 1} | RegisteredNodes];
-                   {node, FullName, _OldPort, OldCreation} ->
-                       lists:keystore(FullName, 2, RegisteredNodes,
-                                      {node, FullName, PortNo, OldCreation + 1})
-               end,
+    {NewNodes,
+     Creation} = case lists:keyfind(FullName, 2, RegisteredNodes) of
+                     false ->
+                         { [{node, FullName, PortNo, 1} | RegisteredNodes], 1 };
+                     {node, FullName, _OldPort, OldCreation} ->
+                         C = OldCreation + 1,
+                         { lists:keystore(FullName, 2, RegisteredNodes,
+                                          {node, FullName, PortNo, C}),
+                           C }
+                 end,
     ok = file:write_file(EpmdPropfile,
-                         io_lib:format("~p.~n", [lists:sort(NewNodes)])).
+                         io_lib:format("~p.~n", [lists:sort(NewNodes)])),
+    {ok, Creation}.
 
 full_name(Name) ->
     {ok, HostName} = inet:gethostname(),
