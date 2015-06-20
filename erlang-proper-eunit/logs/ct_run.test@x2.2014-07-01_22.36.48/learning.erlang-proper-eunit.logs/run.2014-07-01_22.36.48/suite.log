@@ -1,0 +1,29 @@
+=== Suite started at 2014-07-01 22:36:48
+=== Starting test, 2 test cases
+=cases         2
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  5.10.1
+=emulator      beam
+=otp_release   R16B
+=started       2014-07-01 22:36:48
+=case          ct_framework:error_in_suite
+=logfile       ct_framework.error_in_suite.html
+=started       2014-07-01 22:36:48
+=ended         2014-07-01 22:36:48
+=result        skipped
+=== *** SKIPPED *** test case 1 of 2
+=case          ct_framework:error_in_suite
+=logfile       ct_framework.error_in_suite.247008.326.html
+=started       2014-07-01 22:36:48
+=ended         2014-07-01 22:36:48
+=result        skipped
+=== *** SKIPPED *** test case 2 of 2
+=== TEST COMPLETE, 0 ok, 0 failed, 2 skipped of 2 test cases
+
+=finished      2014-07-01 22:36:48
+=failed        0
+=successful    0
+=user_skipped  2
+=auto_skipped  0

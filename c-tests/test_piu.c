@@ -111,10 +111,10 @@ test_spec tests[] = {
     TEST_SPEC(piu_matches_request_not_followed_not_blocked)
 };
 
-int main(int argc, const char *argv[]) {
+int run_tests(test_spec* tests, size_t ntests) {
     int i;
     int failed = 0;
-    for (i = 0; i < size(tests); ++i) {
+    for (i = 0; i < ntests; ++i) {
         if ( !(tests[i].test)() ) {
             failed += 1;
             fprintf(stderr, "failed \"%s\"\n", tests[i].name);
@@ -125,7 +125,7 @@ int main(int argc, const char *argv[]) {
         fprintf(stderr, "\nAll ok!\n");
         return 0;
     } else {
-        fprintf(stderr, "\nFailed %d of %ld tests.\n", failed, size(tests));
+        fprintf(stderr, "\nFailed %d of %ld tests.\n", failed, ntests);
         return 1;
     }
 }

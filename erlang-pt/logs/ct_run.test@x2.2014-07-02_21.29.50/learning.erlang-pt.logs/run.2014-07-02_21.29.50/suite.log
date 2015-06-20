@@ -1,0 +1,38 @@
+=== Suite started at 2014-07-02 21:29:50
+=== Starting test, 1 test cases
+=cases         1
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  5.10.1
+=emulator      beam
+=otp_release   R16B
+=started       2014-07-02 21:29:50
+=case          ct_framework:init_per_suite
+=logfile       ct_framework.init_per_suite.html
+=group_props   [{suite,mylib_SUITE}]
+=started       2014-07-02 21:29:50
+=ended         2014-07-02 21:29:50
+=result        ok
+=elapsed       1.0e-6
+=case          mylib_SUITE:test_mylib
+=logfile       mylib_suite.test_mylib.html
+=started       2014-07-02 21:29:50
+=ended         2014-07-02 21:29:50
+=result        skipped
+=== *** SKIPPED *** test case 1 of 1
+=case          ct_framework:end_per_suite
+=logfile       ct_framework.end_per_suite.html
+=group_props   [{suite,mylib_SUITE}]
+=started       2014-07-02 21:29:50
+=ended         2014-07-02 21:29:50
+=result        ok
+=elapsed       1.0e-6
+=group_time    0.057s
+=== TEST COMPLETE, 0 ok, 0 failed, 1 skipped of 1 test cases
+
+=finished      2014-07-02 21:29:50
+=failed        0
+=successful    0
+=user_skipped  1
+=auto_skipped  0

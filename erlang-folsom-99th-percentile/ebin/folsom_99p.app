@@ -1,0 +1,7 @@
+{application,folsom_99p,
+             [{description,"An example of gathering histogram based statistics using Erlang Folsom library"},
+              {vsn,"1"},
+              {modules,[folsom_99p]},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {env,[]}]}.

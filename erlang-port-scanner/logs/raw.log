@@ -1,0 +1,20 @@
+--- Test run on 2015/02/03 22:59:37 ---
+Converting "/home/erszcz/work/learning/erlang-port-scanner/." to "/home/erszcz/work/learning/erlang-port-scanner" and re-inserting with add_patha/1
+
+
+Common Test v1.8 starting (cwd is /home/erszcz/work/learning/erlang-port-scanner)
+
+
+Common Test: Running make in test directories...
+Recompile: mad_SUITE
+
+CWD set to: "/home/erszcz/work/learning/erlang-port-scanner/logs/ct_run.test@x2.2015-02-03_22.59.38"
+
+TEST INFO: 1 test(s), 3 case(s) in 1 suite(s)
+
+Testing learning.erlang-port-scanner: Starting test, 3 test cases
+Testing learning.erlang-port-scanner: TEST COMPLETE, 3 ok, 0 failed of 3 test cases
+
+Updating /home/erszcz/work/learning/erlang-port-scanner/logs/index.html... done
+Updating /home/erszcz/work/learning/erlang-port-scanner/logs/all_runs.html... done
+

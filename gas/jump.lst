@@ -1,0 +1,17 @@
+GAS LISTING jump.s 			page 1
+
+
+   1              		.text
+   2              		.global	_start
+   3              	_start:
+   4 0000 55       		pushq	%rbp
+   5 0001 4889E5   		movq	%rsp, %rbp
+   6              	
+   7 0004 E9000000 		jmp	1
+   7      00
+   8              	
+   9              		# exit (5)
+  10 0009 48C7C705 	1:	mov	$5, %rdi
+  10      000000
+  11 0010 E9000000 		jmp	exit
+  11      00

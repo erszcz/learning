@@ -1,0 +1,15 @@
+src/tutorial/README
+
+tutorial
+========
+
+This directory contains SQL tutorial scripts.  To look at them, first do a
+	% make
+to compile all the scripts and C files for the user-defined functions
+and types. This requires postgresql-server-dev-9.1 to be installed.
+
+Then, run psql with the -s (single-step) flag:
+	% psql -s
+
+From within psql, you can try each individual script file by using
+psql's \i <filename> command.

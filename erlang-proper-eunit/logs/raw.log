@@ -1,0 +1,22 @@
+--- Test run on 2014/07/01 22:36:47 ---
+Converting "/home/erszcz/work/learning/erlang-proper-eunit/." to "/home/erszcz/work/learning/erlang-proper-eunit" and re-inserting with add_patha/1
+
+
+Common Test v1.7.1 starting (cwd is /home/erszcz/work/learning/erlang-proper-eunit)
+
+
+Common Test: Running make in test directories...
+Recompile: test2_SUITE
+
+CWD set to: "/home/erszcz/work/learning/erlang-proper-eunit/logs/ct_run.test@x2.2014-07-01_22.36.48"
+
+TEST INFO: 1 test(s), 2 case(s) in 0 suite(s)
+
+Testing learning.erlang-proper-eunit: Starting test, 2 test cases
+Testing learning.erlang-proper-eunit: *** SKIPPED *** test case 1 of 2
+Testing learning.erlang-proper-eunit: *** SKIPPED *** test case 2 of 2
+Testing learning.erlang-proper-eunit: TEST COMPLETE, 0 ok, 0 failed, 2 skipped of 2 test cases
+
+Updating /home/erszcz/work/learning/erlang-proper-eunit/logs/index.html... done
+Updating /home/erszcz/work/learning/erlang-proper-eunit/logs/all_runs.html... done
+

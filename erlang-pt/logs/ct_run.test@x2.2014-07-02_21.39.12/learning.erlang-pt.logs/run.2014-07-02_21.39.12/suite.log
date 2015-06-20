@@ -1,0 +1,17 @@
+=== Suite started at 2014-07-02 21:39:12
+=== Starting test, 0 test cases
+=cases         0
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  5.10.1
+=emulator      beam
+=otp_release   R16B
+=started       2014-07-02 21:39:12
+=== TEST COMPLETE, 0 ok, 0 failed of 0 test cases
+
+=finished      2014-07-02 21:39:12
+=failed        0
+=successful    0
+=user_skipped  0
+=auto_skipped  0

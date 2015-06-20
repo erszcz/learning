@@ -1,0 +1,23 @@
+=== Suite started at 2014-07-01 22:27:31
+=== Starting test, 1 test cases
+=cases         1
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  5.10.1
+=emulator      beam
+=otp_release   R16B
+=started       2014-07-01 22:27:31
+=case          ct_framework:error_in_suite
+=logfile       ct_framework.error_in_suite.html
+=started       2014-07-01 22:27:31
+=ended         2014-07-01 22:27:31
+=result        skipped
+=== *** SKIPPED *** test case 1 of 1
+=== TEST COMPLETE, 0 ok, 0 failed, 1 skipped of 1 test cases
+
+=finished      2014-07-01 22:27:31
+=failed        0
+=successful    0
+=user_skipped  1
+=auto_skipped  0

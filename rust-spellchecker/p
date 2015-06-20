@@ -1,0 +1,142 @@
+commit dbbe9425220e252a55cef9d47d5503214cb68589
+Author: Radek Szymczyszyn <lavrin@gmail.com>
+Date:   Thu Oct 16 19:16:11 2014 +0200
+
+    wip
+
+diff --git a/rust-spellchecker/src/bin/plchecker.rs b/rust-spellchecker/src/bin/plchecker.rs
+index 99323fd..3ed883d 100644
+--- a/rust-spellchecker/src/bin/plchecker.rs
++++ b/rust-spellchecker/src/bin/plchecker.rs
+@@ -86,12 +86,12 @@ impl<'a> Word<'a> {
+                        idx: 0 }
+     }
+ 
+-    fn longer(&self) -> LongerWords {
+-        LongerWords { word: self.word.as_slice().utf16_units().collect(),
+-                      idx: 0,
+-                      letters: alphabet(),
+-                      exhausted: false}
+-    }
++    //fn longer(&self) -> LongerWords {
++    //    LongerWords { word: self.word.as_slice().utf16_units().collect(),
++    //                  idx: 0,
++    //                  letters: alphabet(),
++    //                  exhausted: false}
++    //}
+ 
+ }
+ 
+@@ -131,37 +131,44 @@ fn alphabet<'a>() -> Unfold<'a, u16, (uint, Vec<u16>)> {
+                 })
+ }
+ 
+-struct LongerWords<'a> {
+-    word: Vec<u16>,
+-    idx: uint,
+-    letters: Unfold<'a, u16, (uint, Vec<u16>)>,
+-    exhausted: bool
+-}
++//struct LongerWords<'a> {
++//    word: Vec<u16>,
++//    idx: uint,
++//    letters: Vec<u16>
++//}
+ 
+-impl<'a> Iterator<String> for LongerWords<'a> {
++//impl<'a> Iterator<String> for LongerWords<'a> {
++
++//    fn next(&mut self) -> Option<String> {
++//        match self.letters.next() {
++//            Some (l) => {
++//                make_longer(&self.word, self.idx, l)
++//            }
++//            None => {
++//                self.idx += 1;
++//                if self.idx > self.word.len()
++//                    { return None }
++//                self.letters = alphabet();
++//                make_longer(&self.word, self.idx, self.letters.next().unwrap())
++//            }
++//        }
++//    }
+ 
+-    fn next(&mut self) -> Option<String> {
+-        match self.letters.next() {
+-            Some (l) => {
+-                make_longer(&self.word, self.idx, l)
+-            }
+-            None => {
+-                self.idx += 1;
+-                if self.idx > self.word.len()
+-                    { return None }
+-                self.letters = alphabet();
+-                make_longer(&self.word, self.idx, self.letters.next().unwrap())
+-            }
+-        }
+-    }
++//}
+ 
+-}
++//fn make_longer(word: &Vec<u16>, idx: uint, letter: u16) -> Option<String> {
++//    let mut longer : Vec<u16> = Vec::with_capacity(1 + word.len());
++//    longer.extend(word.iter().map(|c| *c));
++//    longer.insert(idx, letter);
++//    String::from_utf16(longer.as_slice())
++//}
+ 
+-fn make_longer(word: &Vec<u16>, idx: uint, letter: u16) -> Option<String> {
+-    let mut longer : Vec<u16> = Vec::with_capacity(1 + word.len());
+-    longer.extend(word.iter().map(|c| *c));
+-    longer.insert(idx, letter);
+-    String::from_utf16(longer.as_slice())
++fn extend(word: &Vec<u16>, i: uint, letter: u16) -> Option<String> {
++    let prefix = word.iter().take(i).map(|c| *c);
++    let infix = std::iter::iterate(letter, |l| l).take(1);
++    let suffix = word.slice_from(i).iter().map(|c| *c);
++    let short : Vec<u16> = prefix.chain(infix).chain(suffix).collect();
++    String::from_utf16(short.as_slice())
+ }
+ 
+ //fn fibonacci() -> Unfold<uint, (uint, uint)> {
+@@ -182,17 +189,32 @@ struct Correction {
+ }
+ 
+ fn main() {
+-    let dict = Dict::from_file(Path::new(DATA_PATH));
+-    let w = Word::new( std::os::args()[1].as_slice(), &dict );
+-    println!("shorter words:");
+-    for mutation in w.shorter()
+-        { println!("{:s}", mutation.as_slice()); }
+-    println!("longer words:");
+-    for mutation in w.longer()
+-        { println!("{:s}", mutation.as_slice()); }
++    let word : Vec<u16> = "kot".utf16_units().collect();
++
++    println!("{}", extend(&word, 0, "e".utf16_units().next().unwrap()));
++    println!("");
++
++    for l in "abc".chars() {
++        let mut words_extra_letter = 
++            range(0u, word.len() + 1).map(|i| extend(&word, i, l as u16));
++        for word in words_extra_letter {
++            println!("{}", word.unwrap());
++        }
++    }
+ }
+ 
+ //fn main() {
++//    let dict = Dict::from_file(Path::new(DATA_PATH));
++//    let w = Word::new( std::os::args()[1].as_slice(), &dict );
++//    println!("shorter words:");
++//    for mutation in w.shorter()
++//        { println!("{:s}", mutation.as_slice()); }
++//    println!("longer words:");
++//    for mutation in w.longer()
++//        { println!("{:s}", mutation.as_slice()); }
++//}
++
++//fn main() {
+ 
+ //    info!("building the dictionary from {:s}", DATA_PATH);
+ //    let ns_build_start = precise_time_ns();

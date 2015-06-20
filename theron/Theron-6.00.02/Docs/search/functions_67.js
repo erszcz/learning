@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['getaddress',['GetAddress',['../classTheron_1_1Actor_a268613b27d2d718b55e2eb489118aa04.html#a268613b27d2d718b55e2eb489118aa04',1,'Theron::Actor::GetAddress()'],['../classTheron_1_1Receiver_ade22428952084fee67865a194ade6df2.html#ade22428952084fee67865a194ade6df2',1,'Theron::Receiver::GetAddress()']]],
+  ['getallocationcount',['GetAllocationCount',['../classTheron_1_1DefaultAllocator_a7aa1fb21aa04f2924e30d4eda10e2c43.html#a7aa1fb21aa04f2924e30d4eda10e2c43',1,'Theron::DefaultAllocator']]],
+  ['getallocator',['GetAllocator',['../classTheron_1_1AllocatorManager_ae9038770699e0ff14c0dd68378e8ad90.html#ae9038770699e0ff14c0dd68378e8ad90',1,'Theron::AllocatorManager']]],
+  ['getbytesallocated',['GetBytesAllocated',['../classTheron_1_1DefaultAllocator_a368812ccfd6bf1780a9b74360b239826.html#a368812ccfd6bf1780a9b74360b239826',1,'Theron::DefaultAllocator']]],
+  ['getcache',['GetCache',['../classTheron_1_1AllocatorManager_ad172ad959d33123014963ff2d1c7584b.html#ad172ad959d33123014963ff2d1c7584b',1,'Theron::AllocatorManager']]],
+  ['getcountername',['GetCounterName',['../classTheron_1_1Framework_a722e6d5081d82de68d0a8f15a78e4aa4.html#a722e6d5081d82de68d0a8f15a78e4aa4',1,'Theron::Framework']]],
+  ['getcountervalue',['GetCounterValue',['../classTheron_1_1Framework_a0ee4917d4e5c680996e4f15f0858f181.html#a0ee4917d4e5c680996e4f15f0858f181',1,'Theron::Framework']]],
+  ['getframework',['GetFramework',['../classTheron_1_1Actor_afe30f86e99ff80691ec11e207711a46a.html#afe30f86e99ff80691ec11e207711a46a',1,'Theron::Actor::GetFramework()'],['../classTheron_1_1Address_a33a1cc68ee53d494a0823e379795f1dc.html#a33a1cc68ee53d494a0823e379795f1dc',1,'Theron::Address::GetFramework()']]],
+  ['getmaxthreads',['GetMaxThreads',['../classTheron_1_1Framework_a7d1eec252eaf09d35787d7ff42bb4f92.html#a7d1eec252eaf09d35787d7ff42bb4f92',1,'Theron::Framework']]],
+  ['getminthreads',['GetMinThreads',['../classTheron_1_1Framework_a90fe333c11791e419b3eeaeb332c5514.html#a90fe333c11791e419b3eeaeb332c5514',1,'Theron::Framework']]],
+  ['getname',['GetName',['../classTheron_1_1EndPoint_a1e0996ed4cc23ab5c1bc5c48ce68d4d1.html#a1e0996ed4cc23ab5c1bc5c48ce68d4d1',1,'Theron::EndPoint']]],
+  ['getnumcounters',['GetNumCounters',['../classTheron_1_1Framework_a0bbe8b5b6ffdea2a8dc0577d371e75e6.html#a0bbe8b5b6ffdea2a8dc0577d371e75e6',1,'Theron::Framework']]],
+  ['getnumqueuedmessages',['GetNumQueuedMessages',['../classTheron_1_1Actor_a4f6af5dba4b36bbb55ee216589ccfb63.html#a4f6af5dba4b36bbb55ee216589ccfb63',1,'Theron::Actor']]],
+  ['getnumthreads',['GetNumThreads',['../classTheron_1_1Framework_a40159b92cc679a38d2f0cf45cdbdc7be.html#a40159b92cc679a38d2f0cf45cdbdc7be',1,'Theron::Framework']]],
+  ['getpeakbytesallocated',['GetPeakBytesAllocated',['../classTheron_1_1DefaultAllocator_a42b6356c075558e513648eae05df21cb.html#a42b6356c075558e513648eae05df21cb',1,'Theron::DefaultAllocator']]],
+  ['getpeakthreads',['GetPeakThreads',['../classTheron_1_1Framework_a15b2632e9004c3a7caa04e8d395fac3c.html#a15b2632e9004c3a7caa04e8d395fac3c',1,'Theron::Framework']]],
+  ['getperthreadcountervalues',['GetPerThreadCounterValues',['../classTheron_1_1Framework_a6d5fe8944ea6dc6a9b806b8c86e77997.html#a6d5fe8944ea6dc6a9b806b8c86e77997',1,'Theron::Framework']]]
+];

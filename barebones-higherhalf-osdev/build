@@ -1,0 +1,4 @@
+. ~/apps/i586-elf/activate
+i586-elf-as -g -mmnemonic=intel -msyntax=intel -mnaked-reg loader.asm -o loader.o
+i586-elf-gcc -g -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+i586-elf-gcc -g -T linker.ld -o myos.bin -ffreestanding -O2 -nostdlib loader.o kernel.o -lgcc

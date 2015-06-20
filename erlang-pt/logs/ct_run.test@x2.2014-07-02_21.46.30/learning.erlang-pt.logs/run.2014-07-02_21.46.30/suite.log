@@ -1,0 +1,55 @@
+=== Suite started at 2014-07-02 21:46:30
+=== Starting test, 1 test cases
+=cases         1
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  5.10.1
+=emulator      beam
+=otp_release   R16B
+=started       2014-07-02 21:46:30
+=case          mylib_SUITE:init_per_suite
+=logfile       mylib_suite.init_per_suite.html
+=started       2014-07-02 21:46:30
+=ended         2014-07-02 21:46:30
+=result        ok
+=elapsed       1.0e-6
+=case          mylib_SUITE:test_manually_crafted_property
+=logfile       mylib_suite.test_manually_crafted_property.html
+=started       2014-07-02 21:46:30
+=ended         2014-07-02 21:46:30
+=result        failed: {{badmatch,false},
+                        [{mylib_SUITE,test_manually_crafted_property,1,
+                                      [{file,"mylib_SUITE.erl"},{line,25}]},
+                         {test_server,ts_tc,3,
+                                      [{file,"test_server.erl"},{line,1362}]},
+                         {test_server,run_test_case_eval1,6,
+                                      [{file,"test_server.erl"},{line,979}]},
+                         {test_server,run_test_case_eval,9,
+                                      [{file,"test_server.erl"},{line,928}]}]}, [{mylib_SUITE,
+                                                                                  test_manually_crafted_property,
+                                                                                  25},
+                                                                                 {test_server,
+                                                                                  ts_tc,
+                                                                                  1362},
+                                                                                 {test_server,
+                                                                                  run_test_case_eval1,
+                                                                                  979},
+                                                                                 {test_server,
+                                                                                  run_test_case_eval,
+                                                                                  928}]
+=== *** FAILED *** test case 1 of 1
+=case          ct_framework:end_per_suite
+=logfile       ct_framework.end_per_suite.html
+=started       2014-07-02 21:46:30
+=ended         2014-07-02 21:46:31
+=result        ok
+=elapsed       1.0e-6
+=group_time    0.078s
+=== TEST COMPLETE, 0 ok, 1 failed of 1 test cases
+
+=finished      2014-07-02 21:46:31
+=failed        1
+=successful    0
+=user_skipped  0
+=auto_skipped  0

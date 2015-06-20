@@ -1,0 +1,36 @@
+=== Suite started at 2014-07-02 21:28:37
+=== Starting test, 1 test cases
+=cases         1
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  5.10.1
+=emulator      beam
+=otp_release   R16B
+=started       2014-07-02 21:28:37
+=case          mylib_SUITE:init_per_suite
+=logfile       mylib_suite.init_per_suite.html
+=started       2014-07-02 21:28:37
+=ended         2014-07-02 21:28:37
+=result        ok
+=elapsed       1.0e-6
+=case          mylib_SUITE:test_mylib
+=logfile       mylib_suite.test_mylib.html
+=started       2014-07-02 21:28:37
+=ended         2014-07-02 21:28:37
+=result        skipped
+=== *** SKIPPED *** test case 1 of 1
+=case          mylib_SUITE:end_per_suite
+=logfile       mylib_suite.end_per_suite.html
+=started       2014-07-02 21:28:37
+=ended         2014-07-02 21:28:37
+=result        ok
+=elapsed       1.0e-6
+=group_time    0.057s
+=== TEST COMPLETE, 0 ok, 0 failed, 1 skipped of 1 test cases
+
+=finished      2014-07-02 21:28:37
+=failed        0
+=successful    0
+=user_skipped  1
+=auto_skipped  0

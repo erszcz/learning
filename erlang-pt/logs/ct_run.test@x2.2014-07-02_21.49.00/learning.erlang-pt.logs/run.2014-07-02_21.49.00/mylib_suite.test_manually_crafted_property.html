@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Test mylib_SUITE:test_manually_crafted_property result</title>
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="../../ct_default.css" type="text/css">
+<script type="text/javascript" src="../../jquery-latest.js"></script>
+<script type="text/javascript" src="../../jquery.tablesorter.min.js"></script>
+</head>
+<body>
+
+=== <a href="mylib_suite.src.html#test_manually_crafted_property-1">source code for mylib_SUITE:test_manually_crafted_property/1</a>
+
+<pre>
+<a name="top"></a>
+=== Test case started with:
+mylib_SUITE:test_manually_crafted_property([{start,5},
+                                            {'end',10},
+                                            {expected,ok},
+                                            {watchdog,<0.126.0>},
+                                            {tc_logfile,
+                                             "/home/erszcz/work/learning/erlang-pt/logs/ct_run.test@x2.2014-07-02_21.49.00/learning.erlang-pt.logs/run.2014-07-02_21.49.00/mylib_suite.test_manually_crafted_property.html"},
+                                            {tc_group_properties,[]},
+                                            {tc_group_path,[]},
+                                            {data_dir,
+                                             "/home/erszcz/work/learning/erlang-pt/test/mylib_SUITE_data/"},
+                                            {priv_dir,
+                                             "/home/erszcz/work/learning/erlang-pt/logs/ct_run.test@x2.2014-07-02_21.49.00/learning.erlang-pt.logs/run.2014-07-02_21.49.00/log_private/"}])
+
+=== Current directory is "/home/erszcz/work/learning/erlang-pt/logs/ct_run.test@x2.2014-07-02_21.49.00"
+
+=== Started at 2014-07-02 21:49:00
+
+<br />
+!
+
+
+Failed: After 1 test(s).
+
+An exception was raised: error:undef.
+
+Stacktrace: [{mylib,my_fun,"\t",[]},
+             {mylib_SUITE,'-manually_crafted_property/1-fun-0-',2,
+                          [{file,"mylib_SUITE.erl"},{line,22}]}].
+
+9
+
+
+Shrinking 
+.
+(1 time(s))
+
+5
+
+<div class="ct_error_notify"><b>*** User 2014-07-02 21:49:00.239 ***</b>
+mylib_SUITE:test_manually_crafted_property failed on line 25
+Reason: {badmatch,false}
+</div>
+<a name="end"></a>
+
+
+=== Ended at 2014-07-02 21:49:00
+=== location [{mylib_SUITE,test_manually_crafted_property,<a href="mylib_suite.src.html#25">25</a>},
+              {test_server,ts_tc,1362},
+              {test_server,run_test_case_eval1,979},
+              {test_server,run_test_case_eval,928}]
+=== reason = no match of right hand side value false
+  in function  mylib_SUITE:test_manually_crafted_property/1 (mylib_SUITE.erl, line 25)
+  in call from test_server:ts_tc/3 (test_server.erl, line 1362)
+  in call from test_server:run_test_case_eval1/6 (test_server.erl, line 979)
+  in call from test_server:run_test_case_eval/9 (test_server.erl, line 928)
+</pre>
+<center>
+<br /><hr /><p>
+<a href="../../../all_runs.html">Test run history
+</a>  |  <a href="../../../index.html">Top level test index
+</a>
+</p>
+<div class="copyright">Copyright &copy; 2014 <a href="http://www.erlang.org">Open Telecom Platform</a><br />
+Updated: <!date>Wed Jul 02 2014 21:49:00<!/date><br />
+</div>
+</center>
+</body>
+</html>

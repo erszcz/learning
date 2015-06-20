@@ -1,0 +1,20 @@
+--- Test run on 2014/07/02 21:52:17 ---
+Converting "/home/erszcz/work/learning/erlang-pt/." to "/home/erszcz/work/learning/erlang-pt" and re-inserting with add_patha/1
+
+
+Common Test v1.7.1 starting (cwd is /home/erszcz/work/learning/erlang-pt)
+
+
+Common Test: Running make in test directories...
+Recompile: mylib_SUITE
+
+CWD set to: "/home/erszcz/work/learning/erlang-pt/logs/ct_run.test@x2.2014-07-02_21.52.17"
+
+TEST INFO: 1 test(s), 2 case(s) in 1 suite(s)
+
+Testing learning.erlang-pt: Starting test, 2 test cases
+Testing learning.erlang-pt: TEST COMPLETE, 2 ok, 0 failed of 2 test cases
+
+Updating /home/erszcz/work/learning/erlang-pt/logs/index.html... done
+Updating /home/erszcz/work/learning/erlang-pt/logs/all_runs.html... done
+

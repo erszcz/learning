@@ -1,0 +1,44 @@
+=== Suite started at 2015-02-03 22:37:52
+=== Starting test, 2 test cases
+=cases         2
+=user          erszcz
+=host          x2
+=hosts         x2 
+=emulator_vsn  6.0
+=emulator      beam
+=otp_release   17
+=started       2015-02-03 22:37:52
+=case          ct_framework:init_per_suite
+=logfile       ct_framework.init_per_suite.html
+=group_props   [{suite,mad_SUITE}]
+=started       2015-02-03 22:37:52
+=ended         2015-02-03 22:37:52
+=result        ok
+=elapsed       1.0e-6
+=case          mad_SUITE:sanity_check
+=logfile       mad_suite.sanity_check.html
+=started       2015-02-03 22:37:52
+=ended         2015-02-03 22:37:52
+=result        ok
+=elapsed       1.0e-6
+=case          mad_SUITE:generate_subnet_addrs
+=logfile       mad_suite.generate_subnet_addrs.html
+=started       2015-02-03 22:37:52
+=ended         2015-02-03 22:37:52
+=result        ok
+=elapsed       7.79e-4
+=case          ct_framework:end_per_suite
+=logfile       ct_framework.end_per_suite.html
+=group_props   [{suite,mad_SUITE}]
+=started       2015-02-03 22:37:52
+=ended         2015-02-03 22:37:52
+=result        ok
+=elapsed       2.0e-6
+=group_time    0.090s
+=== TEST COMPLETE, 2 ok, 0 failed of 2 test cases
+
+=finished      2015-02-03 22:37:52
+=failed        0
+=successful    2
+=user_skipped  0
+=auto_skipped  0

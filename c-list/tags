@@ -1,0 +1,31 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+SLIMTESTS_H	slimtests.h	2;"	d
+TEST_SPEC	slimtests.h	9;"	d
+cleanup	list-head-tail.c	/^cleanup() {$/;"	f
+cleanup_after_tests	list-head-tail.c	/^cleanup_after_tests() {$/;"	f
+data	list-head-tail.c	/^    int             data;$/;"	m	struct:item	file:
+data	list-nth.c	/^    int             data;$/;"	m	struct:item	file:
+delete	list-head-tail.c	/^delete(struct item* item) {$/;"	f
+delete	list-nth.c	/^delete(struct item** root) {$/;"	f
+find	list-nth.c	/^find(struct item* item, int data) {$/;"	f
+insert	list-nth.c	/^insert(struct item** root, int data) {$/;"	f
+item	list-nth.c	/^struct item {$/;"	s	file:
+last_nth	list-nth.c	/^last_nth(size_t n, struct item* list) {$/;"	f
+main	list-nth.c	/^int main(int argc, const char *argv[])$/;"	f
+next	list-nth.c	/^    struct item*    next;$/;"	m	struct:item	typeref:struct:item::item	file:
+nth	list-nth.c	/^nth(size_t n, struct item* list) {$/;"	f
+print	list-nth.c	/^print(struct item* list) {$/;"	f
+print_element	list-nth.c	/^print_element(struct item* list, char const* suffix) {$/;"	f
+size	list-nth.c	179;"	d	file:
+test_last_nth_1st	list-nth.c	/^test_last_nth_1st() {$/;"	f
+test_last_nth_2nd	list-nth.c	/^test_last_nth_2nd() {$/;"	f
+test_last_nth_4th	list-nth.c	/^test_last_nth_4th() {$/;"	f
+test_nth_1st	list-nth.c	/^test_nth_1st() {$/;"	f
+test_nth_2nd	list-nth.c	/^test_nth_2nd() {$/;"	f
+test_nth_4th	list-nth.c	/^test_nth_4th() {$/;"	f
+tests	list-nth.c	/^test_spec tests[] = {$/;"	v

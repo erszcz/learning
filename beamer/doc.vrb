@@ -1,0 +1,253 @@
+\frametitle {Algorytmy równoległe: Dekompozycja
+funkcjonalna i branch and bound}
+
+Radosław Szymczyszyn
+\href{mailto:r.szymczyszyn@gmail.com}{\texttt{r.szymczyszyn@gmail.com}}
+
+.. role:: m(raw) :format: latex html
+
+\begin{block}{Problem do rozwiązania: przydział maszyn wirtualnych do
+zadań w chmurze obliczeniowej}
+
+Dane jest \emph{N} zadań o znanym czasie wykonania \emph{t(1) .. t(N)}
+oraz ograniczenie czasowe \emph{D} (deadline). Należy znaleźć taki
+przydział zadań do wirtualnych maszyn, aby koszt wykonania obliczenia
+był jak najmniejszy, oraz aby wszystkie zadania zakończyły się przed
+upływem terminu \emph{D}. Jedna maszyna może w jednej chwili wykonywać
+tylko jedno zadanie. Koszt wirtualnej maszyny pobierany jest za każdą
+rozpoczętą godzinę jej działania, niezależnie od tego, czy jakieś
+zadanie jest na niej wykonywane. Wszystkie maszyny posiadają jednakową
+wydajność i koszt.
+
+\end{block}
+
+\begin{block}{PCAM - projekt rozwiązania}
+
+Problem zadania jest problemem przeszukiwania dużej przestrzeni
+rozwiązań. Przestrzeń ma kształt drzewa, którego każdy węzeł
+reprezentuje pewne rozwiązanie cząstkowe, na przykład:
+
+:m:\texttt{\$\$ maszyny = \textbackslash{}\{\textbackslash{}\{3, 5\textbackslash{}\}, \textbackslash{}\{2, 1\textbackslash{}\}\textbackslash{}\} \textbackslash{}quad zadania = \textbackslash{}\{5, 3\textbackslash{}\} \$\$}
+
+Rozwiązanie cząstkowe to pewien przydział zadań do maszyn, na których są
+liczone oraz zestaw nieprzydzielonych zadań. Zadanie identyfikowane są
+ich czasem wykonania w minutach.
+
+Każdy liść reprezentuje rozwiązanie pełne, tj. takie, gdzie brak już
+nieprzydzielonych zadań:
+
+:m:\texttt{\$\$ maszyny = \textbackslash{}\{\textbackslash{}\{3, 5, 5\textbackslash{}\}, \textbackslash{}\{2, 1, 3\textbackslash{}\}\textbackslash{}\} \textbackslash{}quad zadania = \textbackslash{}empty \$\$}
+
+Korzeń drzewa przedstawić możemy jako:
+
+:m:\texttt{\$\$ maszyny = \textbackslash{}empty \textbackslash{}quad zadania = \textbackslash{}\{3, 2, 5, 1, 5, 3\textbackslash{}\} \$\$}
+
+Rozgałęzienie w każdym węźle dokonywane jest w następujący sposób:
+
+\begin{enumerate}[1.]
+\item
+  Weź jedno nieprzydzielone zadanie.
+\item
+  Dla każdej maszyny w obecnym przyporządkowaniu utwórz węzeł potomny,
+  ale do danej maszyny w nowym węźle dołącz zad. wybrane w pkt. 1.
+\item
+  Utwórz jeszcze jeden węzeł potomny. Jego zbiór przyporządkowań to
+  zbiór węzła obecnego rozszerzony o nową maszynę z jednym zadaniem
+  wybranym w pkt. 1.
+\end{enumerate}
+
+Przykład - dla węzła postaci:
+
+:m:\texttt{\$\$ maszyny = \textbackslash{}\{\textbackslash{}\{3, 5\textbackslash{}\}, \textbackslash{}\{2, 1\textbackslash{}\}\textbackslash{}\} \textbackslash{}quad zadania = \textbackslash{}\{5, 3\textbackslash{}\} \$\$}
+
+Zbiór dzieci wyglądał będzie następująco:
+
+:m:\texttt{\$\$ maszyny = \textbackslash{}\{\textbackslash{}\{3, 5, 5\textbackslash{}\}, \textbackslash{}\{2, 1\textbackslash{}\}\textbackslash{}\} \textbackslash{}quad zadania = \textbackslash{}\{3\textbackslash{}\} \$\$}
+:m:\texttt{\$\$ maszyny = \textbackslash{}\{\textbackslash{}\{3, 5\textbackslash{}\}, \textbackslash{}\{2, 1, 5\textbackslash{}\}\textbackslash{}\} \textbackslash{}quad zadania = \textbackslash{}\{3\textbackslash{}\} \$\$}
+:m:\texttt{\$\$ maszyny = \textbackslash{}\{\textbackslash{}\{3, 5\textbackslash{}\}, \textbackslash{}\{2, 1\textbackslash{}\}, \textbackslash{}\{5\textbackslash{}\}\textbackslash{}\} \textbackslash{}quad zadania = \textbackslash{}\{3\textbackslash{}\} \$\$}
+
+W celu rozwiązania zadania zastosowane zostanie podejście przeszukiwania
+wgłąb. Ze względu na rozmiar przestrzeni, niepraktyczne jest
+przeglądanie wszystkich możliwych rozwiązań. Określone są zatem trzy
+kryteria odcinania poddrzew, sprawdzane w momencie wejścia do nowego
+węzła:
+
+\begin{itemize}
+\item
+  Jeśli czas wykonania obecnego węzła przekracza deadline \emph{D}, to
+  przerwij przeszukiwanie tej gałęzi.
+\item
+  Jeśli najlepsze dotychczas znalezione rozwiązanie jest najlepszym
+  osiągalnym rozwiązaniem, tzn. że spełnia równanie:
+\end{itemize}
+
+:m:\texttt{\$\$ C = \textbackslash{}lceil \textbackslash{}frac\{\textbackslash{}sum\_\{i = 1 .. N\} t\_i\}\{60\} \textbackslash{}rceil \$\$}
+
+gdzie:
+
+\begin{itemize}
+\item
+  \emph{C} - koszt rozwiązania,
+\item
+  :m:\texttt{\$ t\_i \$} - czas wykonania zadania \emph{i}, gdzie
+  \emph{i} określa zadanie z początkowego zbioru zadań do
+  przyporządkowania,
+\item
+  stała 60 oznacza długość jednostki czasu (tutaj godzinę), za która
+  naliczany jest jeden punkt kosztu zadania.
+\end{itemize}
+
+Innymi słowy, jeśli znalezione rozwiązanie osiągnęło minimalny koszt
+obliczeń możliwy przy takim zestawie zadań wejściowych, to przerwij
+poszukiwanie. Inne, równie dobre, rozwiązania mogą przyporządkowywać
+zadania do maszyn w inny sposób, ale nie osiągną mniejszego kosztu, gdyż
+nie da się zmieścić, w czasie dealine'u \emph{D}, na mniejszej liczbie
+maszyn lub w mniejszej liczbie godzin.
+
+\begin{itemize}
+\item
+  Jeśli obecne rozwiązanie ma koszt większy niż najlepsze dotychczas
+  znalezione rozwiązanie, to przerwij przeszukiwanie tej gałęzi.
+\end{itemize}
+
+Partition
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+Najmniejszym, niepodzielnym zadaniem jakie można określić dla tego
+problemu jest określenie zbioru dzieci danego węzła. Na podstawie
+powyższych reguł, takie zadanie określone musi być poprzez informacje o
+danym węźle, deadline'ie \emph{D} oraz najlepszym dotychczas znalezionym
+rozwiązaniu.
+
+Communication
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+Na potrzeby wykonania elementarnego zadania proces roboczy musi wymienić
+dwa komunikaty:
+
+\begin{itemize}
+\item
+  Otrzymać definicję zadania (węzeł, deadline, najlepsze rozwiązanie),
+\item
+  Odesłać analogiczne definicje wszystkich dzieci otrzymanego węzła.
+  Warto zaznaczyć, że wielkość komunikatu zwrotnego może drastycznie
+  rosnąc wraz z głębokością, na której dokonujemy przeszukiwania w
+  drzewie.
+\end{itemize}
+
+Agglomeration
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+Aby zminimalizować ilość wymienianych komunikatów (nt. pojedynczych
+węzłów), możemy określić pewną ilość gałęzi drzewa, które mają być
+potraktowane jako osobne zadania. Innymi słowy, musimy dokonać
+przeszukiwania wszerz do pewnego poziomu głębokości, gwarantującego
+odpowiednio dużą w stosunku do ilości dostępnych procesów ilość gałęzi
+do przeszukania.
+
+\end{block}
+
+\begin{block}{Mapping}
+
+Mapowanie zadań określonych jako gałęzie do przeszukania wgłąb
+dokonywane jest za pomocą schematu farmy zadań (ang. \emph{task farm}).
+Gałęzie-zadania generowane są przez proces farmera za pomocą algorytmu
+przeszukiwania wszerz. Farmer następnie rozsyła zadania do procesów
+roboczych. Każda gąłąź jest przeszukiwana wgłąb przez proces roboczy,
+jej wynik zwracany, a proces roboczy zgłasza się po następne zadanie.
+
+Nierówne obciążenie wynikłe z różnych czasów przeszukiwania różnych
+gałęzi drzewa powinno zostać zniwelowane przez zmapowanie odpowiednio
+większej ilości zadań na te procesy, które dostają zadania stosunkowo
+krótkie.
+
+\end{block}
+
+\begin{block}{Przyspieszenie i efektywność}
+
+Serie danych określone są dwoma parametrami:
+
+\begin{itemize}
+\item
+  \emph{tasks} - ilość zadań do przyporządkowania maszynom,
+\item
+  \emph{deadline} - czas, w którym obliczenie musi zostać zakończone.
+\end{itemize}
+
+x2 - laptop, 4 rdzenie
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+
+.. image:: x2-speedup.png
+
+.. image:: x2-eff.png
+
+blade - klaster obliczeniowy AGH
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+
+.. image:: blade-speedup.png
+
+.. image:: blade-eff.png
+
+Wyniki pomiarów
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+
+Powyższe wykresy zostały wygenerowane automatycznie za pomocą skryptu
+\texttt{prepare-new.py} dostępnego w archiwum z rozwiązaniem zadania
+oraz programu Gnuplot.
+
+Linijka zaczyna się od ilości procesów, które zostały użyte do wykonania
+obliczeń. Po niej następują czasy wykonania dla kolejnych uruchomień
+programu z danym zestawem parametrów. Jednostką czasu jest sekunda.
+
+\texttt{Laptop x2 \textless{}results.x2.txt\textgreater{}}\_
+
+\texttt{Klaster blade \textless{}results.x2.txt\textgreater{}}\_
+
+Wnioski
+\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}\textasciitilde{}
+Na podstawie analizy powyższych wykresów oraz bezwzględnych czasów
+wykonania programu, nasuwają się następujące wnioski:
+
+\begin{enumerate}[1.]
+\item
+  Decydujący wpływ na trudność problemu ma parametr deadline.
+  Niezależnie od rozmiaru drzewa (tj. od ilości zadań do
+  przyporządkowania) zaostrzanie deadline'u wydłuża czas przeszukiwania.
+\end{enumerate}
+
+Tłumaczyć można to tym, że dla dużych deadline'ów w drzewie występuje
+stosunkowo wiele równoważnych ze względu na czas rozwiązań. Szybko
+znajdowane jest akceptowalne ze wzg. na deadline rozwiązanie, dzięki
+czemu duże fragmenty drzewa są potem odcinane jako gorsze (a
+przynajmniej nie lepsze) niż najlepsze znalezione rozwiązanie.
+
+\begin{enumerate}[1.]
+\setcounter{enumi}{1}
+\item
+  Przy słabych ograniczeniach deadline'u zrównoleglenie algorytmu nie
+  daje dobrych rezultatów. Dominujący wpływ na czas wykonania ma
+  sekwencyjna faza alg. równoległego, tj. generowanie zadań do
+  równoległego wykonania za pomocą przeszukiwania wszerz. Otrzymywane
+  czasy są niewiele lepsze lub nawet gorsze niż algorytmu czysto
+  sekwencyjnego, przeszukującego tylko wgłąb.
+\end{enumerate}
+
+Dla silnych ograniczeń, tj. niskich wartości deadline'u, gdy całkowite
+czasy działania okazują się być znacznie dłuższe niż faza sekwencyjna
+BFS następuje znaczne przyspieszenie znajdowania rozwiązania.
+
+Niestety, wskaźnik efektywności szybko maleje wraz ze wzrostem ilości
+procesów równolegle wykonujących przeszukiwanie. Być może lepsze efekty
+dałoby się uzyskać dopasowując początkową ilość zadań-gałęzi do
+przeszukania równoległego.
+
+\begin{enumerate}[1.]
+\setcounter{enumi}{2}
+\item
+  Problemy dekomponowane funkcjonalnie wydają się być trudniejsze w
+  efektywnej implementacji równoległej z powodu bardziej złożonego
+  procesu kodowania zadań do wykonania zdalnego (serializacji złożonych
+  struktur a nie tylko pakietów danych liczbowych) i konieczności
+  zastosowania skuteczniejszych metod mapowania w celu zrównoważenia
+  obciążenia.
+\end{enumerate}
+
+\end{block}
+
