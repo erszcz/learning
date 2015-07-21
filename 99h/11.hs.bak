@@ -1,0 +1,19 @@
+import Test.HUnit
+import Data.List
+
+data Encoded a = Single a
+               | Multiple Int a
+
+encode xs = map f (group xs)
+  where f [x] = Single x
+        f xs  = Multiple (length xs) (head xs)
+
+t expected actual = TestCase (assertEqual "" expected actual)
+
+tests = TestList
+  [ TestLabel "1" (t [Multiple 4 'a',Single 'b',Multiple 2 'c',
+                      Multiple 2 'a',Single 'd',Multiple 4 'e']
+                     (encode "aaaabccaadeeee")) ]
+
+main = do runTestTT tests
+          return ()

@@ -1,0 +1,10 @@
+#!/usr/bin/env awk -f
+BEGIN {
+    print "fee"
+}
+{
+    $1 == "foo" { print "fi" }
+}
+END {
+    print "fo fum"
+} 

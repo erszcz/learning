@@ -1,4 +1,4 @@
--module(sups_sup).
+-module(get_sup).
 
 -behaviour(supervisor).
 
@@ -23,10 +23,5 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10},
-           [
-            %?CHILD(fail_to_init_worker, worker),
-            %?CHILD(fail_after_init_worker, worker)
-            ?CHILD(working_worker, worker)
-           ]} }.
+    {ok, { {one_for_one, 5, 10}, []} }.
 

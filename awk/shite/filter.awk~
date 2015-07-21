@@ -1,0 +1,7 @@
+#!/usr/bin/env awk -f
+BEGIN {
+    RS="\n\n"
+    jid="2072686"
+}
+
+$0 !~ /mod_notify_truphone/ && $0 !~ /mod_mam/ && $0 ~ jid

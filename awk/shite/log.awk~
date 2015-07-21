@@ -1,0 +1,11 @@
+#!/usr/bin/env awk -f
+BEGIN {
+    RS="\\\(<[0-9]+.[0-9]+.[0-9]+>\\\)"
+    ORS="\n\n"
+    jid="jid,\"2072686\""
+}
+
+## the RT printing breaks when we filter out some records,
+## so just don't bother with it
+#$0 ~ jid { print prevRT, $0; prevRT=RT }
+$0 ~ jid && $0 ~ /c2s_broadcast_recipients/ && $0 ~ /urn:xmpp:reach:0/

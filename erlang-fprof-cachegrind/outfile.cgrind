@@ -1,0 +1,1514 @@
+events: Time
+summary: 16617844
+fl=shell
+fn={shell,exprs,7}
+1 134
+cfl=shell
+cfn={shell,eval_loop,3}
+calls=1 1
+1 16616999
+cfl=shell
+cfn={shell,check_command,2}
+calls=2 1
+1 3727
+cfl=shell
+cfn={shell,pp,3}
+calls=2 1
+1 2056
+cfl=shell
+cfn={shell,expr,4}
+calls=2 1
+1 1065
+cfl=shell
+cfn={shell,used_record_defs,2}
+calls=2 1
+1 865
+cfl=shell
+cfn={shell,prep_check,1}
+calls=2 1
+1 536
+cfl=io
+cfn={io,requests,1}
+calls=2 1
+1 422
+cfl=shell
+cfn={shell,result_will_be_saved,0}
+calls=2 1
+1 143
+cfl=orddict
+cfn={orddict,from_list,1}
+calls=2 1
+1 15
+cfl=erl_eval
+cfn={erl_eval,bindings,1}
+calls=2 1
+1 14
+cfl=fprof
+cfn={fprof,just_call,2}
+calls=0 1
+1 8
+cfl=shell
+cfn={shell,record_bindings,2}
+calls=2 1
+1 7
+cfl=erlang
+cfn={erlang,get,0}
+calls=2 1
+1 7
+cfl=shell
+cfn={shell,expand_records,2}
+calls=2 1
+1 6
+cfl=shell
+cfn={shell,'-exprs/7-lc$^0/1-0-',1}
+calls=2 1
+1 6
+fl=shell
+fn={shell,eval_loop,3}
+1 62
+cfl=pseudo
+cfn=suspend
+calls=2 1
+1 16608676
+cfl=shell
+cfn={shell,eval_exprs,7}
+calls=2 1
+1 8235
+cfl=shell
+cfn={shell,local_func_handler,3}
+calls=2 1
+1 26
+cfl=shell
+cfn={shell,eval_loop,3}
+calls=1 1
+1 0
+fl=pseudo
+fn=suspend
+1 0
+fl=shell
+fn={shell,eval_exprs,7}
+1 17
+cfl=shell
+cfn={shell,exprs,6}
+calls=2 1
+1 8218
+fl=shell
+fn={shell,exprs,6}
+1 8
+cfl=shell
+cfn={shell,exprs,7}
+calls=2 1
+1 0
+fl=shell
+fn={shell,check_command,2}
+1 6
+cfl=erl_eval
+cfn={erl_eval,check_command,2}
+calls=2 1
+1 3721
+fl=erl_eval
+fn={erl_eval,check_command,2}
+1 22
+cfl=erl_lint
+cfn={erl_lint,exprs_opt,3}
+calls=2 1
+1 3688
+cfl=erl_eval
+cfn={erl_eval,bindings,1}
+calls=2 1
+1 11
+fl=erl_lint
+fn={erl_lint,exprs_opt,3}
+1 60
+cfl=erl_lint
+cfn={erl_lint,start,2}
+calls=2 1
+1 2607
+cfl=erl_lint
+cfn={erl_lint,zip_file_and_line,2}
+calls=2 1
+1 515
+cfl=erl_lint
+cfn={erl_lint,exprs,3}
+calls=2 1
+1 301
+cfl=erl_lint
+cfn={erl_lint,return_status,1}
+calls=2 1
+1 178
+cfl=orddict
+cfn={orddict,from_list,1}
+calls=2 1
+1 19
+cfl=lists
+cfn={lists,foldl,3}
+calls=2 1
+1 8
+fl=erl_lint
+fn={erl_lint,start,2}
+1 295
+cfl=erl_lint
+cfn={erl_lint,bool_option,4}
+calls=26 1
+1 856
+cfl=ordsets
+cfn={ordsets,from_list,1}
+calls=2 1
+1 309
+cfl=dict
+cfn={dict,from_list,1}
+calls=2 1
+1 297
+cfl=gb_sets
+cfn={gb_sets,from_list,1}
+calls=4 1
+1 237
+cfl=erl_lint
+cfn={erl_lint,'-start/2-lc$^0/1-0-',1}
+calls=2 1
+1 179
+cfl=dict
+cfn={dict,new,0}
+calls=10 1
+1 177
+cfl=erl_lint
+cfn={erl_lint,value_option,7}
+calls=2 1
+1 79
+cfl=erl_lint
+cfn={erl_lint,'-start/2-lc$^1/1-1-',1}
+calls=2 1
+1 55
+cfl=ordsets
+cfn={ordsets,is_element,2}
+calls=2 1
+1 51
+cfl=sets
+cfn={sets,new,0}
+calls=2 1
+1 27
+cfl=erl_lint
+cfn={erl_lint,pseudolocals,0}
+calls=6 1
+1 23
+cfl=gb_sets
+cfn={gb_sets,empty,0}
+calls=6 1
+1 22
+fl=shell
+fn={shell,pp,3}
+1 22
+cfl=shell
+cfn={shell,pp,4}
+calls=2 1
+1 1646
+cfl=shell
+cfn={shell,enc,0}
+calls=2 1
+1 388
+fl=shell
+fn={shell,pp,4}
+1 39
+cfl=io_lib_pretty
+cfn={io_lib_pretty,print,2}
+calls=2 1
+1 1225
+cfl=shell
+cfn={shell,columns,0}
+calls=2 1
+1 314
+cfl=application
+cfn={application,get_env,2}
+calls=2 1
+1 53
+cfl=shell
+cfn={shell,record_print_fun,1}
+calls=2 1
+1 15
+fl=io_lib_pretty
+fn={io_lib_pretty,print,2}
+1 80
+cfl=io_lib_pretty
+cfn={io_lib_pretty,print,8}
+calls=2 1
+1 881
+cfl=proplists
+cfn={proplists,get_value,3}
+calls=14 1
+1 259
+cfl=epp
+cfn={epp,default_encoding,0}
+calls=2 1
+1 5
+fl=lists
+fn={lists,foldl,3}
+1 614
+cfl=erl_lint
+cfn={erl_lint,'-bool_option/4-fun-0-',4}
+calls=52 1
+1 225
+cfl=dict
+cfn={dict,'-from_list/1-fun-0-',2}
+calls=2 1
+1 215
+cfl=erl_lint
+cfn={erl_lint,'-expr_list/3-fun-0-',3}
+calls=1 1
+1 25
+cfl=erl_lint
+cfn={erl_lint,'-value_option/7-fun-0-',7}
+calls=4 1
+1 16
+cfl=lists
+cfn={lists,foldl,3}
+calls=59 1
+1 0
+fl=shell
+fn={shell,expr,4}
+1 9
+cfl=erl_eval
+cfn={erl_eval,expr,4}
+calls=2 1
+1 1056
+fl=erl_eval
+fn={erl_eval,expr,4}
+1 9
+cfl=erl_eval
+cfn={erl_eval,expr,5}
+calls=2 1
+1 1047
+fl=erl_eval
+fn={erl_eval,expr,5}
+1 82
+cfl=erl_eval
+cfn={erl_eval,do_apply,6}
+calls=2 1
+1 866
+cfl=erl_eval
+cfn={erl_eval,expr_list,4}
+calls=2 1
+1 55
+cfl=erl_eval
+cfn={erl_eval,merge_bindings,2}
+calls=2 1
+1 28
+cfl=erl_eval
+cfn={erl_eval,ret_expr,3}
+calls=5 1
+1 15
+cfl=erl_internal
+cfn={erl_internal,bif,3}
+calls=2 1
+1 7
+cfl=erl_eval
+cfn={erl_eval,expr,5}
+calls=4 1
+1 0
+fl=io_lib_pretty
+fn={io_lib_pretty,print,8}
+1 24
+cfl=io_lib_pretty
+cfn={io_lib_pretty,print_length,5}
+calls=1 1
+1 788
+cfl=io_lib
+cfn={io_lib,write,1}
+calls=1 1
+1 41
+cfl=io_lib_pretty
+cfn={io_lib_pretty,while_fail,3}
+calls=1 1
+1 15
+cfl=io_lib_pretty
+cfn={io_lib_pretty,indent,1}
+calls=1 1
+1 7
+cfl=io_lib_pretty
+cfn={io_lib_pretty,pp,8}
+calls=1 1
+1 3
+cfl=io_lib_pretty
+cfn={io_lib_pretty,max_cs,2}
+calls=1 1
+1 3
+fl=erl_eval
+fn={erl_eval,do_apply,6}
+1 15
+cfl=shell
+cfn={shell,'-eval_loop/3-fun-0-',3}
+calls=2 1
+1 847
+cfl=erl_eval
+cfn={erl_eval,ret_expr,3}
+calls=1 1
+1 4
+fl=shell
+fn={shell,used_record_defs,2}
+1 20
+cfl=shell
+cfn={shell,used_records,3}
+calls=2 1
+1 825
+cfl=shell
+cfn={shell,record_defs,2}
+calls=2 1
+1 20
+fl=erl_lint
+fn={erl_lint,bool_option,4}
+1 123
+cfl=lists
+cfn={lists,foldl,3}
+calls=26 1
+1 716
+cfl=pseudo
+cfn=garbage_collect
+calls=1 1
+1 17
+fl=shell
+fn={shell,'-eval_loop/3-fun-0-',3}
+1 10
+cfl=shell
+cfn={shell,apply_fun,3}
+calls=2 1
+1 837
+fl=shell
+fn={shell,apply_fun,3}
+1 13
+cfl=string_lists
+cfn={string_lists,accumulator_join_test,0}
+calls=1 1
+1 779
+cfl=fprof
+cfn={fprof,trace,1}
+calls=1 1
+1 45
+fl=shell
+fn={shell,used_records,3}
+1 573
+cfl=shell
+cfn={shell,used_records,1}
+calls=66 1
+1 252
+cfl=shell
+cfn={shell,used_records,3}
+calls=64 1
+1 0
+fl=io_lib_pretty
+fn={io_lib_pretty,print_length,5}
+1 10
+cfl=io_lib_pretty
+cfn={io_lib_pretty,write_string,2}
+calls=1 1
+1 537
+cfl=io_lib_pretty
+cfn={io_lib_pretty,printable_list,3}
+calls=1 1
+1 241
+fl=string_lists
+fn={string_lists,accumulator_join_test,0}
+1 6
+cfl=string_lists
+cfn={string_lists,join,2}
+calls=1 1
+1 773
+fl=string_lists
+fn={string_lists,join,2}
+1 14
+cfl=lists
+cfn={lists,flatten,1}
+calls=1 1
+1 643
+cfl=string_lists
+cfn={string_lists,join,3}
+calls=1 1
+1 103
+cfl=lists
+cfn={lists,reverse,1}
+calls=1 1
+1 13
+fl=io
+fn={io,execute_request,2}
+1 79
+cfl=io
+cfn={io,wait_io_mon_reply,2}
+calls=6 1
+1 569
+cfl=erlang
+cfn={erlang,monitor,2}
+calls=6 1
+1 38
+fl=lists
+fn={lists,flatten,1}
+1 6
+cfl=lists
+cfn={lists,do_flatten,2}
+calls=1 1
+1 637
+fl=lists
+fn={lists,do_flatten,2}
+1 637
+cfl=lists
+cfn={lists,do_flatten,2}
+calls=80 1
+1 0
+fl=io
+fn={io,wait_io_mon_reply,2}
+1 82
+cfl=pseudo
+cfn=suspend
+calls=6 1
+1 451
+cfl=erlang
+cfn={erlang,demonitor,2}
+calls=6 1
+1 36
+fl=io
+fn={io,request,2}
+1 71
+cfl=io
+cfn={io,execute_request,2}
+calls=4 1
+1 466
+cfl=io
+cfn={io,io_request,2}
+calls=4 1
+1 16
+fl=io_lib_pretty
+fn={io_lib_pretty,write_string,2}
+1 5
+cfl=io_lib
+cfn={io_lib,write_string,2}
+calls=1 1
+1 532
+fl=shell
+fn={shell,prep_check,1}
+1 492
+cfl=erlang
+cfn={erlang,tuple_to_list,1}
+calls=9 1
+1 22
+cfl=erlang
+cfn={erlang,list_to_tuple,1}
+calls=9 1
+1 22
+cfl=shell
+cfn={shell,prep_check,1}
+calls=77 1
+1 0
+fl=io_lib
+fn={io_lib,write_string,2}
+1 7
+cfl=io_lib
+cfn={io_lib,write_string1,3}
+calls=1 1
+1 525
+fl=io_lib
+fn={io_lib,write_string1,3}
+1 367
+cfl=io_lib
+cfn={io_lib,string_char,4}
+calls=54 1
+1 158
+cfl=io_lib
+cfn={io_lib,write_string1,3}
+calls=54 1
+1 0
+fl=erl_lint
+fn={erl_lint,zip_file_and_line,2}
+1 13
+cfl=erl_lint
+cfn={erl_lint,modify_line,2}
+calls=2 1
+1 502
+fl=erl_lint
+fn={erl_lint,modify_line,2}
+1 11
+cfl=erl_lint
+cfn={erl_lint,modify_line1,2}
+calls=2 1
+1 491
+fl=erl_lint
+fn={erl_lint,modify_line1,2}
+1 258
+cfl=erl_lint
+cfn={erl_lint,'-zip_file_and_line/2-fun-1-',2}
+calls=9 1
+1 233
+cfl=erl_lint
+cfn={erl_lint,modify_line1,2}
+calls=19 1
+1 0
+fl=io
+fn={io,requests,1}
+1 33
+cfl=io
+cfn={io,requests,2}
+calls=2 1
+1 374
+cfl=io
+cfn={io,default_output,0}
+calls=2 1
+1 15
+fl=shell
+fn={shell,enc,0}
+1 26
+cfl=io
+cfn={io,getopts,0}
+calls=2 1
+1 355
+cfl=lists
+cfn={lists,keyfind,3}
+calls=2 1
+1 7
+fl=io
+fn={io,requests,2}
+1 14
+cfl=io
+cfn={io,execute_request,2}
+calls=2 1
+1 220
+cfl=io
+cfn={io,io_requests,2}
+calls=2 1
+1 140
+fl=io
+fn={io,getopts,0}
+1 18
+cfl=io
+cfn={io,getopts,1}
+calls=2 1
+1 314
+cfl=io
+cfn={io,default_input,0}
+calls=2 1
+1 23
+fl=ordsets
+fn={ordsets,from_list,1}
+1 32
+cfl=lists
+cfn={lists,usort,1}
+calls=6 1
+1 319
+fl=lists
+fn={lists,usort,1}
+1 46
+cfl=lists
+cfn={lists,usplit_2,5}
+calls=2 1
+1 284
+fl=shell
+fn={shell,columns,0}
+1 15
+cfl=io
+cfn={io,columns,0}
+calls=2 1
+1 299
+fl=io
+fn={io,getopts,1}
+1 10
+cfl=io
+cfn={io,request,2}
+calls=2 1
+1 304
+fl=erl_lint
+fn={erl_lint,exprs,3}
+1 53
+cfl=erl_lint
+cfn={erl_lint,expr,3}
+calls=2 1
+1 171
+cfl=erl_lint
+cfn={erl_lint,vtupdate,2}
+calls=4 1
+1 77
+cfl=erl_lint
+cfn={erl_lint,exprs,3}
+calls=2 1
+1 0
+fl=io
+fn={io,columns,0}
+1 16
+cfl=io
+cfn={io,columns,1}
+calls=2 1
+1 265
+cfl=io
+cfn={io,default_output,0}
+calls=2 1
+1 18
+fl=dict
+fn={dict,from_list,1}
+1 25
+cfl=lists
+cfn={lists,foldl,3}
+calls=2 1
+1 246
+cfl=dict
+cfn={dict,new,0}
+calls=2 1
+1 26
+fl=lists
+fn={lists,usplit_2,5}
+1 48
+cfl=lists
+cfn={lists,usplit_2_1,6}
+calls=2 1
+1 248
+cfl=lists
+cfn={lists,umergel,3}
+calls=2 1
+1 212
+cfl=lists
+cfn={lists,usplit_2,5}
+calls=4 1
+1 0
+fl=io
+fn={io,columns,1}
+1 16
+cfl=io
+cfn={io,request,2}
+calls=2 1
+1 249
+fl=proplists
+fn={proplists,get_value,3}
+1 259
+cfl=proplists
+cfn={proplists,get_value,3}
+calls=42 1
+1 0
+fl=shell
+fn={shell,used_records,1}
+1 227
+cfl=erlang
+cfn={erlang,tuple_to_list,1}
+calls=9 1
+1 25
+fl=lists
+fn={lists,usplit_2_1,6}
+1 24
+cfl=lists
+cfn={lists,usplit_2_1,6}
+calls=2 1
+1 0
+cfl=lists
+cfn={lists,usplit_2,5}
+calls=2 1
+1 0
+fl=io_lib_pretty
+fn={io_lib_pretty,printable_list,3}
+1 4
+cfl=io_lib
+cfn={io_lib,printable_list,1}
+calls=1 1
+1 237
+fl=io_lib
+fn={io_lib,printable_list,1}
+1 10
+cfl=io_lib
+cfn={io_lib,printable_latin1_list,1}
+calls=1 1
+1 223
+cfl=io
+cfn={io,printable_range,0}
+calls=1 1
+1 4
+fl=gb_sets
+fn={gb_sets,from_list,1}
+1 38
+cfl=gb_sets
+cfn={gb_sets,from_ordset,1}
+calls=4 1
+1 157
+cfl=ordsets
+cfn={ordsets,from_list,1}
+calls=4 1
+1 42
+fl=erl_lint
+fn={erl_lint,'-zip_file_and_line/2-fun-1-',2}
+1 42
+cfl=erl_parse
+cfn={erl_parse,set_line,2}
+calls=9 1
+1 191
+fl=erl_lint
+fn={erl_lint,'-bool_option/4-fun-0-',4}
+1 225
+fl=io_lib
+fn={io_lib,printable_latin1_list,1}
+1 223
+cfl=io_lib
+cfn={io_lib,printable_latin1_list,1}
+calls=54 1
+1 0
+fl=dict
+fn={dict,'-from_list/1-fun-0-',2}
+1 12
+cfl=dict
+cfn={dict,store,3}
+calls=2 1
+1 203
+fl=lists
+fn={lists,umergel,3}
+1 47
+cfl=lists
+cfn={lists,umerge2_2,4}
+calls=2 1
+1 135
+cfl=lists
+cfn={lists,rumergel,3}
+calls=2 1
+1 39
+cfl=lists
+cfn={lists,umergel,3}
+calls=2 1
+1 0
+fl=dict
+fn={dict,store,3}
+1 34
+cfl=dict
+cfn={dict,on_bucket,3}
+calls=2 1
+1 97
+cfl=dict
+cfn={dict,maybe_expand,2}
+calls=2 1
+1 39
+cfl=dict
+cfn={dict,get_slot,2}
+calls=2 1
+1 33
+fl=dict
+fn={dict,new,0}
+1 156
+cfl=dict
+cfn={dict,mk_seg,1}
+calls=12 1
+1 47
+fl=erl_parse
+fn={erl_parse,set_line,2}
+1 45
+cfl=erl_scan
+cfn={erl_scan,set_attribute,3}
+calls=9 1
+1 146
+fl=erl_lint
+fn={erl_lint,'-start/2-lc$^0/1-0-',1}
+1 179
+cfl=erl_lint
+cfn={erl_lint,'-start/2-lc$^0/1-0-',1}
+calls=26 1
+1 0
+fl=erl_lint
+fn={erl_lint,return_status,1}
+1 23
+cfl=erl_lint
+cfn={erl_lint,pack_errors,1}
+calls=2 1
+1 117
+cfl=erl_lint
+cfn={erl_lint,pack_warnings,1}
+calls=2 1
+1 38
+fl=erl_lint
+fn={erl_lint,expr,3}
+1 32
+cfl=erl_lint
+cfn={erl_lint,check_remote_function,5}
+calls=2 1
+1 90
+cfl=erl_lint
+cfn={erl_lint,expr_list,3}
+calls=2 1
+1 48
+cfl=erl_lint
+cfn={erl_lint,keyword_warning,3}
+calls=3 1
+1 9
+fl=io_lib
+fn={io_lib,string_char,4}
+1 158
+fl=gb_sets
+fn={gb_sets,from_ordset,1}
+1 37
+cfl=gb_sets
+cfn={gb_sets,balance_list,2}
+calls=4 1
+1 120
+fl=erl_scan
+fn={erl_scan,set_attribute,3}
+1 40
+cfl=erl_scan
+cfn={erl_scan,set_attr,3}
+calls=9 1
+1 106
+fl=shell
+fn={shell,result_will_be_saved,0}
+1 14
+cfl=shell
+cfn={shell,get_history_and_results,0}
+calls=2 1
+1 129
+fl=io
+fn={io,io_requests,2}
+1 5
+cfl=io
+cfn={io,io_requests,4}
+calls=2 1
+1 135
+fl=lists
+fn={lists,umerge2_2,4}
+1 86
+cfl=lists
+cfn={lists,umerge2_1,5}
+calls=4 1
+1 123
+cfl=lists
+cfn={lists,reverse,2}
+calls=2 1
+1 8
+fl=io
+fn={io,io_requests,4}
+1 29
+cfl=io
+cfn={io,io_request,2}
+calls=4 1
+1 106
+cfl=io
+cfn={io,io_requests,4}
+calls=2 1
+1 0
+fl=shell
+fn={shell,get_history_and_results,0}
+1 26
+cfl=shell
+cfn={shell,get_env,2}
+calls=4 1
+1 96
+cfl=erlang
+cfn={erlang,min,2}
+calls=2 1
+1 7
+fl=application
+fn={application,get_env,2}
+1 24
+cfl=application_controller
+cfn={application_controller,get_env,2}
+calls=6 1
+1 101
+fl=lists
+fn={lists,umerge2_1,5}
+1 41
+cfl=lists
+cfn={lists,umerge2_2,4}
+calls=4 1
+1 0
+cfl=lists
+cfn={lists,umerge2_1,5}
+calls=4 1
+1 0
+fl=io
+fn={io,io_request,2}
+1 66
+cfl=unicode
+cfn={unicode,characters_to_binary,2}
+calls=2 1
+1 22
+cfl=io
+cfn={io,bc_req,3}
+calls=2 1
+1 17
+cfl=pseudo
+cfn=garbage_collect
+calls=1 1
+1 13
+cfl=io_lib
+cfn={io_lib,nl,0}
+calls=2 1
+1 4
+fl=gb_sets
+fn={gb_sets,balance_list,2}
+1 32
+cfl=gb_sets
+cfn={gb_sets,balance_list_1,2}
+calls=4 1
+1 88
+fl=erl_lint
+fn={erl_lint,pack_errors,1}
+1 38
+cfl=erl_lint
+cfn={erl_lint,pack_warnings,1}
+calls=2 1
+1 46
+cfl=pseudo
+cfn=garbage_collect
+calls=1 1
+1 20
+cfl=lists
+cfn={lists,mapfoldl,3}
+calls=2 1
+1 8
+cfl=lists
+cfn={lists,map,2}
+calls=2 1
+1 5
+fl=erl_scan
+fn={erl_scan,set_attr,3}
+1 73
+cfl=erl_lint
+cfn={erl_lint,'-zip_file_and_line/2-fun-0-',2}
+calls=9 1
+1 33
+fl=string_lists
+fn={string_lists,join,3}
+1 103
+cfl=string_lists
+cfn={string_lists,join,3}
+calls=6 1
+1 0
+fl=application_controller
+fn={application_controller,get_env,2}
+1 54
+cfl=ets
+cfn={ets,lookup,2}
+calls=6 1
+1 47
+fl=dict
+fn={dict,on_bucket,3}
+1 51
+cfl=erlang
+cfn={erlang,setelement,3}
+calls=6 1
+1 26
+cfl=dict
+cfn={dict,'-store/3-fun-0-',3}
+calls=2 1
+1 20
+fl=shell
+fn={shell,get_env,2}
+1 24
+cfl=application
+cfn={application,get_env,2}
+calls=4 1
+1 72
+fl=erl_lint
+fn={erl_lint,check_remote_function,5}
+1 23
+cfl=erl_lint
+cfn={erl_lint,deprecated_function,5}
+calls=2 1
+1 39
+cfl=erl_lint
+cfn={erl_lint,format_function,5}
+calls=2 1
+1 22
+cfl=erl_lint
+cfn={erl_lint,check_qlc_hrl,5}
+calls=2 1
+1 6
+fl=gb_sets
+fn={gb_sets,balance_list_1,2}
+1 88
+cfl=gb_sets
+cfn={gb_sets,balance_list_1,2}
+calls=8 1
+1 0
+fl=erl_lint
+fn={erl_lint,pack_warnings,1}
+1 43
+cfl=erl_lint
+cfn={erl_lint,'-pack_warnings/1-lc$^2/1-2-',1}
+calls=4 1
+1 18
+cfl=erl_lint
+cfn={erl_lint,'-pack_warnings/1-lc$^0/1-0-',2}
+calls=4 1
+1 12
+cfl=lists
+cfn={lists,usort,1}
+calls=4 1
+1 11
+fl=fprof
+fn={fprof,just_call,2}
+1 57
+cfl=erlang
+cfn={erlang,demonitor,1}
+calls=1 1
+1 12
+cfl=erlang
+cfn={erlang,monitor,2}
+calls=1 1
+1 9
+cfl=erl_eval
+cfn={erl_eval,ret_expr,3}
+calls=1 1
+1 3
+cfl=pseudo
+cfn=suspend
+calls=1 1
+1 0
+fl=erl_lint
+fn={erl_lint,value_option,7}
+1 13
+cfl=lists
+cfn={lists,foldl,3}
+calls=2 1
+1 66
+fl=erl_lint
+fn={erl_lint,vtupdate,2}
+1 19
+cfl=orddict
+cfn={orddict,merge,3}
+calls=4 1
+1 58
+fl=orddict
+fn={orddict,merge,3}
+1 61
+fl=erl_lint
+fn={erl_lint,'-start/2-lc$^1/1-1-',1}
+1 55
+cfl=erl_lint
+cfn={erl_lint,'-start/2-lc$^1/1-1-',1}
+calls=6 1
+1 0
+fl=erl_eval
+fn={erl_eval,expr_list,4}
+1 9
+cfl=erl_eval
+cfn={erl_eval,expr_list,6}
+calls=2 1
+1 46
+fl=ordsets
+fn={ordsets,is_element,2}
+1 51
+cfl=ordsets
+cfn={ordsets,is_element,2}
+calls=8 1
+1 0
+fl=pseudo
+fn=garbage_collect
+1 50
+fl=erl_lint
+fn={erl_lint,expr_list,3}
+1 11
+cfl=lists
+cfn={lists,foldl,3}
+calls=2 1
+1 37
+fl=ets
+fn={ets,lookup,2}
+1 47
+fl=erlang
+fn={erlang,tuple_to_list,1}
+1 47
+fl=erlang
+fn={erlang,monitor,2}
+1 47
+fl=dict
+fn={dict,mk_seg,1}
+1 47
+fl=erl_eval
+fn={erl_eval,expr_list,6}
+1 21
+cfl=erl_eval
+cfn={erl_eval,merge_bindings,2}
+calls=1 1
+1 12
+cfl=lists
+cfn={lists,reverse,1}
+calls=2 1
+1 7
+cfl=erl_eval
+cfn={erl_eval,expr_list,6}
+calls=1 1
+1 0
+cfl=erl_eval
+cfn={erl_eval,expr,5}
+calls=1 1
+1 0
+fl=fprof
+fn={fprof,trace,1}
+1 4
+cfl=fprof
+cfn={fprof,call,1}
+calls=1 1
+1 41
+fl=io_lib
+fn={io_lib,write,1}
+1 3
+cfl=io_lib
+cfn={io_lib,write,2}
+calls=1 1
+1 38
+fl=fprof
+fn={fprof,call,1}
+1 7
+cfl=fprof
+cfn={fprof,just_call,2}
+calls=1 1
+1 29
+cfl=erlang
+cfn={erlang,whereis,1}
+calls=1 1
+1 5
+fl=erl_eval
+fn={erl_eval,merge_bindings,2}
+1 23
+cfl=orddict
+cfn={orddict,to_list,1}
+calls=3 1
+1 9
+cfl=lists
+cfn={lists,foldl,3}
+calls=3 1
+1 8
+fl=lists
+fn={lists,rumergel,3}
+1 23
+cfl=lists
+cfn={lists,reverse,2}
+calls=2 1
+1 7
+cfl=lists
+cfn={lists,umergel,3}
+calls=2 1
+1 0
+fl=erl_lint
+fn={erl_lint,deprecated_function,5}
+1 17
+cfl=otp_internal
+cfn={otp_internal,obsolete,3}
+calls=2 1
+1 22
+fl=dict
+fn={dict,maybe_expand,2}
+1 11
+cfl=dict
+cfn={dict,maybe_expand_aux,2}
+calls=2 1
+1 28
+fl=io_lib
+fn={io_lib,write,2}
+1 3
+cfl=io_lib
+cfn={io_lib,write_atom,1}
+calls=1 1
+1 35
+fl=erlang
+fn={erlang,demonitor,2}
+1 36
+fl=io_lib
+fn={io_lib,write_atom,1}
+1 8
+cfl=io_lib
+cfn={io_lib,quote_atom,2}
+calls=1 1
+1 22
+cfl=erlang
+cfn={erlang,atom_to_list,1}
+calls=1 1
+1 5
+fl=orddict
+fn={orddict,from_list,1}
+1 20
+cfl=lists
+cfn={lists,foldl,3}
+calls=4 1
+1 14
+fl=erlang
+fn={erlang,setelement,3}
+1 34
+fl=io
+fn={io,default_output,0}
+1 22
+cfl=erlang
+cfn={erlang,group_leader,0}
+calls=4 1
+1 11
+fl=erl_lint
+fn={erl_lint,'-zip_file_and_line/2-fun-0-',2}
+1 33
+fl=dict
+fn={dict,get_slot,2}
+1 20
+cfl=erlang
+cfn={erlang,phash,2}
+calls=2 1
+1 13
+fl=dict
+fn={dict,maybe_expand_aux,2}
+1 20
+cfl=erlang
+cfn={erlang,setelement,3}
+calls=2 1
+1 8
+fl=sets
+fn={sets,new,0}
+1 19
+cfl=sets
+cfn={sets,mk_seg,1}
+calls=2 1
+1 8
+fl=shell
+fn={shell,local_func_handler,3}
+1 18
+cfl=shell
+cfn={shell,'-local_func_handler/3-fun-1-',4}
+calls=2 1
+1 8
+fl=erl_lint
+fn={erl_lint,'-expr_list/3-fun-0-',3}
+1 9
+cfl=erl_lint
+cfn={erl_lint,vtmerge,2}
+calls=1 1
+1 8
+cfl=erl_lint
+cfn={erl_lint,expr,3}
+calls=1 1
+1 0
+fl=erl_eval
+fn={erl_eval,bindings,1}
+1 15
+cfl=orddict
+cfn={orddict,to_list,1}
+calls=4 1
+1 10
+fl=io
+fn={io,default_input,0}
+1 17
+cfl=erlang
+cfn={erlang,group_leader,0}
+calls=2 1
+1 6
+fl=erl_lint
+fn={erl_lint,pseudolocals,0}
+1 23
+fl=unicode
+fn={unicode,characters_to_binary,2}
+1 22
+fl=otp_internal
+fn={otp_internal,obsolete,3}
+1 15
+cfl=otp_internal
+cfn={otp_internal,obsolete_1,3}
+calls=2 1
+1 7
+fl=io_lib
+fn={io_lib,quote_atom,2}
+1 8
+cfl=io_lib
+cfn={io_lib,name_chars,1}
+calls=1 1
+1 11
+cfl=erl_scan
+cfn={erl_scan,reserved_word,1}
+calls=1 1
+1 3
+fl=gb_sets
+fn={gb_sets,empty,0}
+1 22
+fl=erlang
+fn={erlang,list_to_tuple,1}
+1 22
+fl=erl_lint
+fn={erl_lint,format_function,5}
+1 15
+cfl=erl_lint
+cfn={erl_lint,is_format_function,2}
+calls=2 1
+1 7
+fl=erl_eval
+fn={erl_eval,ret_expr,3}
+1 22
+fl=shell
+fn={shell,record_defs,2}
+1 12
+cfl=lists
+cfn={lists,flatmap,2}
+calls=2 1
+1 8
+fl=lists
+fn={lists,reverse,1}
+1 17
+cfl=lists
+cfn={lists,reverse,2}
+calls=1 1
+1 3
+fl=dict
+fn={dict,'-store/3-fun-0-',3}
+1 12
+cfl=dict
+cfn={dict,store_bkt_val,3}
+calls=2 1
+1 8
+fl=orddict
+fn={orddict,to_list,1}
+1 19
+fl=lists
+fn={lists,reverse,2}
+1 18
+fl=erl_lint
+fn={erl_lint,'-pack_warnings/1-lc$^2/1-2-',1}
+1 18
+fl=io
+fn={io,bc_req,3}
+1 11
+cfl=net_kernel
+cfn={net_kernel,dflag_unicode_io,1}
+calls=2 1
+1 6
+fl=erlang
+fn={erlang,group_leader,0}
+1 17
+fl=erl_lint
+fn={erl_lint,'-value_option/7-fun-0-',7}
+1 16
+fl=shell
+fn={shell,record_print_fun,1}
+1 15
+fl=io_lib_pretty
+fn={io_lib_pretty,while_fail,3}
+1 7
+cfl=io_lib_pretty
+cfn={io_lib_pretty,'-print/8-fun-0-',5}
+calls=1 1
+1 8
+fl=erlang
+fn={erlang,phash,2}
+1 13
+fl=erlang
+fn={erlang,demonitor,1}
+1 12
+fl=erl_lint
+fn={erl_lint,'-pack_warnings/1-lc$^0/1-0-',2}
+1 12
+fl=io_lib
+fn={io_lib,name_chars,1}
+1 9
+cfl=io_lib
+cfn={io_lib,name_char,1}
+calls=1 1
+1 2
+cfl=io_lib
+cfn={io_lib,name_chars,1}
+calls=1 1
+1 0
+fl=erl_lint
+fn={erl_lint,keyword_warning,3}
+1 9
+fl=shell
+fn={shell,'-local_func_handler/3-fun-1-',4}
+1 8
+fl=sets
+fn={sets,mk_seg,1}
+1 8
+fl=lists
+fn={lists,mapfoldl,3}
+1 8
+fl=lists
+fn={lists,flatmap,2}
+1 8
+fl=io_lib_pretty
+fn={io_lib_pretty,'-print/8-fun-0-',5}
+1 4
+cfl=io_lib_pretty
+cfn={io_lib_pretty,cind,7}
+calls=1 1
+1 4
+fl=erl_lint
+fn={erl_lint,vtmerge,2}
+1 5
+cfl=orddict
+cfn={orddict,merge,3}
+calls=1 1
+1 3
+fl=dict
+fn={dict,store_bkt_val,3}
+1 8
+fl=shell
+fn={shell,record_bindings,2}
+1 7
+fl=otp_internal
+fn={otp_internal,obsolete_1,3}
+1 7
+fl=lists
+fn={lists,keyfind,3}
+1 7
+fl=io_lib_pretty
+fn={io_lib_pretty,indent,1}
+1 4
+cfl=io_lib_pretty
+cfn={io_lib_pretty,chars,2}
+calls=1 1
+1 3
+fl=erlang
+fn={erlang,min,2}
+1 7
+fl=erlang
+fn={erlang,get,0}
+1 7
+fl=erl_lint
+fn={erl_lint,is_format_function,2}
+1 7
+fl=erl_internal
+fn={erl_internal,bif,3}
+1 7
+fl=shell
+fn={shell,expand_records,2}
+1 6
+fl=shell
+fn={shell,'-exprs/7-lc$^0/1-0-',1}
+1 6
+fl=net_kernel
+fn={net_kernel,dflag_unicode_io,1}
+1 6
+fl=erl_lint
+fn={erl_lint,check_qlc_hrl,5}
+1 6
+fl=lists
+fn={lists,map,2}
+1 5
+fl=erlang
+fn={erlang,whereis,1}
+1 5
+fl=erlang
+fn={erlang,atom_to_list,1}
+1 5
+fl=epp
+fn={epp,default_encoding,0}
+1 5
+fl=io_lib_pretty
+fn={io_lib_pretty,cind,7}
+1 4
+fl=io_lib
+fn={io_lib,nl,0}
+1 4
+fl=io
+fn={io,printable_range,0}
+1 4
+fl=io_lib_pretty
+fn={io_lib_pretty,pp,8}
+1 3
+fl=io_lib_pretty
+fn={io_lib_pretty,max_cs,2}
+1 3
+fl=io_lib_pretty
+fn={io_lib_pretty,chars,2}
+1 3
+fl=erl_scan
+fn={erl_scan,reserved_word,1}
+1 3
+fl=io_lib
+fn={io_lib,name_char,1}
+1 2
+fl=pseudo
+fn=undefined
+1 0
+cfl=shell
+cfn={shell,exprs,7}
+calls=0 1
+1 16617800
+cfl=fprof
+cfn={fprof,just_call,2}
+calls=0 1
+1 44

@@ -1,0 +1,9 @@
+#!/usr/bin/env awk -f
+BEGIN {
+    RS="\n"
+    ORS="\n"
+    re="/asd/"
+}
+
+#/asd/
+re

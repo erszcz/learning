@@ -1,0 +1,60 @@
+%% Analysis results:
+{  analysis_options,
+ [{callers, true},
+  {sort, acc},
+  {totals, false},
+  {details, true}]}.
+
+%                                               CNT       ACC       OWN        
+[{ totals,                                       94,    0.863,    0.863}].  %%%
+
+
+%                                               CNT       ACC       OWN        
+[{ "<0.37.0>",                                   94,undefined,    0.863}].   %%
+
+{[{undefined,                                     0,    0.863,    0.036}],     
+ { {fprof,apply_start_stop,4},                    0,    0.863,    0.036},     %
+ [{{string_lists,accumulator_join_test,0},        1,    0.827,    0.006},      
+  {suspend,                                       1,    0.000,    0.000}]}.    
+
+{[{{fprof,apply_start_stop,4},                    1,    0.827,    0.006}],     
+ { {string_lists,accumulator_join_test,0},        1,    0.827,    0.006},     %
+ [{{string_lists,join,2},                         1,    0.821,    0.018}]}.    
+
+{[{{string_lists,accumulator_join_test,0},        1,    0.821,    0.018}],     
+ { {string_lists,join,2},                         1,    0.821,    0.018},     %
+ [{{lists,flatten,1},                             1,    0.468,    0.008},      
+  {{string_lists,join,3},                         1,    0.311,    0.004},      
+  {{lists,reverse,1},                             1,    0.024,    0.016}]}.    
+
+{[{{string_lists,join,2},                         1,    0.468,    0.008}],     
+ { {lists,flatten,1},                             1,    0.468,    0.008},     %
+ [{{lists,do_flatten,2},                          1,    0.460,    0.065}]}.    
+
+{[{{lists,flatten,1},                             1,    0.460,    0.065},      
+  {{lists,do_flatten,2},                         80,    0.000,    0.395}],     
+ { {lists,do_flatten,2},                         81,    0.460,    0.460},     %
+ [{{lists,do_flatten,2},                         80,    0.000,    0.395}]}.    
+
+{[{{string_lists,join,2},                         1,    0.311,    0.004},      
+  {{string_lists,join,3},                         6,    0.000,    0.307}],     
+ { {string_lists,join,3},                         7,    0.311,    0.311},     %
+ [{{string_lists,join,3},                         6,    0.000,    0.307}]}.    
+
+{[{{string_lists,join,2},                         1,    0.024,    0.016}],     
+ { {lists,reverse,1},                             1,    0.024,    0.016},     %
+ [{{lists,reverse,2},                             1,    0.008,    0.008}]}.    
+
+{[{{lists,reverse,1},                             1,    0.008,    0.008}],     
+ { {lists,reverse,2},                             1,    0.008,    0.008},     %
+ [ ]}.
+
+{[ ],
+ { undefined,                                     0,    0.000,    0.000},     %
+ [{{fprof,apply_start_stop,4},                    0,    0.863,    0.036}]}.    
+
+{[{{fprof,apply_start_stop,4},                    1,    0.000,    0.000}],     
+ { suspend,                                       1,    0.000,    0.000},     %
+ [ ]}.
+
+

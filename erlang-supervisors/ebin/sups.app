@@ -1,0 +1,10 @@
+{application,sups,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{sups_app,[]}},
+              {env,[]},
+              {modules,[fail_after_init_worker,fail_to_init_worker,
+                        spawning_worker,sups,sups_app,sups_sup,
+                        working_worker]}]}.

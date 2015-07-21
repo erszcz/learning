@@ -1,0 +1,76 @@
+events: Time
+summary: 863
+fl=fprof
+fn={fprof,apply_start_stop,4}
+1 36
+cfl=string_lists
+cfn={string_lists,accumulator_join_test,0}
+calls=1 1
+1 827
+cfl=pseudo
+cfn=suspend
+calls=1 1
+1 0
+fl=string_lists
+fn={string_lists,accumulator_join_test,0}
+1 6
+cfl=string_lists
+cfn={string_lists,join,2}
+calls=1 1
+1 821
+fl=string_lists
+fn={string_lists,join,2}
+1 18
+cfl=lists
+cfn={lists,flatten,1}
+calls=1 1
+1 468
+cfl=string_lists
+cfn={string_lists,join,3}
+calls=1 1
+1 311
+cfl=lists
+cfn={lists,reverse,1}
+calls=1 1
+1 24
+fl=lists
+fn={lists,flatten,1}
+1 8
+cfl=lists
+cfn={lists,do_flatten,2}
+calls=1 1
+1 460
+fl=lists
+fn={lists,do_flatten,2}
+1 460
+cfl=lists
+cfn={lists,do_flatten,2}
+calls=80 1
+1 0
+fl=string_lists
+fn={string_lists,join,3}
+1 311
+cfl=string_lists
+cfn={string_lists,join,3}
+calls=6 1
+1 0
+fl=lists
+fn={lists,reverse,1}
+1 16
+cfl=lists
+cfn={lists,reverse,2}
+calls=1 1
+1 8
+fl=lists
+fn={lists,reverse,2}
+1 8
+fl=pseudo
+fn=undefined
+1 0
+cfl=fprof
+cfn={fprof,apply_start_stop,4}
+calls=0 1
+1 863
+fl=pseudo
+fn=suspend
+1 0

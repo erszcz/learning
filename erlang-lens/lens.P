@@ -1,0 +1,136 @@
+-file("lens.erl", 1).
+
+-module(lens).
+
+-compile([export_all]).
+
+-record(address,{street,city,state,zip}).
+
+-record(person,{name,age,addr}).
+
+street({Vmod,Fmap}) ->
+    {fun(R = #address{street = F}) ->
+            Fmap(fun(NewF) ->
+                        R#address{street = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+city({Vmod,Fmap}) ->
+    {fun(R = #address{city = F}) ->
+            Fmap(fun(NewF) ->
+                        R#address{city = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+state({Vmod,Fmap}) ->
+    {fun(R = #address{state = F}) ->
+            Fmap(fun(NewF) ->
+                        R#address{state = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+zip({Vmod,Fmap}) ->
+    {fun(R = #address{zip = F}) ->
+            Fmap(fun(NewF) ->
+                        R#address{zip = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+name({Vmod,Fmap}) ->
+    {fun(R = #person{name = F}) ->
+            Fmap(fun(NewF) ->
+                        R#person{name = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+age({Vmod,Fmap}) ->
+    {fun(R = #person{age = F}) ->
+            Fmap(fun(NewF) ->
+                        R#person{age = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+addr({Vmod,Fmap}) ->
+    {fun(R = #person{addr = F}) ->
+            Fmap(fun(NewF) ->
+                        R#person{addr = NewF}
+                 end,
+                 Vmod(F))
+     end,
+     Fmap}.
+
+runlens(Lens, Obj, FMod) ->
+    {L,_} = Lens(FMod),
+    L(Obj).
+
+set(Lens, Obj, Val) ->
+    runlens(Lens,
+            Obj,
+            {fun(_) ->
+                    Val
+             end,
+             fun(F, V) ->
+                    F(V)
+             end}).
+
+view(Lens, Obj) ->
+    runlens(Lens,
+            Obj,
+            {fun(V) ->
+                    V
+             end,
+             fun(_F, V) ->
+                    V
+             end}).
+
+modify(Lens, Obj, Func) ->
+    runlens(Lens,
+            Obj,
+            {fun(V) ->
+                    Func(V)
+             end,
+             fun(F, V) ->
+                    F(V)
+             end}).
+
+compose(L1, L2) ->
+    fun(O) ->
+           L1(L2(O))
+    end.
+
+t() ->
+    A = #address{street = "123 Main St",
+                 city = "Oakland",
+                 state = "CA",
+                 zip = "94610"},
+    P = #person{name = "Steven",age = 46,addr = A},
+    io:format("Name: ~p\n", [view(fun name/1, P)]),
+    P1 = set(fun name/1, P, "NewDude"),
+    io:format("New Person: ~p\n", [P1]),
+    AddrStreet = compose(fun addr/1, fun street/1),
+    P2 = set(AddrStreet, P, "456 New Rd."),
+    io:format("New Street: ~p\n", [view(AddrStreet, P2)]),
+    io:format("New Addr~p\n", [view(fun addr/1, P2)]),
+    io:format("New Person~p\n", [P2]),
+    P3 =
+        modify(fun age/1,
+               P,
+               fun(N) ->
+                      N + 1
+               end),
+    io:format("New Age: ~p\n", [view(fun age/1, P3)]).
+
+
+

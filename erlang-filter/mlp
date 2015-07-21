@@ -1,0 +1,18 @@
+#!/usr/bin/env escript
+%%! -pa /Users/erszcz/work/learning/erlang-filter/deps/pa/ebin -pa /Users/erszcz/work/learning/erlang-filter/deps/exml/ebin
+%% -*- erlang -*-
+%% vim: ft=erlang
+
+main(Args) ->
+    io:format("cwd: ~p~n", [file:get_cwd()]),
+    io:format("base dir: ~p~n", [base_dir(escript:script_name())]),
+    io:format("deps dir: ~p~n", [deps_dirs(escript:script_name())]),
+    code:add_paths([base_dir(escript:script_name())] ++ deps_dirs(escript:script_name())),
+    mlp:main(Args).
+
+base_dir(ScriptName) ->
+    filename:absname(filename:dirname(ScriptName)).
+
+deps_dirs(ScriptName) ->
+    Base = base_dir(ScriptName),
+    filelib:wildcard(filename:join([Base, "deps", "*", "ebin"])).

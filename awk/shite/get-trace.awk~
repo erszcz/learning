@@ -1,0 +1,23 @@
+#!/usr/bin/env awk -f
+BEGIN {
+    RS="}\n"
+    ORS="}\n---\n"
+    #RS="\n{trace"
+    #ORS="\n---\n{trace"
+
+    FS="(,|{|})"
+}
+
+#$0 ~ /ejabberd_hooks/ { print $1 }
+#$0 ~ /ejabberd_hooks/ {
+#    i = 1
+#    found = -1
+#    for (; i < NF; i++) {
+#        if ($i ~ /ejabberd_hooks/) {
+#            found = i
+#        }
+#    }
+#    if (found != -1 && $(found+1) != "")
+#        print $(found+1)"\n"
+#}
+$0 ~ trace_ts && $0 ~ $timestamp { print $0 }

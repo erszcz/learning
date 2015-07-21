@@ -1,0 +1,11 @@
+2014-11-17 11:13:30.864 [info] <0.7.0> Application lager started on node nonode@nohost
+2014-11-17 11:17:42.081 [info] <0.7.0> Application lager started on node nonode@nohost
+2014-11-17 11:17:52.391 [warning] <0.39.0>@lager_tracing:log_event_with_tag:8 warning with tag "{tag, true}"
+2014-11-17 11:17:57.408 [warning] <0.39.0>@lager_tracing:log_event_no_tag:11 warning without tags
+2014-11-17 11:17:59.226 [warning] <0.39.0>@lager_tracing:log_event_no_tag:11 warning without tags
+2014-11-17 11:17:59.845 [warning] <0.39.0>@lager_tracing:log_event_no_tag:11 warning without tags
+2014-11-17 11:18:05.024 [warning] <0.39.0>@lager_tracing:log_event_with_tag:8 warning with tag "{tag, true}"
+2014-11-17 11:20:26.853 [warning] <0.39.0>@lager_tracing:log_event_no_tag:11 warning without tags
+2014-11-17 11:20:29.507 [warning] <0.39.0>@lager_tracing:log_event_with_tag:8 warning with tag "{tag, true}"
+2014-11-17 11:21:00.075 [warning] <0.39.0>@lager_tracing:log_event_no_tag:11 warning without tags
+2014-11-17 11:21:02.088 [warning] <0.39.0>@lager_tracing:log_event_with_tag:8 warning with tag "{tag, true}"

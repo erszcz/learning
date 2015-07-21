@@ -1,0 +1,12 @@
+{application, get,
+ [
+  {description, "gen_event test"},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { get_app, []}},
+  {env, []}
+ ]}.
