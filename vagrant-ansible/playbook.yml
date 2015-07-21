@@ -1,6 +1,8 @@
 ---
 - hosts: all
   sudo: true
+  vars:
+    document_root: /vagrant
   tasks:
     - name: update apt cache
       apt: update_cache=yes
