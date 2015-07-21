@@ -3,9 +3,9 @@
   sudo: true
   vars:
     document_root: /vagrant
-  tasks:
+  pre_tasks:
     - name: update apt cache
       apt: update_cache=yes
-    - include: tasks/apache.yml
-    - include: tasks/mysql.yml
-    - include: tasks/php.yml
+  roles:
+    - webserver
+    - database
