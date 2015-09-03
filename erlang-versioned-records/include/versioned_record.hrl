@@ -28,7 +28,7 @@
 %%      
 %%      breaks the contract of this headaer file / library
 %%
-%%  -   this header file doesn't export anything from the module that imports it;
+%%  -   this header file doesn't export anything from the module that includes it;
 %%      define your exports explicitly as appropriate;
 %%      a suggested -export() attribute is:
 %%
