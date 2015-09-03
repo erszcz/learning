@@ -1,0 +1,14 @@
+{application, vr,
+ [
+  {description, "A take at versioned records"},
+  {vsn, "1"},
+  {modules, [
+             vr_lib
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
