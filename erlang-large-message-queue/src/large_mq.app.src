@@ -1,0 +1,12 @@
+{application, large_mq,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { large_mq_app, []}},
+  {env, []}
+ ]}.
