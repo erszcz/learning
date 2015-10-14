@@ -1,0 +1,14 @@
+{application, exprecs_example,
+ [
+  {description, "An Erlang exprecs_example library"},
+  {vsn, "1"},
+  {modules, [
+             exprecs_example
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
