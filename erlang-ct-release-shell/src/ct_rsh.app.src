@@ -1,0 +1,14 @@
+{application, ct_rsh,
+ [
+  {description, "An Erlang ct_rsh library"},
+  {vsn, "1"},
+  {modules, [
+             ct_rsh
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
