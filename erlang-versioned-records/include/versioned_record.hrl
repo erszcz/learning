@@ -26,7 +26,7 @@
 %%                                  field1 = a,
 %%                                  field2 = b}).
 %%      
-%%      breaks the contract of this headaer file / library
+%%      breaks the contract of this header file / library
 %%
 %%  -   this header file doesn't export anything from the module that includes it;
 %%      define your exports explicitly as appropriate;
