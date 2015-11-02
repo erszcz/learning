@@ -1,0 +1,14 @@
+{application, elixir_libs,
+ [
+  {description, "An Erlang elixir_libs library"},
+  {vsn, "1"},
+  {modules, [
+             elixir_libs
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.

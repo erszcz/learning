@@ -1,0 +1,2 @@
+export PATH=$(pwd)/deps/elixir/bin:${PATH}
+export MANPATH=$(pwd)/deps/elixir/man:${MANPATH}
