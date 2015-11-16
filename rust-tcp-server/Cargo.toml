@@ -1,0 +1,16 @@
+[package]
+name = "tcp-server"
+version = "0.1.0"
+authors = ["Radek Szymczyszyn <lavrin@gmail.com>"]
+
+[dependencies]
+bufstream = "*"
+xml-rs = "*"
+
+[[bin]]
+path = "src/bin.rs"
+name = "tcp-server"
+
+[[bin]]
+path = "src/xml.rs"
+name = "tcp-xml-server"
