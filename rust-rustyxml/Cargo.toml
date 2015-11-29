@@ -1,0 +1,11 @@
+[package]
+name = "xmltest"
+version = "0.1.0"
+authors = ["Radek Szymczyszyn <radoslaw.szymczyszyn@erlang-solutions.com>"]
+
+[dependencies]
+RustyXML = "*"
+
+[[bin]]
+name = "xmltest"
+path = "src/bin.rs"
