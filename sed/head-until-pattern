@@ -1,0 +1,4 @@
+#!/bin/sh
+pattern=$1
+shift
+sed ${pattern}q $@
