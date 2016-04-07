@@ -10,6 +10,8 @@ actions() ->
      #{op => crash, trap_exit => true},
      #{op => external_normal_exit, trap_exit => true},
      #{op => external_abnormal_exit, trap_exit => true},
+     #{op => external_shutdown, trap_exit => true},
+     %% TODO: op => parent_shutdown / supervisor_shutdown
      #{op => linked_process_exits, trap_exit => true},
      #{op => linked_process_crashes, trap_exit => true},
 
@@ -17,6 +19,7 @@ actions() ->
      #{op => crash, trap_exit => false},
      #{op => external_normal_exit, trap_exit => false},
      #{op => external_abnormal_exit, trap_exit => false},
+     #{op => external_shutdown, trap_exit => false},
      #{op => linked_process_exits, trap_exit => false},
      #{op => linked_process_crashes, trap_exit => false}].
 
@@ -45,7 +48,7 @@ do(#{op := Op, trap_exit := Trap}) ->
         MStatus = receive
                       {'DOWN', MRef, _, _, _} ->
                           ok
-                  after timer:seconds(10) ->
+                  after timer:seconds(6) ->
                           timeout
                   end,
         #{op => Op,

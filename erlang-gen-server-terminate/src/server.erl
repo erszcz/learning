@@ -9,6 +9,7 @@
          stop/1,
          external_normal_exit/1,
          external_abnormal_exit/1,
+         external_shutdown/1,
          crash/1,
          linked_process_exits/1,
          linked_process_crashes/1]).
@@ -48,6 +49,9 @@ external_normal_exit(Pid) ->
 
 external_abnormal_exit(Pid) ->
     exit(Pid, abnormal).
+
+external_shutdown(Pid) ->
+    exit(Pid, shutdown).
 
 linked_process_exits(Pid) ->
     gen_server:cast(Pid, linked_process_exits).
