@@ -10,7 +10,7 @@ $ ./rebar3 dialyzer
 ===> Analyzing 5 files with "/Users/erszcz/work/learning/erlang-enforced-types/_build/default/rebar3_18.2_plt"...
 
 _build/default/lib/eet/src/usage_example.erl
-  13: Function invalid/0 has no local return
-  14: The call usage_example:xmlel(#{#<105>(8, 1, 'integer', ['unsigned', 'big']), #<110>(8, 1, 'integer', ['unsigned', 'big']), #<118>(8, 1, 'integer', ['unsigned', 'big']), #<97>(8, 1, 'integer', ['unsigned', 'big']), #<108>(8, 1, 'integer', ['unsigned', 'big']), #<105>(8, 1, 'integer', ['unsigned', 'big']), #<100>(8, 1, 'integer', ['unsigned', 'big'])}#, [], [<<_:144>>,...]) does not have a term of type [#xmlel{name::binary(),attrs::[any()],children::[#xmlel{name::binary(),attrs::[any()],children::[any()]} | eet_cdata:t()]} | eet_cdata:t()] (with opaque subterms) as 3rd argument
+   5: Function invalid/0 has no local return
+   6: The call eet_el:new(#{#<105>(8, 1, 'integer', ['unsigned', 'big']), #<110>(8, 1, 'integer', ['unsigned', 'big']), #<118>(8, 1, 'integer', ['unsigned', 'big']), #<97>(8, 1, 'integer', ['unsigned', 'big']), #<108>(8, 1, 'integer', ['unsigned', 'big']), #<105>(8, 1, 'integer', ['unsigned', 'big']), #<100>(8, 1, 'integer', ['unsigned', 'big'])}#, [], [<<_:144>>,...]) does not have a term of type [eet_cdata:t() | eet_el:t()] (with opaque subterms) as 3rd argument
 ===> Warnings written to /Users/erszcz/work/learning/erlang-enforced-types/_build/default/18.2.dialyzer_warnings
 ===> Warnings occured running dialyzer: 2
