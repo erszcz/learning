@@ -1,0 +1,4 @@
+[{<<"exml">>,
+  {git,"git://github.com/esl/exml",
+       {ref,"2547164950b65a86b79a5a5669821cff9bde17a7"}},
+  0}].
