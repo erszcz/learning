@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+    <g>
+        <polygon points="100,10 250,150 200,110"
+                 style="fill:lime;stroke:purple;stroke-width:1" />
+        <circle cx="25" cy="75" r="20" style="fill:lime;stroke:purple;stroke-width:1"/>
+    </g>
+</svg>
