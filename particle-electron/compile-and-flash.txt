@@ -1,0 +1,2 @@
+particle compile electron publish.ino --saveTo publish.bin
+particle flash --usb publish.bin
