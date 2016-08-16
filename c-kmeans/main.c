@@ -140,7 +140,7 @@ int main(int argc, const char *argv[])
 
     // print our data
     //printf("npoints: %ld\n", npoints);  
-    //for (int i; i < npoints; ++i) {
+    //for (int i = 0; i < npoints; ++i) {
     //    printf("  %f %f\n", points[i][0], points[i][1]);
     //}
 
@@ -152,7 +152,7 @@ int main(int argc, const char *argv[])
     printf("nclusters: %ld\n", nclusters);
     // x, y, cluster, centroid x, centroid y
     printf("  %8s %8s %2s %8s %8s\n", "x", "y", "c", "cx", "cy");
-    for (int i; i < npoints; ++i) {
+    for (int i = 0; i < npoints; ++i) {
         int cluster = clusters[i];
         printf("  %8f %8f %2d %f %f\n", points[i][0], points[i][1], cluster,
                                         centroids[cluster][0],
