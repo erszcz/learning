@@ -139,7 +139,7 @@ int main(int argc, const char *argv[])
     //}
 
     // run k_means()
-    clusters = k_means(points, npoints, DIM, 2, 0.0001, centroids);
+    clusters = k_means(points, npoints, DIM, nclusters, 0.0001, centroids);
 
     // print clusters
     printf("npoints: %ld\n", npoints);
