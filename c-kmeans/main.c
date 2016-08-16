@@ -1,5 +1,6 @@
-#include <stdlib.h>
+#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int *k_means(double **data, int n, int m, int k, double t, double **centroids);
 
@@ -118,7 +119,7 @@ size_t   npoints = sizeof(_points) / sizeof(_points[0]) / DIM;
 double** points;
 int*     clusters;
 double** centroids;
-size_t   nclusters = 2;
+size_t   nclusters;
 
 int main(int argc, const char *argv[])
 {
@@ -127,6 +128,11 @@ int main(int argc, const char *argv[])
     for (int i = 0; i < npoints; ++i) {
         points[i] = &_points[i * DIM];
     }
+
+    // determine the number of points - this is a fragile heuristic!
+    nclusters = sqrt(npoints / 2);
+
+    //
     centroids = calloc(nclusters, sizeof(double*));
     for (int i = 0; i < nclusters; ++i) {
         centroids[i] = calloc(2, sizeof(double));
@@ -143,6 +149,7 @@ int main(int argc, const char *argv[])
 
     // print clusters
     printf("npoints: %ld\n", npoints);
+    printf("nclusters: %ld\n", nclusters);
     // x, y, cluster, centroid x, centroid y
     printf("  %8s %8s %2s %8s %8s\n", "x", "y", "c", "cx", "cy");
     for (int i; i < npoints; ++i) {
