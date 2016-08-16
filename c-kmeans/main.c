@@ -159,6 +159,17 @@ int main(int argc, const char *argv[])
                                         centroids[cluster][1]);
     }
 
+    // print just the centroids
+    printf("\ncentroids:\n");
+    for (int i = 0; i < nclusters; ++i) {
+        int cluster = clusters[i];
+        printf("  %2d %f\n", i, centroids[i][0]);
+    }
+    printf("\n");
+    for (int i = 0; i < nclusters; ++i) {
+        printf("  %2d %f\n", i, centroids[i][1]);
+    }
+
     // clean up
     if (points)
         free(points);
