@@ -1,0 +1,1 @@
+-define(REL1_CONST, rel1_const).

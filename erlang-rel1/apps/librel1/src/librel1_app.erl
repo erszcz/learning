@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc rel1 public API
+%% @doc librel1 public API
 %% @end
 %%%-------------------------------------------------------------------
 
--module(rel1_app).
+-module(librel1_app).
 
 -behaviour(application).
 
@@ -13,20 +13,20 @@
 
 -export([z/0]).
 
--include_lib("librel1/include/librel1.hrl").
+-include_lib("rel1/include/rel1.hrl").
 
 %%====================================================================
 %% API
 %%====================================================================
 
 start(_StartType, _StartArgs) ->
-    rel1_sup:start_link().
+    librel1_sup:start_link().
 
 stop(_State) ->
     ok.
 
 z() ->
-    ?LIBREL1_CONST.
+    ?REL1_CONST.
 
 %%====================================================================
 %% Internal functions
