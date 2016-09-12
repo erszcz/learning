@@ -1,0 +1,3 @@
+[
+  { rel1, [{ fake_env_var, {{crossed_l_and_stuff}} }] }
+].
