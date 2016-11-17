@@ -29,7 +29,7 @@ actions() ->
 
 test() ->
     Rs = [ do(A) || A <- actions() ],
-    [ print("~s~n", [format_result(R)]) || R <- Rs ].
+    [ print("~3b) ~s~n", [I, format_result(R)]) || {I, R} <- enum(Rs) ].
 
 do(#{op := Op, trap_exit := Trap}) ->
     try
@@ -72,5 +72,8 @@ format_result(driver_error) -> "driver_error";
 format_result(#{op := Op, trap_exit := Trap,
                 terminate_status := TStatus,
                 aliveness := Alive}) ->
-    io_lib:format("op: ~p\ttrap: ~p\talive: ~p\tterminate: ~s\t",
-                  [Op, Trap, Alive, TStatus]).
+    io_lib:format("trap:~6s\top:~23s\talive:~6s\tterminate:~11s",
+                  [Trap, Op, Alive, TStatus]).
+
+enum(List) ->
+    lists:zip(lists:seq(1, length(List)), List).
