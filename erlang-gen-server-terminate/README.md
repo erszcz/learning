@@ -22,3 +22,10 @@ $ rebar3 shell
  14) trap: false        op: linked_process_crashes      alive: false    terminate: not_called
 [ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok,ok]
 ```
+
+Case 10 might be surprising, but it actually makes perfect sense.
+See `man erlang` for the documentation of `exit/2`: _If Reason is the atom `normal`, Pid does not exit._
+This is due to the fact that an `exit(normal)` call is a valid clean termination of a process.
+However, each call to `exit/1` sends an exit signal to linked processes - in order not to kill
+linked processes upon normal termination, `normal` exit reason is treated specially by `exit/2`.
+It's also described at http://erlang.org/doc/reference_manual/processes.html
