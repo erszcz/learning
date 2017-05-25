@@ -1,6 +1,9 @@
 module basic_adt
 
-export len/1
+export len/1,
+       nil/1,
+       cons/2,
+       list/1
 
 export_type my_list, opt
 
@@ -10,6 +13,14 @@ export_type my_list, opt
 type my_list 'x = Cons ('x, my_list 'x) | Nil
 
 type opt 'a = None | Some 'a
+
+let nil () = Nil
+
+let cons e l = Cons (e, l)
+
+let list l = match l with
+    [] -> Nil
+  | h :: t -> Cons (h, list t)
 
 let len l = match l with
     Nil -> 0
