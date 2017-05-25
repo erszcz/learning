@@ -1,0 +1,15 @@
+module left_or_right
+
+export f, g
+
+export_type left_or_right
+
+type left_or_right = Left atom | Right atom
+
+let f ctr_name = beam :erlang :list_to_tuple [[ctr_name, :some_val]] with
+    Left l -> Left l
+  | Right r -> Right r
+
+let g ctr_name = match f ctr_name with
+    Left l -> :left
+  | Right r -> :right

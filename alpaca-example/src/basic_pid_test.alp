@@ -3,11 +3,14 @@ module basic_pid_test
 export pid_fun/1,
        start_pid_fun/1
 
-export m_add/1
+export m_add/1, m_fetch/1
 
 type t = Add int | Fetch (pid int)
 
 let m_add i = Add i
+
+let m_fetch pid = beam :erlang :list_to_tuple [[:Fetch, pid]] with
+    Fetch p -> Fetch p
 
 let pid_fun x = receive with
     Add i -> pid_fun x + i
