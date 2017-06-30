@@ -10,5 +10,5 @@ serde_json = "1.0"
 
 [[bin]]
 doc  = false
-name = "cbor_to_json"
-path = "src/bin/cbor_to_json.rs"
+name = "cbor"
+path = "src/bin/cbor.rs"
