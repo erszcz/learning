@@ -4,10 +4,11 @@ version = "0.1.0"
 authors = ["Radek Szymczyszyn <radoslaw.szymczyszyn@erlang-solutions.com>"]
 
 [dependencies]
+serde = "1.0.0"
 serde_cbor = "0.6.0"
 serde_json = "1.0"
 
 [[bin]]
 doc  = false
-name = "print"
-path = "src/bin/print.rs"
+name = "cbor_to_json"
+path = "src/bin/cbor_to_json.rs"
