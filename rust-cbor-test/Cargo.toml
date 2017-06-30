@@ -4,8 +4,8 @@ version = "0.1.0"
 authors = ["Radek Szymczyszyn <radoslaw.szymczyszyn@erlang-solutions.com>"]
 
 [dependencies]
-cbor = "0.3"
-rustc-serialize = "0.3.24"
+serde_cbor = "0.6.0"
+serde_json = "1.0"
 
 [[bin]]
 doc  = false

@@ -1,11 +1,10 @@
-extern crate cbor;
-extern crate rustc_serialize;
+extern crate serde_cbor;
+extern crate serde_json;
 
-use cbor::{ Decoder };
-use rustc_serialize::json::{ Json, ToJson };
+use serde_cbor::{ from_reader, Value };
+use serde_json::{ to_string };
 
 fn main() {
-    let mut d = Decoder::from_reader(std::io::stdin());
-    let cbor = d.items().next();
-    println!("{:?}", cbor);
+    let value: Value = from_reader(std::io::stdin()).unwrap();
+    println!("{}", to_string(value).unwrap());
 }
