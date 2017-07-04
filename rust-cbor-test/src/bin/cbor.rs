@@ -16,6 +16,10 @@ fn main() {
             let value: Value = from_reader(std::io::stdin()).unwrap();
             let _ = to_writer(&mut std::io::stdout(), &value).unwrap();
         }
+        "--to-rust" => {
+            let value: Value = from_reader(std::io::stdin()).unwrap();
+            println!("{:?}", value);
+        }
         _ => panic!("cbor: unknown option")
     }
 }
