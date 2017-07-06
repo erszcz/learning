@@ -1,0 +1,13 @@
+[package]
+name = "rocketfuel"
+version = "0.1.0"
+authors = ["Radek Szymczyszyn <radoslaw.szymczyszyn@erlang-solutions.com>"]
+
+[dependencies]
+rocket = "0.2.8"
+rocket_codegen = "0.2.8"
+
+[[bin]]
+doc  = false
+name = "rocketfuel"
+path = "src/bin/rocketfuel.rs"
