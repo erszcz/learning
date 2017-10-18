@@ -50,6 +50,8 @@ handle_cast(Msg, State) ->
 handle_info({udp, Socket, IP, InPortNo, <<"dtls", Rest/bytes>>}, #{udp_socket := Socket}) ->
     print("handle_info::upgrade-to-dtls: ~p ~p ~p discarding: ~p\n",
           [Socket, IP, InPortNo, Rest]),
+    %% Just to make sure...
+    ok = inet:setopts(Socket, [{active, false}]),
     {ok, DTLSSocket} = dtls:listen(Socket, [{active, once}, binary]),
     {noreply, #{dtls_socket => DTLSSocket}};
 
