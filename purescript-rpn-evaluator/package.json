@@ -1,0 +1,18 @@
+{
+  "name": "purescript-rpn-evaluator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@bower_components/purescript-console": "purescript/purescript-console#^3.0.0",
+    "@bower_components/purescript-eff": "purescript/purescript-eff#^3.0.0",
+    "@bower_components/purescript-prelude": "purescript/purescript-prelude#^3.0.0",
+    "@bower_components/purescript-psci-support": "purescript/purescript-psci-support#^3.0.0"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
+  },
+  "scripts": {
+    "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'bower_components', 'junction') } catch (e) { }\""
+  }
+}
