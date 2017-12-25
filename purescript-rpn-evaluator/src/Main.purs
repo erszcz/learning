@@ -7,7 +7,6 @@ import Control.Monad.Eff.Console (CONSOLE, logShow)
 import Data.Int (fromString)
 import Data.Maybe (Maybe(..))
 import Data.String (Pattern(..), split)
-import Partial.Unsafe (unsafePartial)
 
 data Symbol = Add
             | Sub
@@ -22,7 +21,7 @@ instance showSymbol :: Show Symbol where
   show Div = "Div"
   show (Num n) = show n
 
-token :: Partial => String -> Maybe Symbol
+token :: String -> Maybe Symbol
 token "+" = Just Add
 token "-" = Just Sub
 token "*" = Just Mul
@@ -36,8 +35,8 @@ example2 :: String
 example2 = "2 3 + 3 *"
 
 {--parse :: String -> Maybe [Symbol]--}
-parse expr = map (unsafePartial token) (split (Pattern " ") expr)
+parse expr = map token $ split (Pattern " ") expr
 
 {--main :: forall e. Eff (console :: CONSOLE | e) Unit--}
 main = do
-  logShow $ unsafePartial $ parse "3 2 +"
+  logShow $ parse "3 2 +"
