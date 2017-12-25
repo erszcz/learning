@@ -6,27 +6,33 @@ import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, logShow)
 import Data.Array (catMaybes, partition)
 import Data.Int (fromString)
+import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..), isJust)
 import Data.String (Pattern(..), split)
 
-data Symbol = Add
-            | Sub
-            | Mul
-            | Div
+data Symbol = Op Operator
             | Num Int
 
 instance showSymbol :: Show Symbol where
+  show (Op op) = show op
+  show (Num n) = show n
+
+data Operator = Add
+              | Sub
+              | Mul
+              | Div
+
+instance showOperator :: Show Operator where
   show Add = "Add"
   show Sub = "Sub"
   show Mul = "Mul"
   show Div = "Div"
-  show (Num n) = show n
 
 symbol :: String -> Maybe Symbol
-symbol "+" = Just Add
-symbol "-" = Just Sub
-symbol "*" = Just Mul
-symbol "/" = Just Div
+symbol "+" = Just $ Op Add
+symbol "-" = Just $ Op Sub
+symbol "*" = Just $ Op Mul
+symbol "/" = Just $ Op Div
 symbol num = map Num (fromString num)
 
 example1 :: String
@@ -41,6 +47,21 @@ parse expr = case partition isJust symbols of
   _ -> Nothing
     where symbols = map symbol $ split (Pattern " ") expr
 
+eval :: List Symbol -> Maybe Int
+eval expr = go expr Nil
+  where go Nil (Cons v Nil) = Just v
+        go (Op op : expr') (x : y : stack) = go expr' $ (evalOp op x y) : stack
+        go (Num n : expr') stack = go expr' (n : stack)
+        go _ _ = Nothing
+        evalOp op = case op of
+          Add -> (+)
+          Sub -> (-)
+          Mul -> (*)
+          Div -> (/)
+
 main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
-  logShow $ parse "3 2 +"
+  {--logShow $ eval $ parse "3 2 +"--}
+  {--logShow $ parse "3 2 +"--}
+  logShow $ eval $ Cons (Num 3) $ Cons (Num 2) $ Cons (Op Mul) Nil
+  {--logShow $ Cons (Num 3) $ Cons (Num 2) $ Cons Add Nil--}

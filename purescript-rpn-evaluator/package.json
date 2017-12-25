@@ -9,8 +9,9 @@
     "@bower_components/purescript-prelude": "purescript/purescript-prelude#^3.0.0",
     "@bower_components/purescript-psci-support": "purescript/purescript-psci-support#^3.0.0",
     "@bower_components/purescript-strings": "purescript/purescript-strings",
-    "@bower_components/purescript-psci-support": "purescript/purescript-psci-support",
-    "@bower_components/purescript-arrays": "purescript/purescript-arrays"
+    "@bower_components/purescript-arrays": "purescript/purescript-arrays",
+    "@bower_components/purescript-lists": "purescript/purescript-lists",
+    "@bower_components/purescript-psci-support": "purescript/purescript-psci-support"
   },
   "engines": {
     "yarn": ">= 1.0.0"
