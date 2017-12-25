@@ -6,7 +6,7 @@ import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, logShow)
 import Data.Array (catMaybes, partition)
 import Data.Int (fromString)
-import Data.List (List(..), (:))
+import Data.List (List(..), (:), fromFoldable)
 import Data.Maybe (Maybe(..), isJust)
 import Data.String (Pattern(..), split)
 
@@ -59,9 +59,9 @@ eval expr = go expr Nil
           Mul -> (*)
           Div -> (/)
 
+parseEval :: String -> Maybe Int
+parseEval expr = (parse expr) >>= (eval <<< fromFoldable)
+
 main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
-  {--logShow $ eval $ parse "3 2 +"--}
-  {--logShow $ parse "3 2 +"--}
-  logShow $ eval $ Cons (Num 3) $ Cons (Num 2) $ Cons (Op Mul) Nil
-  {--logShow $ Cons (Num 3) $ Cons (Num 2) $ Cons Add Nil--}
+  logShow $ parseEval example2
