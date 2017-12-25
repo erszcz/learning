@@ -4,6 +4,10 @@
     "source": "https://github.com/purescript/package-sets.git",
     "depends": [
         "prelude",
-        "console"
+        "console",
+        "strings",
+        "integers",
+        "arrays",
+        "psci-support"
     ]
 }
