@@ -4,8 +4,9 @@ import Prelude
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, logShow)
+import Data.Array (catMaybes, partition)
 import Data.Int (fromString)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), isJust)
 import Data.String (Pattern(..), split)
 
 data Symbol = Add
@@ -34,8 +35,11 @@ example1 = "2 3 +"
 example2 :: String
 example2 = "2 3 + 3 *"
 
-{--parse :: String -> Maybe [Symbol]--}
-parse expr = map symbol $ split (Pattern " ") expr
+parse :: String -> Maybe (Array Symbol)
+parse expr = case partition isJust symbols of
+  { yes: justSymbols, no: [] } -> Just $ catMaybes justSymbols
+  _ -> Nothing
+    where symbols = map symbol $ split (Pattern " ") expr
 
 main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
