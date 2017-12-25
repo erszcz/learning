@@ -22,15 +22,12 @@ instance showSymbol :: Show Symbol where
   show Div = "Div"
   show (Num n) = show n
 
--- using an unsafe partial function, we can parse strings already
 token :: Partial => String -> Maybe Symbol
 token "+" = Just Add
 token "-" = Just Sub
 token "*" = Just Mul
 token "/" = Just Div
-token num = case fromString num of
-  Nothing -> Nothing
-  Just n -> Just $ Num n
+token num = map Num (fromString num)
 
 example1 :: String
 example1 = "2 3 +"
