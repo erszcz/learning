@@ -4,11 +4,11 @@ import Prelude
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, logShow)
-import Data.Array (catMaybes, partition)
 import Data.Int (fromString)
 import Data.List (List(..), (:), fromFoldable)
-import Data.Maybe (Maybe(..), isJust)
+import Data.Maybe (Maybe(..))
 import Data.String (Pattern(..), split)
+import Data.Traversable (traverse)
 
 data Symbol = Op Operator
             | Num Int
@@ -42,10 +42,7 @@ example2 :: String
 example2 = "2 3 + 3 *"
 
 parse :: String -> Maybe (Array Symbol)
-parse expr = case partition isJust symbols of
-  { yes: justSymbols, no: [] } -> Just $ catMaybes justSymbols
-  _ -> Nothing
-    where symbols = map symbol $ split (Pattern " ") expr
+parse expr = traverse symbol $ split (Pattern " ") expr
 
 eval :: List Symbol -> Maybe Int
 eval expr = go expr Nil
