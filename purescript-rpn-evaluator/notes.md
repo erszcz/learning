@@ -333,3 +333,6 @@ Hello sailor!
 14:47:05 erszcz @ x2 : /tmp/my-psc-project
 $ 
 ```
+
+Run `pulp --psc-package ...` to use `psc-package.json` file
+for resolving dependencies.
