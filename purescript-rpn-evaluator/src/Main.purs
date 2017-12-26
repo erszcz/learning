@@ -52,8 +52,8 @@ parse expr = traverse symbol $ split (Pattern " ") expr
 
 eval :: List Symbol -> Maybe Int
 eval expr = go expr Nil
-  where go Nil (Cons v Nil) = Just v
-        go (Op op : expr') (y : x : stack) = go expr' $ (evalOp op x y) : stack
+  where go Nil (v : Nil) = Just v
+        go (Op op : expr') (y : x : stack) = go expr' $ (x `evalOp op` y) : stack
         go (Num n : expr') stack = go expr' (n : stack)
         go _ _ = Nothing
         evalOp op = case op of
