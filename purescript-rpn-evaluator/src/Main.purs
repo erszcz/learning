@@ -41,13 +41,19 @@ example1 = "2 3 +"
 example2 :: String
 example2 = "2 3 + 3 *"
 
+example3 :: String
+example3 = "2 3 + 3 * 5 /"
+
+example4 :: String
+example4 = "5 4 -"
+
 parse :: String -> Maybe (Array Symbol)
 parse expr = traverse symbol $ split (Pattern " ") expr
 
 eval :: List Symbol -> Maybe Int
 eval expr = go expr Nil
   where go Nil (Cons v Nil) = Just v
-        go (Op op : expr') (x : y : stack) = go expr' $ (evalOp op x y) : stack
+        go (Op op : expr') (y : x : stack) = go expr' $ (evalOp op x y) : stack
         go (Num n : expr') stack = go expr' (n : stack)
         go _ _ = Nothing
         evalOp op = case op of
@@ -61,4 +67,4 @@ parseEval expr = (parse expr) >>= (eval <<< fromFoldable)
 
 main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
-  logShow $ parseEval example2
+  logShow $ parseEval example4
