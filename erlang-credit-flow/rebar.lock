@@ -1,0 +1,4 @@
+[{<<"credit_flow">>,
+  {git,"https://github.com/erszcz/credit_flow",
+       {ref,"55c944983120afefd110a4e0630145b7a648a6b4"}},
+  0}].

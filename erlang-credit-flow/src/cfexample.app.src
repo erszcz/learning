@@ -1,11 +1,12 @@
 {application, cfexample,
- [{description, "An OTP application"},
+ [{description, "A credit_flow example"},
   {vsn, "0.1.0"},
   {registered, []},
   {mod, { cfexample_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    sasl
    ]},
   {env,[]},
   {modules, []},
