@@ -31,8 +31,18 @@ start_link() ->
 %% Before OTP 18 tuples must be used to specify a child. e.g.
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+    {ok, { #{strategy => one_for_one},
+           [consumer(),
+            producer()] }}.
 
 %%====================================================================
 %% Internal functions
 %%====================================================================
+
+consumer() ->
+    #{id => cf_consumer,
+      start => {cf_consumer, start_link, []}}.
+
+producer() ->
+    #{id => cf_producer,
+      start => {cf_producer, start_link, [20]}}.
