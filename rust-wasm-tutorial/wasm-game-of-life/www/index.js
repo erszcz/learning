@@ -30,7 +30,9 @@ const renderLoop = () => {
   drawGrid();
   drawCells();
 
-  universe.tick();
+  for (let i = 0; i < 9; i++) {
+    universe.tick();
+  }
 
   animationId = requestAnimationFrame(renderLoop);
 };
