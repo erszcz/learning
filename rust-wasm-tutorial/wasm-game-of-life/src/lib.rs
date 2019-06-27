@@ -1,10 +1,10 @@
 mod utils;
 
-extern crate web_sys;
+//extern crate web_sys;
 
 use std::fmt;
-use wasm_bindgen::prelude::*;
-use web_sys::console;
+//use wasm_bindgen::prelude::*;
+//use web_sys::console;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -12,7 +12,7 @@ use web_sys::console;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
-#[wasm_bindgen]
+//#[wasm_bindgen]
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Cell {
@@ -29,7 +29,7 @@ impl Cell {
     }
 }
 
-#[wasm_bindgen]
+//#[wasm_bindgen]
 pub struct Universe {
     width: u32,
     height: u32,
@@ -37,7 +37,7 @@ pub struct Universe {
 }
 
 /// Public methods, exported to JavaScript.
-#[wasm_bindgen]
+//#[wasm_bindgen]
 impl Universe {
     pub fn tick(&mut self) {
         let _timer = Timer::new("Universe::tick");
@@ -201,13 +201,13 @@ pub struct Timer<'a> {
 
 impl<'a> Timer<'a> {
     pub fn new(name: &'a str) -> Timer<'a> {
-        console::time_with_label(name);
+        //console::time_with_label(name);
         Timer { name }
     }
 }
 
 impl<'a> Drop for Timer<'a> {
     fn drop(&mut self) {
-        console::time_end_with_label(self.name);
+        //console::time_end_with_label(self.name);
     }
 }

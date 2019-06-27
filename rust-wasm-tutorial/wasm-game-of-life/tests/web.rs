@@ -3,14 +3,14 @@
 #![cfg(target_arch = "wasm32")]
 
 extern crate wasm_bindgen_test;
-use wasm_bindgen_test::*;
+//use wasm_bindgen_test::*;
 
 extern crate wasm_game_of_life;
 use wasm_game_of_life::Universe;
 
-wasm_bindgen_test_configure!(run_in_browser);
+//wasm_bindgen_test_configure!(run_in_browser);
 
-#[wasm_bindgen_test]
+//#[wasm_bindgen_test]
 fn pass() {
     assert_eq!(1 + 1, 2);
 }
@@ -33,7 +33,7 @@ pub fn expected_spaceship() -> Universe {
     universe
 }
 
-#[wasm_bindgen_test]
+//#[wasm_bindgen_test]
 pub fn test_tick() {
     // Let's create a smaller Universe with a small spaceship to test!
     let mut input_universe = input_spaceship();
