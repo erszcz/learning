@@ -1,0 +1,12 @@
+- hosts: all
+  vars:
+      no_vault: "a var defined outside the vault"
+  vars_files:
+      - "{{ playbook_dir }}/vault/vars"
+  tasks:
+
+      - debug:
+          var: no_vault
+
+      - debug:
+          var: vault_a
