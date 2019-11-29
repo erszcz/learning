@@ -2,8 +2,8 @@
 #define SLIMTESTS_H
 
 typedef struct test_spec_struct {
-    char*       name;
-    bool        (*test)();
+    const char*     name;
+    bool            (*test)();
 } test_spec;
 
 #define TEST_SPEC(name) { #name, name }

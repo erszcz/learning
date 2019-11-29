@@ -122,7 +122,7 @@ int binary_to_jid_v2(const char* data_in, jid_t* jid)
     jid->server = strpbrk(data, "@/");
     data[jid->server - data] = 0;
     jid->server += 1;
-    jid->res = strpbrk(jid->server+1, "@/");
+    jid->res = strpbrk(jid->server, "@/");
     data[jid->res - data] = 0;
     jid->res += 1;
     return 0;
@@ -161,6 +161,7 @@ int main() {
     binary_to_jid = binary_to_jid_v1;
     run_tests(tests, size(tests));
 
+    fprintf(stderr, "\n");
     fprintf(stderr, "Testing strpbrk()\n");
     binary_to_jid = binary_to_jid_v2;
     run_tests(tests, size(tests));
