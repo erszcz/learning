@@ -1,5 +1,4 @@
-erlang-gen-server-terminate
-=====
+# erlang-gen-server-terminate
 
 Test when `gen_server:terminate` will really be called:
 
@@ -29,3 +28,9 @@ This is due to the fact that an `exit(normal)` call is a valid clean termination
 However, each call to `exit/1` sends an exit signal to linked processes - in order not to kill
 linked processes upon normal termination, `normal` exit reason is treated specially by `exit/2`.
 It's also described at http://erlang.org/doc/reference_manual/processes.html
+
+## ToDo
+
+With and without trapping exits:
+- `gen_server` shutdown by supervisor
+- `gen_server` shutdown by parent
