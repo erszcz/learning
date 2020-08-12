@@ -19,3 +19,18 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/mkv](https://hexdocs.pm/mkv).
 
+
+## Manual testing
+
+First, run the app - development mode is fine:
+
+```
+iex -S mix
+```
+
+Then, store and retrieve a value with curl:
+
+```
+curl -X PUT -d $(echo asd | base64) http://localhost:4001/v1/kv/a
+curl http://localhost:4001/v1/kv/a | base64 -d
+```

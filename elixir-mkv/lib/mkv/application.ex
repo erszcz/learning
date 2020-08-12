@@ -6,9 +6,12 @@ defmodule MKV.Application do
   use Application
 
   def start(_type, _args) do
+    MKV.Store.init()
+
     children = [
       # Starts a worker by calling: MKV.Worker.start_link(arg)
       # {MKV.Worker, arg}
+      {Plug.Cowboy, scheme: :http, plug: MKV.Router, options: [port: 4001]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
