@@ -20,8 +20,8 @@ defmodule MKV.Store do
     end
   end
 
-  def put(key, value) do
-    :true = :ets.insert(@table, {key, value})
+  def put(%MKV.Entry{key: k, value: v}) do
+    :true = :ets.insert(@table, {k, v})
   end
 
 end

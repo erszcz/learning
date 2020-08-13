@@ -14,7 +14,8 @@ defmodule MKV.ApiV1 do
 
   put "/kv/:id" do
     {:ok, body, conn} = Plug.Conn.read_body(conn, length: 1_000_000)
-    MKV.Store.put(id, Base.decode64!(body))
+    entry = %MKV.Entry{key: id, value: Base.decode64!(body)}
+    MKV.Store.put(entry)
     send_resp(conn, 200, "")
   end
 

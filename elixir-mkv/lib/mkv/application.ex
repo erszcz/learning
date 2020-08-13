@@ -8,10 +8,13 @@ defmodule MKV.Application do
   def start(_type, _args) do
     MKV.Store.init()
 
+    ranch_opts = [{:port, MKV.tcp_port()}]
+    :ranch.start_listener(:tcp_endpoint, :ranch_tcp, ranch_opts, MKV.Ranch.Protocol, [])
+
     children = [
       # Starts a worker by calling: MKV.Worker.start_link(arg)
       # {MKV.Worker, arg}
-      {Plug.Cowboy, scheme: :http, plug: MKV.Router, options: [port: 4001]}
+      {Plug.Cowboy, scheme: :http, plug: MKV.Router, options: [port: MKV.rest_port()]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -3,16 +3,10 @@ defmodule MKV do
   Documentation for MKV.
   """
 
-  @doc """
-  Hello world.
+  @doc "The REST endpoint listen port"
+  def rest_port, do: 4001
 
-  ## Examples
+  @doc "The TCP (non-REST) endpoint listen port"
+  def tcp_port,  do: 4002
 
-      iex> MKV.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
