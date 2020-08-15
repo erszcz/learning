@@ -19,7 +19,7 @@ defmodule MKV.UDPListener do
   def handle_info({:udp, socket, ip, in_port_no, data} = dgram, state) do
     Logger.info "handle_info: #{inspect dgram}"
     :inet.setopts(socket, [{:active, :once}])
-    # For real, we should rather make this process stick around for a while
+    # In a real life case we should rather make this process stick around for a while
     # to receive further dgrams from ip:in_port_no.
     Task.Supervisor.start_child(MKV.UDPHandlerSupervisor, fn ->
       handle_datagram(socket, {ip, in_port_no}, data)
@@ -28,13 +28,18 @@ defmodule MKV.UDPListener do
   end
 
   def handle_datagram(socket, dest, data) do
-    Logger.debug "handling data: #{data}"
-    case MKV.Protocol.decode!(data) do
+    decoded = MKV.Protocol.decode!(data)
+    Logger.info "handling: #{inspect decoded}"
+    case decoded do
       %MKV.Protocol.Put{key: k, value: v} ->
         MKV.Store.put(%MKV.Entry{key: k, value: v})
       %MKV.Protocol.Get{key: k} ->
-        v = MKV.Store.get!(k)
-        response = %MKV.Protocol.Put{key: k, value: v}
+        response = case MKV.Store.get(k, :not_found) do
+          :not_found ->
+            %MKV.Protocol.NotFound{key: k}
+          {^k, v} ->
+            %MKV.Protocol.Result{key: k, value: v}
+        end
         :gen_udp.send(socket, dest, MKV.Protocol.encode(response))
     end
   end

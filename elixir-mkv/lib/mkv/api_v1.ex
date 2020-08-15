@@ -6,10 +6,12 @@ defmodule MKV.ApiV1 do
   plug :dispatch
 
   get "/kv/:id" do
-    response = id
-               |> MKV.Store.get!()
-               |> Base.encode64()
-    send_resp(conn, 200, response)
+    case MKV.Store.get(id, :not_found) do
+      :not_found ->
+        send_resp(conn, 404, "")
+      {^id, value} ->
+        send_resp(conn, 200, Base.encode64(value))
+    end
   end
 
   put "/kv/:id" do

@@ -24,7 +24,8 @@ defmodule MKV.Ranch.Protocol do
     :gen_server.enter_loop(__MODULE__, [], %{socket: socket, transport: transport})
   end
 
-  def handle_info({:tcp, socket, data}, state = %{socket: socket, transport: transport}) do
+  def handle_info({:tcp, socket, data} = segment, state = %{socket: socket, transport: transport}) do
+    Logger.info "handle_info: #{inspect segment}"
     transport.setopts(socket, [{:active, :once}])
     state = handle_data(data, state)
     {:noreply, state}
@@ -36,13 +37,18 @@ defmodule MKV.Ranch.Protocol do
   end
 
   defp handle_data(data, state = %{socket: socket, transport: transport}) do
-    Logger.debug "handling data: #{data}"
-    case MKV.Protocol.decode!(data) do
+    decoded = MKV.Protocol.decode!(data)
+    Logger.info "handling: #{inspect decoded}"
+    case decoded do
       %MKV.Protocol.Put{key: k, value: v} ->
         MKV.Store.put(%MKV.Entry{key: k, value: v})
       %MKV.Protocol.Get{key: k} ->
-        v = MKV.Store.get!(k)
-        response = %MKV.Protocol.Put{key: k, value: v}
+        response = case MKV.Store.get(k, :not_found) do
+          :not_found ->
+            %MKV.Protocol.NotFound{key: k}
+          {^k, v} ->
+            %MKV.Protocol.Result{key: k, value: v}
+        end
         transport.send(socket, MKV.Protocol.encode(response))
     end
     state
