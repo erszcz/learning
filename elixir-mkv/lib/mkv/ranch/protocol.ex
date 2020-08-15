@@ -30,7 +30,7 @@ defmodule MKV.Ranch.Protocol do
     {:noreply, state}
   end
   def handle_info({:tcp_closed, socket}, state = %{socket: socket, transport: transport}) do
-    IO.puts "Closing"
+    Logger.debug "Closing #{__MODULE__}"
     transport.close(socket)
     {:stop, :normal, state}
   end

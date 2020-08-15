@@ -14,7 +14,9 @@ defmodule MKV.Application do
     children = [
       # Starts a worker by calling: MKV.Worker.start_link(arg)
       # {MKV.Worker, arg}
-      {Plug.Cowboy, scheme: :http, plug: MKV.Router, options: [port: MKV.rest_port()]}
+      {Plug.Cowboy, scheme: :http, plug: MKV.Router, options: [port: MKV.rest_port()]},
+      {Task.Supervisor, name: MKV.UDPHandlerSupervisor},
+      {MKV.UDPListener, MKV.udp_port()}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

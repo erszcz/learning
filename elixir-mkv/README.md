@@ -71,3 +71,17 @@ Let's also test the other direction, i.e. REST -> TCP:
 curl -X PUT -d $(echo asd | base64) http://localhost:4001/v1/kv/mykey
 cat packet.get.dat | nc -i 1 localhost 4002
 ```
+
+To test the UDP endpoint, we'll use the same binary protocol files as with raw TCP.
+
+Caveat: in my tests the MacOS X Catalina netcat (aka `nc`) could not properly send a UDP datagram
+to an Elixir UDP server. As of that, whilst with TCP we use netcat, for UDP we use `socat`.
+
+```
+# store mykey:myval via the UDP endpoint
+cat packet.put.dat | socat -d - UDP:localhost:4003
+# retrieve via REST
+curl http://localhost:4001/v1/kv/mykey | base64 -d
+# retrieve via UDP
+cat packet.get.dat | socat -d - UDP:localhost:4003
+```
