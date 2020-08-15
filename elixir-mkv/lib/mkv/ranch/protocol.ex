@@ -35,10 +35,16 @@ defmodule MKV.Ranch.Protocol do
     {:stop, :normal, state}
   end
 
-  defp handle_data(data, state) do
+  defp handle_data(data, state = %{socket: socket, transport: transport}) do
     Logger.debug "handling data: #{data}"
-    entry = MKV.Protocol.decode!(data)
-    MKV.Store.put(entry)
+    case MKV.Protocol.decode!(data) do
+      %MKV.Protocol.Put{key: k, value: v} ->
+        MKV.Store.put(%MKV.Entry{key: k, value: v})
+      %MKV.Protocol.Get{key: k} ->
+        v = MKV.Store.get!(k)
+        response = %MKV.Protocol.Put{key: k, value: v}
+        transport.send(socket, MKV.Protocol.encode(response))
+    end
     state
   end
 
