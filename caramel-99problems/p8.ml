@@ -3,19 +3,19 @@
 - : string list = ["a"; "b"; "c"; "a"; "d"; "e"]
 *)
 
-let compress l =
-    let rec compress' current acc = function
-        | [] -> current :: acc
-        | x::xs when x = current -> compress' current acc xs
-        | x::xs -> compress' x (current :: acc) xs
-    in match l with
-        | [] -> []
-        | [x] -> [x]
-        | x::xs -> List.rev (compress' x [] xs)
+let rec compress_ current acc l = match l with
+  | [] -> current :: acc
+  | x::xs when x = current -> compress_ current acc xs
+  | x::xs -> compress_ x (current :: acc) xs
 
-let main =
-    if compress ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"] = ["a"; "b"; "c"; "a"; "d"; "e"]
-    then
-        print_endline "ok"
-    else
-        failwith "!!"
+let compress l = match l with
+  | [] -> []
+  | [x] -> [x]
+  | x::xs -> Lists.reverse (compress_ x [] xs)
+
+let main () =
+  if compress ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"] = ["a"; "b"; "c"; "a"; "d"; "e"]
+  then
+    Io.format "ok\n" []
+  else
+    Io.format "!!\n" []

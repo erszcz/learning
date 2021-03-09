@@ -15,16 +15,16 @@ type 'a node =
     | One of 'a 
     | Many of 'a node list
 
-let flatten deeplist =
-    let rec flatten' acc = function
-        | [] -> acc
-        | One e :: t -> flatten' (e :: acc) t
-        | Many es :: t -> flatten' ((flatten' [] es) @ acc) t
-    in List.rev (flatten' [] deeplist)
+let rec flatten_ acc l = match l with
+  | [] -> acc
+  | One e :: t -> flatten_ (e :: acc) t
+  | Many es :: t -> flatten_ ((flatten_ [] es) @ acc) t
 
-let main =
+let flatten deeplist = Lists.reverse (flatten_ [] deeplist)
+
+let main () =
     if flatten [ One "a" ; Many [ One "b" ; Many [ One "c" ; One "d" ] ; One "e" ] ] = ["a"; "b"; "c"; "d"; "e"]
     then
-        print_endline "ok"
+      Io.format "ok\n" []
     else
-        failwith "!!"
+      Io.format "!!\n" []

@@ -1,12 +1,13 @@
 let rec last_two l =
   match l with
-  | [] | [_] -> None
+  | [] -> None
+  | [_] -> None
   | x1 :: x2 :: [] -> Some (x1, x2)
   | _ :: xs -> last_two xs
 
-let main =
+let main () =
   if last_two [ "a" ; "b" ; "c" ; "d" ] = Some ("c", "d") &&
      last_two [] = None then
-       print_endline "ok"
+       Io.format "ok\n" []
   else
-    print_endline "!!"
+    Io.format "!!\n" []

@@ -3,17 +3,17 @@
  * # not (is_palindrome [ "a" ; "b" ]);;
  * - : bool = true *)
 
-let is_palindrome l =
-    let rec is_palindrome' = function
-        | ([], []) -> true
-        | ([x], [y]) when x = y -> true
-        | (x::xs, y::ys) when x = y -> is_palindrome' (xs, ys)
-        | _ -> false
-    in is_palindrome' (l, List.rev l)
+let rec is_palindrome_ l1 l2 = match (l1, l2) with
+  | ([], []) -> true
+  | ([x], [y]) when x = y -> true
+  | (x::xs, y::ys) when x = y -> is_palindrome_ xs ys
+  | _ -> false
 
-let main =
-    if is_palindrome [ "x" ; "a" ; "m" ; "a" ; "x" ] = true &&
-       is_palindrome [ "a" ; "b" ] = false then
-           print_endline "ok"
-    else
-        failwith "!!"
+let is_palindrome l = is_palindrome_ l (Lists.reverse l)
+
+let main () =
+  if is_palindrome [ "x" ; "a" ; "m" ; "a" ; "x" ] = true
+  && is_palindrome [ "a" ; "b" ] = false then
+    Io.format "ok\n" []
+  else
+    Io.format "!!\n" []

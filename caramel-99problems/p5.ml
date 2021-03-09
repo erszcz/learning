@@ -1,14 +1,13 @@
-let rev l =
-  let rec rev' acc = function
+let rec rev_ acc l = match l with
   | [] -> acc
-  | x::xs -> rev' (x::acc) xs
-  in rev' [] l
+  | x::xs -> rev_ (x::acc) xs
 
+let rev l = rev_ [] l
 
-let main =
+let main () =
   if rev [ "a" ; "b" ; "c" ; "d" ] = [ "d" ; "c" ; "b" ; "a" ] &&
      rev [ "a" ] = [ "a" ] &&
      rev [] = [] then
-       print_endline "ok"
+       Io.format "ok\n" []
   else
-    print_endline "!!"
+    Io.format "!!\n" []
