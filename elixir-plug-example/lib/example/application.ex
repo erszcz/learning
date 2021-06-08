@@ -11,7 +11,7 @@ defmodule Example.Application do
     children = [
       # Starts a worker by calling: Example.Worker.start_link(arg)
       # {Example.Worker, arg}
-      {Plug.Cowboy, scheme: :http, plug: Example.HelloWorldPlug, options: [port: 18080]}
+      {Plug.Cowboy, scheme: :http, plug: Example.Router, options: [port: 18080]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
