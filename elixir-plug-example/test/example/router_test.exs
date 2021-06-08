@@ -7,13 +7,11 @@ defmodule Example.RouterTest do
   @content "<html><body>Hi!</body></html>"
   @mimetype "text/html"
 
-  @opts Router.init([])
-
   test "returns welcome" do
     conn =
       :get
       |> conn("/", "")
-      |> Router.call(@opts)
+      |> Router.call(opts())
 
     assert conn.state == :sent
     assert conn.status == 200
@@ -25,7 +23,7 @@ defmodule Example.RouterTest do
   #  conn =
   #    :get
   #    |> conn("/upload?content=#{@content}&mimetype=#{@mimetype}")
-  #    |> Router.call(@opts)
+  #    |> Router.call(opts())
 
   #  assert conn.state == :sent
   #  assert conn.status == 201
@@ -35,9 +33,12 @@ defmodule Example.RouterTest do
   #  conn =
   #    :get
   #    |> conn("/missing", "")
-  #    |> Router.call(@opts)
+  #    |> Router.call(opts())
 
   #  assert conn.state == :sent
   #  assert conn.status == 404
   #end
+
+  defp opts, do: Router.init([])
+
 end
