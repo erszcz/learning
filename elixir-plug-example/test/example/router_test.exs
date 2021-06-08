@@ -17,6 +17,8 @@ defmodule Example.RouterTest do
 
     assert conn.state == :sent
     assert conn.status == 200
+    #IO.inspect(conn.resp_body, label: "resp_body")
+    assert conn.resp_body == "Welcome"
   end
 
   #test "returns uploaded" do
