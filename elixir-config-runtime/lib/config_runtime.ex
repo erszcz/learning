@@ -3,16 +3,10 @@ defmodule ConfigRuntime do
   Documentation for `ConfigRuntime`.
   """
 
-  @doc """
-  Hello world.
+  @opt1 Application.compile_env!(:config_runtime_test, :opt1)
 
-  ## Examples
 
-      iex> ConfigRuntime.hello()
-      :world
-
-  """
   def hello do
-    :world
+    "hello #{@opt1}"
   end
 end
