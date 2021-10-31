@@ -56,7 +56,6 @@ test_tree_foldr() ->
                                            (none, _) -> none;
                                            ({node, V, none, none}, _) -> {node, V * 2, none, none}
                                        end, ok, {node, 1, none, none}),
-    %% tree_foldr cannot express the following!
     [5,4,3,2,1] = tree_foldr(fun
                                  (none, Acc) -> Acc;
                                  ({node, V, _, _}, Acc) -> [V | Acc]
@@ -81,8 +80,57 @@ test_tree_foldr() ->
     % none,
     % {node, 2, none, none}} = tree_foldr(fun
     %                                         (none) -> none;
-    %                                       ({node, 3, _, _}) -> none;
-    %                                       ({node, _, _, _} = N) -> N
+    %                                         ({node, 3, _, _}) -> none;
+    %                                         ({node, _, _, _} = N) -> N
     %                                     end, {node, 4,
     %                                           {node, 3, none, none},
     %                                           {node, 2, none, none}}).
+
+-spec tree_walk(fun((tree(V), Acc) -> {tree(V), Acc}), Acc, tree(V)) -> {tree(V), Acc}.
+tree_walk(Fun, Acc, Tree) ->
+    tree_walk(Fun, apply, Acc, Tree).
+
+tree_walk(Fun, _, Acc, none) -> Fun(none, Acc);
+tree_walk(Fun, apply, Acc, Tree) ->
+    {NewTree, Acc1} = Fun(Tree, Acc),
+    tree_walk(Fun, recurse, Acc1, NewTree);
+tree_walk(Fun, recurse, Acc, {node, _, Left, Right}) ->
+    {_, Acc2} = tree_walk(Fun, apply, Acc, Left),
+    tree_walk(Fun, apply, Acc2, Right).
+
+test_tree_walk() ->
+    {none, ok} = tree_walk(fun (E, Acc) -> {E, Acc} end, ok, none),
+    {none, ok} = tree_walk(fun
+                               (none, Acc) -> {none, Acc};
+                               ({node, V, none, none}, Acc) -> {{node, V * 2, none, none}, Acc}
+                           end, ok, {node, 1, none, none}),
+    {_, [1]} = tree_walk(fun
+                             (none, Acc) -> {none, Acc};
+                             ({node, V, _, _} = N, Acc) -> {N, [V | Acc]}
+                         end, [], {node, 1, none, none}),
+    {_, [5,4,3,2,1]} = tree_walk(fun
+                                     (none, Acc) -> {none, Acc};
+                                     ({node, V, _, _} = N, Acc) -> {N, [V | Acc]}
+                                 end, [], {node, 1,
+                                           {node, 2,
+                                            {node, 3, none, none},
+                                            {node, 4, none, none}},
+                                           {node, 5, none, none}}),
+    {_, [5,4,2,1]} = tree_walk(fun
+                                   (none, Acc) -> {none, Acc};
+                                   ({node, 3, _, _} = N, Acc) -> {N, Acc};
+                                   ({node, V, _, _} = N, Acc) -> {N, [V | Acc]}
+                               end, [], {node, 1,
+                                         {node, 2,
+                                          {node, 3, none, none},
+                                          {node, 4, none, none}},
+                                         {node, 5, none, none}}),
+    {_, [5,1]} = tree_walk(fun
+                               (none, Acc) -> {none, Acc};
+                               ({node, 2, _, _}, Acc) -> {none, Acc};
+                               ({node, V, _, _} = N, Acc) -> {N, [V | Acc]}
+                           end, [], {node, 1,
+                                     {node, 2,
+                                      {node, 3, none, none},
+                                      {node, 4, none, none}},
+                                     {node, 5, none, none}}).
