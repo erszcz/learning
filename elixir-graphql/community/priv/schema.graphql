@@ -1,0 +1,21 @@
+"Represents a schema"
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+}
+
+type RootMutationType {
+  "Create a new link"
+  createLink(url: String!, description: String!): Link
+}
+
+type RootQueryType {
+  "Get all links"
+  allLinks: [Link!]!
+}
+
+type Link {
+  id: ID!
+  url: String!
+  description: String!
+}
