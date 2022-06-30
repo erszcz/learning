@@ -22,3 +22,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 community-*.tar
 
+# Ignore database data dir
+docker/db/data/*
