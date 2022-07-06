@@ -12,6 +12,9 @@ type RootMutationType {
 type RootQueryType {
   "Get all links"
   allLinks: [Link!]!
+
+  "Get a single link by id"
+  link(id: ID!): Link
 }
 
 type Link {
