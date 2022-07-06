@@ -1,5 +1,5 @@
 defmodule Community.NewsTest do
-  use Community.DataCase
+  use Community.DataCase, async: true
 
   alias Community.News
 
@@ -11,8 +11,10 @@ defmodule Community.NewsTest do
     @invalid_attrs %{description: nil, url: nil}
 
     test "list_links/0 returns all links" do
-      link = link_fixture()
-      assert News.list_links() == [link]
+      # See Community.Seeds to understand where the links come from
+      links = News.list_links()
+      assert length(links) == 2
+      assert Enum.map(links, fn %Link{id: id} -> id end) |> Enum.sort() == [1, 2]
     end
 
     test "get_link!/1 returns the link with given id" do

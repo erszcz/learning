@@ -1,5 +1,5 @@
 defmodule CommunityWeb.GraphQL.LinksTest do
-  use Community.DataCase, asnyc: true
+  use Community.DataCase, async: true
   use Wormwood.GQLCase
 
   load_gql(CommunityWeb.Schema, "test/support/schema/queries/allLinks.gql")
