@@ -47,7 +47,8 @@ defmodule Community.MixProject do
 
       ## GraphQL
       {:absinthe, "~> 1.6"},
-      {:absinthe_plug, "~> 1.5"}
+      {:absinthe_plug, "~> 1.5"},
+      {:wormwood, "~> 0.1.0"}
     ]
   end
 
