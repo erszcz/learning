@@ -5,6 +5,7 @@ use async_std::net::TcpListener;
 use async_std::net::TcpStream;
 use async_std::prelude::*;
 use async_std::task;
+use async_std::task::spawn;
 use futures::stream::StreamExt;
 
 #[async_std::main]
@@ -15,10 +16,9 @@ async fn main() {
     // Block forever, handling each request that arrives at this IP address
     listener
         .incoming()
-        .for_each_concurrent(None, |tcpstream| async move {
-            let tcpstream = tcpstream.unwrap();
-
-            handle_connection(tcpstream).await;
+        .for_each_concurrent(None, |stream| async move {
+            let stream = stream.unwrap();
+            spawn(handle_connection(stream));
         })
         .await;
 }
