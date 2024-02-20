@@ -6,6 +6,12 @@ terraform {
     }
   }
 
+  backend "s3" {
+    bucket    = "erszcz-learn-terraform-aws-instance"
+    key       = "learn-terraform-aws-instance"
+    region    = "us-west-2"
+  }
+
   required_version = ">= 1.2.0"
 }
 
