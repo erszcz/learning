@@ -1,0 +1,707 @@
+09:22:13 erszcz @ x7 : ~/work
+$ k config use-context docker-desktop
+Switched to context "docker-desktop".
+09:22:16 erszcz @ x7 : ~/work
+$ k config current-context
+docker-desktop
+09:22:21 erszcz @ x7 : ~/work
+$ kubectl get deployment metrics-server -n kube-system
+Error from server (NotFound): deployments.apps "metrics-server" not found
+09:22:28 erszcz @ x7 : ~/work
+$
+09:23:59 erszcz @ x7 : ~/work
+$ kubectl apply -f https://k8s.io/examples/application/php-apache.yaml
+deployment.apps/php-apache created
+service/php-apache created
+09:24:46 erszcz @ x7 : ~/work
+$
+09:24:47 erszcz @ x7 : ~/work
+$ kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+horizontalpodautoscaler.autoscaling/php-apache autoscaled
+09:24:54 erszcz @ x7 : ~/work
+$ k get pod
+NAME                          READY   STATUS    RESTARTS   AGE
+php-apache-598b474864-mw9lk   1/1     Running   0          13s
+09:24:59 erszcz @ x7 : ~/work
+$ k get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%   1         10        0          11s
+09:25:05 erszcz @ x7 : ~/work
+$ k describe deploy php-apache
+Name:                   php-apache
+Namespace:              default
+CreationTimestamp:      Mon, 26 Feb 2024 09:24:45 +0100
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               run=php-apache
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  run=php-apache
+  Containers:
+   php-apache:
+    Image:      registry.k8s.io/hpa-example
+    Port:       80/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:  500m
+    Requests:
+      cpu:        200m
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   php-apache-598b474864 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  33s   deployment-controller  Scaled up replica set php-apache-598b474864 to 1
+09:25:19 erszcz @ x7 : ~/work
+$ k describe hpa php-apache
+Name:                     php-apache
+Namespace:                default
+Labels:                   <none>
+Annotations:              <none>
+CreationTimestamp:        Mon, 26 Feb 2024 09:24:54 +0100
+Reference:                Deployment/php-apache
+Target CPU utilization:   50%
+Current CPU utilization:  <unknown>%
+Min replicas:             1
+Max replicas:             10
+Deployment pods:          0 current / 0 desired
+Events:                   <none>
+09:25:26 erszcz @ x7 : ~/work
+$ kubectl get deployment metrics-server -n kube-system
+Error from server (NotFound): deployments.apps "metrics-server" not found
+09:25:34 erszcz @ x7 : ~/work
+$ k get apiservices
+NAME                                   SERVICE   AVAILABLE   AGE
+v1.                                    Local     True        11d
+v1.admissionregistration.k8s.io        Local     True        11d
+v1.apiextensions.k8s.io                Local     True        11d
+v1.apps                                Local     True        11d
+v1.authentication.k8s.io               Local     True        11d
+v1.authorization.k8s.io                Local     True        11d
+v1.autoscaling                         Local     True        11d
+v1.batch                               Local     True        11d
+v1.certificates.k8s.io                 Local     True        11d
+v1.coordination.k8s.io                 Local     True        11d
+v1.discovery.k8s.io                    Local     True        11d
+v1.events.k8s.io                       Local     True        11d
+v1.networking.k8s.io                   Local     True        11d
+v1.node.k8s.io                         Local     True        11d
+v1.policy                              Local     True        11d
+v1.rbac.authorization.k8s.io           Local     True        11d
+v1.scheduling.k8s.io                   Local     True        11d
+v1.storage.k8s.io                      Local     True        11d
+v1beta2.flowcontrol.apiserver.k8s.io   Local     True        11d
+v1beta3.flowcontrol.apiserver.k8s.io   Local     True        11d
+v2.autoscaling                         Local     True        11d
+09:26:08 erszcz @ x7 : ~/work
+$ k -n kube-system get pod
+NAME                                     READY   STATUS    RESTARTS          AGE
+coredns-5dd5756b68-74jgc                 1/1     Running   1 (4d21h ago)     11d
+coredns-5dd5756b68-8tt2g                 1/1     Running   1 (4d21h ago)     11d
+etcd-docker-desktop                      1/1     Running   23 (4d21h ago)    11d
+kube-apiserver-docker-desktop            1/1     Running   23 (4d21h ago)    11d
+kube-controller-manager-docker-desktop   1/1     Running   23 (4d21h ago)    11d
+kube-proxy-bv47k                         1/1     Running   1 (4d21h ago)     11d
+kube-scheduler-docker-desktop            1/1     Running   118 (4d21h ago)   11d
+storage-provisioner                      1/1     Running   6 (4d20h ago)     11d
+vpnkit-controller                        1/1     Running   1 (4d21h ago)     11d
+09:26:35 erszcz @ x7 : ~/work
+$ # kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+09:27:13 erszcz @ x7 : ~/work
+$ k describe apiservices v2.autoscaling
+Name:         v2.autoscaling
+Namespace:
+Labels:       kube-aggregator.kubernetes.io/automanaged=onstart
+Annotations:  <none>
+API Version:  apiregistration.k8s.io/v1
+Kind:         APIService
+Metadata:
+  Creation Timestamp:  2024-02-14T12:31:16Z
+  Managed Fields:
+    API Version:  apiregistration.k8s.io/v1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:labels:
+          .:
+          f:kube-aggregator.kubernetes.io/automanaged:
+      f:spec:
+        f:group:
+        f:groupPriorityMinimum:
+        f:version:
+        f:versionPriority:
+    Manager:         kube-apiserver
+    Operation:       Update
+    Time:            2024-02-14T12:31:16Z
+  Resource Version:  14
+  UID:               9ea3e967-6da0-4c54-86e3-696d5e61a4e3
+Spec:
+  Group:                   autoscaling
+  Group Priority Minimum:  17500
+  Version:                 v2
+  Version Priority:        30
+Status:
+  Conditions:
+    Last Transition Time:  2024-02-14T12:31:16Z
+    Message:               Local APIServices are always available
+    Reason:                Local
+    Status:                True
+    Type:                  Available
+Events:                    <none>
+09:27:14 erszcz @ x7 : ~/work
+$ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+serviceaccount/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+service/metrics-server created
+deployment.apps/metrics-server created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+09:27:26 erszcz @ x7 : ~/work
+$ k -n kube-system get pod
+NAME                                     READY   STATUS    RESTARTS          AGE
+coredns-5dd5756b68-74jgc                 1/1     Running   1 (4d21h ago)     11d
+coredns-5dd5756b68-8tt2g                 1/1     Running   1 (4d21h ago)     11d
+etcd-docker-desktop                      1/1     Running   23 (4d21h ago)    11d
+kube-apiserver-docker-desktop            1/1     Running   23 (4d21h ago)    11d
+kube-controller-manager-docker-desktop   1/1     Running   23 (4d21h ago)    11d
+kube-proxy-bv47k                         1/1     Running   1 (4d21h ago)     11d
+kube-scheduler-docker-desktop            1/1     Running   118 (4d21h ago)   11d
+metrics-server-6db4d75b97-mcsnx          0/1     Running   0                 12s
+storage-provisioner                      1/1     Running   6 (4d20h ago)     11d
+vpnkit-controller                        1/1     Running   1 (4d21h ago)     11d
+09:27:56 erszcz @ x7 : ~/work
+$ k -n kube-system describe pod metrics-server-6db4d75b97-mcsnx
+Name:                 metrics-server-6db4d75b97-mcsnx
+Namespace:            kube-system
+Priority:             2000000000
+Priority Class Name:  system-cluster-critical
+Service Account:      metrics-server
+Node:                 docker-desktop/192.168.65.3
+Start Time:           Mon, 26 Feb 2024 09:27:26 +0100
+Labels:               k8s-app=metrics-server
+                      pod-template-hash=6db4d75b97
+Annotations:          <none>
+Status:               Running
+IP:                   10.1.4.195
+IPs:
+  IP:           10.1.4.195
+Controlled By:  ReplicaSet/metrics-server-6db4d75b97
+Containers:
+  metrics-server:
+    Container ID:  docker://c581ad329d191b2f1f71b63beacbeb4578b912496bb740a982f5e6aa868001c5
+    Image:         registry.k8s.io/metrics-server/metrics-server:v0.7.0
+    Image ID:      docker-pullable://registry.k8s.io/metrics-server/metrics-server@sha256:1c0419326500f1704af580d12a579671b2c3a06a8aa918cd61d0a35fb2d6b3ce
+    Port:          10250/TCP
+    Host Port:     0/TCP
+    Args:
+      --cert-dir=/tmp
+      --secure-port=10250
+      --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+      --kubelet-use-node-status-port
+      --metric-resolution=15s
+    State:          Running
+      Started:      Mon, 26 Feb 2024 09:27:26 +0100
+    Ready:          False
+    Restart Count:  0
+    Requests:
+      cpu:        100m
+      memory:     200Mi
+    Liveness:     http-get https://:https/livez delay=0s timeout=1s period=10s #success=1 #failure=3
+    Readiness:    http-get https://:https/readyz delay=20s timeout=1s period=10s #success=1 #failure=3
+    Environment:  <none>
+    Mounts:
+      /tmp from tmp-dir (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-b4wc9 (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             False
+  ContainersReady   False
+  PodScheduled      True
+Volumes:
+  tmp-dir:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:  <unset>
+  kube-api-access-b4wc9:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              kubernetes.io/os=linux
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age               From               Message
+  ----     ------     ----              ----               -------
+  Normal   Scheduled  33s               default-scheduler  Successfully assigned kube-system/metrics-server-6db4d75b97-mcsnx to docker-desktop
+  Normal   Pulled     33s               kubelet            Container image "registry.k8s.io/metrics-server/metrics-server:v0.7.0" already present on machine
+  Normal   Created    33s               kubelet            Created container metrics-server
+  Normal   Started    33s               kubelet            Started container metrics-server
+  Warning  Unhealthy  3s (x2 over 13s)  kubelet            Readiness probe failed: HTTP probe failed with statuscode: 500
+09:28:00 erszcz @ x7 : ~/work
+$ k -n kube-system logs  metrics-server-6db4d75b97-mcsnx
+I0226 08:27:27.538108       1 serving.go:374] Generated self-signed cert (/tmp/apiserver.crt, /tmp/apiserver.key)
+I0226 08:27:28.122916       1 handler.go:275] Adding GroupVersion metrics.k8s.io v1beta1 to ResourceManager
+E0226 08:27:28.242123       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:27:28.248559       1 requestheader_controller.go:169] Starting RequestHeaderAuthRequestController
+I0226 08:27:28.248706       1 shared_informer.go:311] Waiting for caches to sync for RequestHeaderAuthRequestController
+I0226 08:27:28.248776       1 configmap_cafile_content.go:202] "Starting controller" name="client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file"
+I0226 08:27:28.248807       1 shared_informer.go:311] Waiting for caches to sync for client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file
+I0226 08:27:28.248646       1 configmap_cafile_content.go:202] "Starting controller" name="client-ca::kube-system::extension-apiserver-authentication::client-ca-file"
+I0226 08:27:28.248941       1 shared_informer.go:311] Waiting for caches to sync for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
+I0226 08:27:28.250686       1 dynamic_serving_content.go:132] "Starting controller" name="serving-cert::/tmp/apiserver.crt::/tmp/apiserver.key"
+I0226 08:27:28.251134       1 secure_serving.go:213] Serving securely on [::]:10250
+I0226 08:27:28.251247       1 tlsconfig.go:240] "Starting DynamicServingCertificateController"
+I0226 08:27:28.349840       1 shared_informer.go:318] Caches are synced for RequestHeaderAuthRequestController
+I0226 08:27:28.349986       1 shared_informer.go:318] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file
+I0226 08:27:28.350138       1 shared_informer.go:318] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
+E0226 08:27:43.239939       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:27:46.464327       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+I0226 08:27:56.461891       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+E0226 08:27:58.235177       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:28:06.473829       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+E0226 08:28:13.234358       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:28:16.465870       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+I0226 08:28:26.465017       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+09:28:27 erszcz @ x7 : ~/work
+$ # kubectl patch deployment metrics-server -n kube-system --type 'json' -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+09:28:34 erszcz @ x7 : ~/work
+$ kubectl patch deployment metrics-server -n kube-system --type 'json' -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+deployment.apps/metrics-server patched
+09:28:36 erszcz @ x7 : ~/work
+$ k -n kube-system logs  metrics-server-6db4d75b97-mcsnx
+I0226 08:27:27.538108       1 serving.go:374] Generated self-signed cert (/tmp/apiserver.crt, /tmp/apiserver.key)
+I0226 08:27:28.122916       1 handler.go:275] Adding GroupVersion metrics.k8s.io v1beta1 to ResourceManager
+E0226 08:27:28.242123       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:27:28.248559       1 requestheader_controller.go:169] Starting RequestHeaderAuthRequestController
+I0226 08:27:28.248706       1 shared_informer.go:311] Waiting for caches to sync for RequestHeaderAuthRequestController
+I0226 08:27:28.248776       1 configmap_cafile_content.go:202] "Starting controller" name="client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file"
+I0226 08:27:28.248807       1 shared_informer.go:311] Waiting for caches to sync for client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file
+I0226 08:27:28.248646       1 configmap_cafile_content.go:202] "Starting controller" name="client-ca::kube-system::extension-apiserver-authentication::client-ca-file"
+I0226 08:27:28.248941       1 shared_informer.go:311] Waiting for caches to sync for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
+I0226 08:27:28.250686       1 dynamic_serving_content.go:132] "Starting controller" name="serving-cert::/tmp/apiserver.crt::/tmp/apiserver.key"
+I0226 08:27:28.251134       1 secure_serving.go:213] Serving securely on [::]:10250
+I0226 08:27:28.251247       1 tlsconfig.go:240] "Starting DynamicServingCertificateController"
+I0226 08:27:28.349840       1 shared_informer.go:318] Caches are synced for RequestHeaderAuthRequestController
+I0226 08:27:28.349986       1 shared_informer.go:318] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::requestheader-client-ca-file
+I0226 08:27:28.350138       1 shared_informer.go:318] Caches are synced for client-ca::kube-system::extension-apiserver-authentication::client-ca-file
+E0226 08:27:43.239939       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:27:46.464327       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+I0226 08:27:56.461891       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+E0226 08:27:58.235177       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:28:06.473829       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+E0226 08:28:13.234358       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:28:16.465870       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+I0226 08:28:26.465017       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+E0226 08:28:28.241165       1 scraper.go:149] "Failed to scrape node" err="Get \"https://192.168.65.3:10250/metrics/resource\": tls: failed to verify certificate: x509: cannot validate certificate for 192.168.65.3 because it doesn't contain any IP SANs" node="docker-desktop"
+I0226 08:28:32.283279       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+I0226 08:28:36.461629       1 server.go:191] "Failed probe" probe="metric-storage-ready" err="no metrics to serve"
+09:28:41 erszcz @ x7 : ~/work
+$ k -n kube-system get pod
+NAME                                     READY   STATUS    RESTARTS          AGE
+coredns-5dd5756b68-74jgc                 1/1     Running   1 (4d21h ago)     11d
+coredns-5dd5756b68-8tt2g                 1/1     Running   1 (4d21h ago)     11d
+etcd-docker-desktop                      1/1     Running   23 (4d21h ago)    11d
+kube-apiserver-docker-desktop            1/1     Running   23 (4d21h ago)    11d
+kube-controller-manager-docker-desktop   1/1     Running   23 (4d21h ago)    11d
+kube-proxy-bv47k                         1/1     Running   1 (4d21h ago)     11d
+kube-scheduler-docker-desktop            1/1     Running   118 (4d21h ago)   11d
+metrics-server-6db4d75b97-mcsnx          0/1     Running   0                 85s
+metrics-server-98bc7f888-gl9c4           0/1     Running   0                 15s
+storage-provisioner                      1/1     Running   6 (4d20h ago)     11d
+vpnkit-controller                        1/1     Running   1 (4d21h ago)     11d
+09:28:51 erszcz @ x7 : ~/work
+$ watch kubectl -n kube-system get pod
+09:29:09 erszcz @ x7 : ~/work
+$ k describe hpa php-apache
+Name:                     php-apache
+Namespace:                default
+Labels:                   <none>
+Annotations:              autoscaling.alpha.kubernetes.io/conditions:
+                            [{"type":"AbleToScale","status":"True","lastTransitionTime":"2024-02-26T08:25:54Z","reason":"SucceededGetScale","message":"the HPA control...
+CreationTimestamp:        Mon, 26 Feb 2024 09:24:54 +0100
+Reference:                Deployment/php-apache
+Target CPU utilization:   50%
+Current CPU utilization:  <unknown>%
+Min replicas:             1
+Max replicas:             10
+Deployment pods:          1 current / 0 desired
+Events:
+  Type     Reason                        Age                    From                       Message
+  ----     ------                        ----                   ----                       -------
+  Warning  FailedGetResourceMetric       2m18s (x2 over 3m18s)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  2m18s (x2 over 3m18s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       18s (x2 over 78s)      horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  18s (x2 over 78s)      horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+09:29:13 erszcz @ x7 : ~/work
+$ k get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%   1         10        1          4m23s
+09:29:17 erszcz @ x7 : ~/work
+$ k get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%   1         10        1          4m31s
+09:29:25 erszcz @ x7 : ~/work
+$ k get hpa
+NAME         REFERENCE               TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%   1         10        1          4m36s
+09:29:30 erszcz @ x7 : ~/work
+$ k describe hpa php-apache
+Name:                     php-apache
+Namespace:                default
+Labels:                   <none>
+Annotations:              autoscaling.alpha.kubernetes.io/conditions:
+                            [{"type":"AbleToScale","status":"True","lastTransitionTime":"2024-02-26T08:25:54Z","reason":"SucceededGetScale","message":"the HPA control...
+CreationTimestamp:        Mon, 26 Feb 2024 09:24:54 +0100
+Reference:                Deployment/php-apache
+Target CPU utilization:   50%
+Current CPU utilization:  <unknown>%
+Min replicas:             1
+Max replicas:             10
+Deployment pods:          1 current / 0 desired
+Events:
+  Type     Reason                        Age                    From                       Message
+  ----     ------                        ----                   ----                       -------
+  Warning  FailedGetResourceMetric       2m38s (x2 over 3m38s)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  2m38s (x2 over 3m38s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       38s (x2 over 98s)      horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  38s (x2 over 98s)      horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+09:29:32 erszcz @ x7 : ~/work
+$ k describe hpa php-apache
+Name:                     php-apache
+Namespace:                default
+Labels:                   <none>
+Annotations:              autoscaling.alpha.kubernetes.io/conditions:
+                            [{"type":"AbleToScale","status":"True","lastTransitionTime":"2024-02-26T08:25:54Z","reason":"ScaleDownStabilized","message":"recent recomm...
+                          autoscaling.alpha.kubernetes.io/current-metrics:
+                            [{"type":"Resource","resource":{"name":"cpu","currentAverageUtilization":0,"currentAverageValue":"1m"}}]
+CreationTimestamp:        Mon, 26 Feb 2024 09:24:54 +0100
+Reference:                Deployment/php-apache
+Target CPU utilization:   50%
+Current CPU utilization:  0%
+Min replicas:             1
+Max replicas:             10
+Deployment pods:          1 current / 1 desired
+Events:
+  Type     Reason                        Age                  From                       Message
+  ----     ------                        ----                 ----                       -------
+  Warning  FailedGetResourceMetric       3m6s (x2 over 4m6s)  horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  3m6s (x2 over 4m6s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server could not find the requested resource (get pods.metrics.k8s.io)
+  Warning  FailedGetResourceMetric       66s (x2 over 2m6s)   horizontal-pod-autoscaler  failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+  Warning  FailedComputeMetricsReplicas  66s (x2 over 2m6s)   horizontal-pod-autoscaler  invalid metrics (1 invalid out of 1), first error is: failed to get cpu resource metric value: failed to get cpu utilization: unable to get metrics for resource cpu: unable to fetch metrics from resource metrics API: the server is currently unable to handle the request (get pods.metrics.k8s.io)
+09:30:00 erszcz @ x7 : ~/work
+$ k get hpa
+NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   0%/50%    1         10        1          5m12s
+09:30:06 erszcz @ x7 : ~/work
+$
+09:30:08 erszcz @ x7 : ~/work
+$
+09:30:08 erszcz @ x7 : ~/work
+$ k get hpa php-apache -o yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: "2024-02-26T08:24:54Z"
+  name: php-apache
+  namespace: default
+  resourceVersion: "754864"
+  uid: 884e1daa-3d35-46df-888d-27437baf4077
+spec:
+  maxReplicas: 10
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 50
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apache
+status:
+  conditions:
+  - lastTransitionTime: "2024-02-26T08:25:54Z"
+    message: recommended size matches current size
+    reason: ReadyForNewScale
+    status: "True"
+    type: AbleToScale
+  - lastTransitionTime: "2024-02-26T08:29:54Z"
+    message: the HPA was able to successfully calculate a replica count from cpu resource
+      utilization (percentage of request)
+    reason: ValidMetricFound
+    status: "True"
+    type: ScalingActive
+  - lastTransitionTime: "2024-02-26T08:30:54Z"
+    message: the desired replica count is less than the minimum replica count
+    reason: TooFewReplicas
+    status: "True"
+    type: ScalingLimited
+  currentMetrics:
+  - resource:
+      current:
+        averageUtilization: 0
+        averageValue: 1m
+      name: cpu
+    type: Resource
+  currentReplicas: 1
+  desiredReplicas: 1
+09:32:29 erszcz @ x7 : ~/work
+09:34:14 erszcz @ x7 : ~/work/esl/infra (main %)
+$ k config current-context
+docker-desktop
+09:34:26 erszcz @ x7 : ~/work/esl/infra (main %)
+$ kubectl get hpa php-apache --watch
+NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   0%/50%    1         10        1          10m
+php-apache   Deployment/php-apache   250%/50%   1         10        1          11m
+php-apache   Deployment/php-apache   71%/50%    1         10        4          12m
+php-apache   Deployment/php-apache   48%/50%    1         10        6          13m
+php-apache   Deployment/php-apache   50%/50%    1         10        6          14m
+php-apache   Deployment/php-apache   0%/50%     1         10        6          15m
+php-apache   Deployment/php-apache   0%/50%     1         10        6          19m
+php-apache   Deployment/php-apache   0%/50%     1         10        1          20m
+^C09:45:34 erszcz @ x7 : ~/work/esl/infra (main %)
+(failed reverse-i-search)`ysml': watch kubectl -n kube-s^Ctem get pod
+09:45:38 erszcz @ x7 : ~/work/esl/infra (main %)
+$ k get hpa php-apache -o yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: "2024-02-26T08:24:54Z"
+  name: php-apache
+  namespace: default
+  resourceVersion: "756134"
+  uid: 884e1daa-3d35-46df-888d-27437baf4077
+spec:
+  maxReplicas: 10
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 50
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apache
+status:
+  conditions:
+  - lastTransitionTime: "2024-02-26T08:25:54Z"
+    message: recommended size matches current size
+    reason: ReadyForNewScale
+    status: "True"
+    type: AbleToScale
+  - lastTransitionTime: "2024-02-26T08:29:54Z"
+    message: the HPA was able to successfully calculate a replica count from cpu resource
+      utilization (percentage of request)
+    reason: ValidMetricFound
+    status: "True"
+    type: ScalingActive
+  - lastTransitionTime: "2024-02-26T08:43:54Z"
+    message: the desired replica count is less than the minimum replica count
+    reason: TooFewReplicas
+    status: "True"
+    type: ScalingLimited
+  currentMetrics:
+  - resource:
+      current:
+        averageUtilization: 0
+        averageValue: 1m
+      name: cpu
+    type: Resource
+  currentReplicas: 1
+  desiredReplicas: 1
+  lastScaleTime: "2024-02-26T08:43:54Z"
+09:45:40 erszcz @ x7 : ~/work/esl/infra (main %)
+$ k get hpa php-apache -o yaml > hpa.yaml
+09:48:35 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ vim hpa.yaml
+09:49:00 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k get hpa
+NAME         REFERENCE               TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   0%/50%    1         10        1          24m
+09:49:04 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k delete hpa php-apache
+horizontalpodautoscaler.autoscaling "php-apache" deleted
+09:49:14 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k apply -f hpa.yaml
+horizontalpodautoscaler.autoscaling/php-apache created
+09:49:20 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k get hpa php-apache
+NAME         REFERENCE               TARGETS                        MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%, <unknown>/50%   1         10        0          8s
+09:49:28 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ watch kubectl get hpa php-apache
+09:51:20 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ watch kubectl get hpa^Chp-apache
+^[[A09:51:23 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k describe hpa php-apache
+Name:                                                     php-apache
+Namespace:                                                default
+Labels:                                                   <none>
+Annotations:                                              <none>
+CreationTimestamp:                                        Mon, 26 Feb 2024 09:49:20 +0100
+Reference:                                                Deployment/php-apache
+Metrics:                                                  ( current / target )
+  resource cpu on pods  (as a percentage of request):     <unknown> / 50%
+  resource memory on pods  (as a percentage of request):  <unknown> / 50%
+Min replicas:                                             1
+Max replicas:                                             10
+Deployment pods:                                          1 current / 0 desired
+Conditions:
+  Type           Status  Reason                   Message
+  ----           ------  ------                   -------
+  AbleToScale    True    SucceededGetScale        the HPA controller was able to get the target's current scale
+  ScalingActive  False   FailedGetResourceMetric  the HPA was unable to compute the replica count: failed to get memory utilization: missing request for memory in container php-apache of Pod php-apache-598b474864-mw9lk
+Events:
+  Type     Reason                        Age                From                       Message
+  ----     ------                        ----               ----                       -------
+  Warning  FailedGetResourceMetric       32s (x2 over 92s)  horizontal-pod-autoscaler  failed to get memory utilization: missing request for memory in container php-apache of Pod php-apache-598b474864-mw9lk
+  Warning  FailedComputeMetricsReplicas  32s (x2 over 92s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 2), first error is: failed to get memory resource metric value: failed to get memory utilization: missing request for memory in container php-apache of Pod php-apache-598b474864-mw9lk
+09:51:26 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k describe deploy php-apache
+Name:                   php-apache
+Namespace:              default
+CreationTimestamp:      Mon, 26 Feb 2024 09:24:45 +0100
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               run=php-apache
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  run=php-apache
+  Containers:
+   php-apache:
+    Image:      registry.k8s.io/hpa-example
+    Port:       80/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:  500m
+    Requests:
+      cpu:        200m
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Progressing    True    NewReplicaSetAvailable
+  Available      True    MinimumReplicasAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   php-apache-598b474864 (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  29m   deployment-controller  Scaled up replica set php-apache-598b474864 to 1
+  Normal  ScalingReplicaSet  18m   deployment-controller  Scaled up replica set php-apache-598b474864 to 4 from 1
+  Normal  ScalingReplicaSet  17m   deployment-controller  Scaled up replica set php-apache-598b474864 to 6 from 4
+  Normal  ScalingReplicaSet  10m   deployment-controller  Scaled down replica set php-apache-598b474864 to 1 from 6
+09:54:35 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k edit deploy php-apache
+deployment.apps/php-apache edited
+09:55:53 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k describe deploy php-apache
+Name:                   php-apache
+Namespace:              default
+CreationTimestamp:      Mon, 26 Feb 2024 09:24:45 +0100
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 2
+Selector:               run=php-apache
+Replicas:               1 desired | 1 updated | 1 total | 1 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  run=php-apache
+  Containers:
+   php-apache:
+    Image:      registry.k8s.io/hpa-example
+    Port:       80/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:     500m
+      memory:  500Mi
+    Requests:
+      cpu:        200m
+      memory:     200Mi
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  php-apache-598b474864 (0/0 replicas created)
+NewReplicaSet:   php-apache-75ddc588fb (1/1 replicas created)
+Events:
+  Type    Reason             Age   From                   Message
+  ----    ------             ----  ----                   -------
+  Normal  ScalingReplicaSet  31m   deployment-controller  Scaled up replica set php-apache-598b474864 to 1
+  Normal  ScalingReplicaSet  20m   deployment-controller  Scaled up replica set php-apache-598b474864 to 4 from 1
+  Normal  ScalingReplicaSet  19m   deployment-controller  Scaled up replica set php-apache-598b474864 to 6 from 4
+  Normal  ScalingReplicaSet  12m   deployment-controller  Scaled down replica set php-apache-598b474864 to 1 from 6
+  Normal  ScalingReplicaSet  3s    deployment-controller  Scaled up replica set php-apache-75ddc588fb to 1
+  Normal  ScalingReplicaSet  1s    deployment-controller  Scaled down replica set php-apache-598b474864 to 0 from 1
+09:55:56 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k get hpa php-apache
+NAME         REFERENCE               TARGETS                        MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   <unknown>/50%, <unknown>/50%   1         10        1          6m46s
+09:56:06 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k describe hpa php-apache
+Name:                                                     php-apache
+Namespace:                                                default
+Labels:                                                   <none>
+Annotations:                                              <none>
+CreationTimestamp:                                        Mon, 26 Feb 2024 09:49:20 +0100
+Reference:                                                Deployment/php-apache
+Metrics:                                                  ( current / target )
+  resource cpu on pods  (as a percentage of request):     <unknown> / 50%
+  resource memory on pods  (as a percentage of request):  <unknown> / 50%
+Min replicas:                                             1
+Max replicas:                                             10
+Deployment pods:                                          1 current / 0 desired
+Conditions:
+  Type           Status  Reason                   Message
+  ----           ------  ------                   -------
+  AbleToScale    True    SucceededGetScale        the HPA controller was able to get the target's current scale
+  ScalingActive  False   FailedGetResourceMetric  the HPA was unable to compute the replica count: failed to get memory utilization: missing request for memory in container php-apache of Pod php-apache-598b474864-mw9lk
+Events:
+  Type     Reason                        Age                  From                       Message
+  ----     ------                        ----                 ----                       -------
+  Warning  FailedGetResourceMetric       17s (x7 over 6m17s)  horizontal-pod-autoscaler  failed to get memory utilization: missing request for memory in container php-apache of Pod php-apache-598b474864-mw9lk
+  Warning  FailedComputeMetricsReplicas  17s (x7 over 6m17s)  horizontal-pod-autoscaler  invalid metrics (1 invalid out of 2), first error is: failed to get memory resource metric value: failed to get memory utilization: missing request for memory in container php-apache of Pod php-apache-598b474864-mw9lk
+09:56:11 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ watch kubectl get hpa php-apache
+09:57:26 erszcz @ x7 : ~/work/esl/infra (main *%)
+$
+09:57:27 erszcz @ x7 : ~/work/esl/infra (main *%)
+$ k get hpa
+NAME         REFERENCE               TARGETS          MINPODS   MAXPODS   REPLICAS   AGE
+php-apache   Deployment/php-apache   0%/50%, 4%/50%   1         10        1          30m
+10:20:19 erszcz @ x7 : ~/work/esl/infra (main *%)
+$
