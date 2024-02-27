@@ -6,8 +6,8 @@ data:
   myvalue: "Hello World"
   drink: {{ .Values.favorite.drink }}
   food: {{ .Values.favorite.food }}
-  {{ if .Values.hated }}
+  {{- if .Values.hated }}
   hated:
     food: {{ .Values.hated.food }}
     drink: {{ .Values.hated.drink }}
-  {{ end }}
+  {{- end }}
