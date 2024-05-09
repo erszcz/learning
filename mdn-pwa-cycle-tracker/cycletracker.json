@@ -3,7 +3,7 @@
   "short_name": "CT",
   "description": "Period tracker",
   "id": "/",
-  "start_url": "http://localhost:9000",
+  "start_url": "https://6bec-77-255-98-26.ngrok-free.app",
   "theme_color": "#eeffee",
   "background_color": "#eeffee",
   "display": "standalone",
