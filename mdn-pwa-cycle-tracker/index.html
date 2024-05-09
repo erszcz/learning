@@ -35,5 +35,11 @@
     <!--  </ul>-->
     <!--</section>-->
     <script src="app.js" defer></script>
+    <!-- Register the app's service worker. -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js");
+      }
+    </script>
   </body>
 </html>
