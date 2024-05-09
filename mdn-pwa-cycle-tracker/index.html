@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>Cycle Tracker</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="manifest" href="cycletracker.json" />
+    <link rel="icon" href="icons/circle.svg" />
   </head>
   <body>
     <h1>Period tracker</h1>
@@ -12,16 +14,16 @@
       <fieldset>
         <legend>Enter your period start and end date</legend>
         <p>
-          <label for="start-date">Start date</label>
-          <input type="date" id="start-date" required />
+        <label for="start-date">Start date</label>
+        <input type="date" id="start-date" required />
         </p>
         <p>
-          <label for="end-date">End date</label>
-          <input type="date" id="end-date" required />
+        <label for="end-date">End date</label>
+        <input type="date" id="end-date" required />
         </p>
       </fieldset>
       <p>
-        <button type="submit">Add Period</button>
+      <button type="submit">Add Period</button>
       </p>
     </form>
     <section id="past-periods"></section>

@@ -1,0 +1,29 @@
+{
+  "name": "cycleTracker",
+  "short_name": "CT",
+  "description": "Period tracker",
+  "id": "/",
+  "start_url": "http://localhost:9000",
+  "theme_color": "#eeffee",
+  "background_color": "#eeffee",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "circle.ico",
+      "sizes": "48x48"
+    },
+    {
+      "src": "icons/circle.svg",
+      "sizes": "72x72 96x96",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/tire.svg",
+      "sizes": "128x128 256x256"
+    },
+    {
+      "src": "icons/wheel.svg",
+      "sizes": "512x512"
+    }
+  ]
+}
