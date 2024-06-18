@@ -10,6 +10,7 @@ defmodule CachingWithNebulex.Application do
     children = [
       # Starts a worker by calling: CachingWithNebulex.Worker.start_link(arg)
       # {CachingWithNebulex.Worker, arg}
+      {CachingWithNebulex.FactorialCache, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
