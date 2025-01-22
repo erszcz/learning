@@ -4,6 +4,7 @@ package:
     - console
     - effect
     - prelude
+    - numbers
   test:
     main: Test.Main
     dependencies: []
