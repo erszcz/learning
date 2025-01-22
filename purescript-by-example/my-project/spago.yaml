@@ -5,6 +5,7 @@ package:
     - effect
     - prelude
     - numbers
+    - lists
   test:
     main: Test.Main
     dependencies: []
