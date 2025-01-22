@@ -1,0 +1,13 @@
+package:
+  name: my-project
+  dependencies:
+    - console
+    - effect
+    - prelude
+  test:
+    main: Test.Main
+    dependencies: []
+workspace:
+  packageSet:
+    registry: 62.3.1
+  extraPackages: {}

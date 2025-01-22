@@ -1,12 +1,11 @@
 module Main where
 
 import Prelude
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, log, logShow)
-import Math (sqrt)
 
+import Effect (Effect)
+import Effect.Console (log)
+
+main :: Effect Unit
 main = do
-  --log "Hello sailor!"
-  logShow $ diagonal 3.0 4.0
+  log "🍝"
 
-diagonal w h = sqrt (w * w + h * h)
