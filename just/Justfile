@@ -1,0 +1,5 @@
+echo-input input:
+    @echo "{{input}}"
+
+echo-env-var:
+    @echo "$HOME"
