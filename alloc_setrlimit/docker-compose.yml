@@ -1,0 +1,8 @@
+# docker-compose.yml
+services:
+  linux_shell:
+    image: docker.io/library/ubuntu
+    command: sleep infinity
+    volumes:
+      - ${HOST_PWD}:${HOST_PWD}
+    working_dir: ${HOST_PWD}
